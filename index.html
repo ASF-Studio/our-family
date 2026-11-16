@@ -181,7 +181,7 @@ footer{text-align:center;color:var(--muted);font-size:11px;padding:15px}
     <label for="loginPin">الرقم السري</label>
     <input id="loginPin" type="password" inputmode="numeric" placeholder="أدخل الرقم السري" autocomplete="current-password">
     <button type="button" class="btn btn-block" id="loginBtn">دخول</button>
-    <p class="small-info" id="systemStatusText">جارٍ فحص الاتصال بالخادم...</p>
+    <p class="small-info" id="systemStatusText">اختر حسابك وأدخل الرقم السري الخاص به.</p>
   </div>
 </section>
 
@@ -539,23 +539,6 @@ const App = {
 
     if (!response.ok) throw new Error(result.error || "حدث خطأ غير متوقع في الخادم");
     return result;
-  },
-
-  async initHealthCheck() {
-    const statusText = this.$("systemStatusText");
-    try {
-      if (statusText) statusText.textContent = "جاري فحص الاتصال بالخادم...";
-      const res = await fetch(SUPABASE_URL + "/rest/v1/", {
-        headers: { "apikey": SUPABASE_KEY }
-      });
-      if (res.ok || res.status === 401 || res.status === 404) {
-        if (statusText) statusText.textContent = "اختر حسابك وأدخل الرقم السري الخاص به.";
-      } else {
-        throw new Error("الخادم لا يستجيب بالشكل المطلوب");
-      }
-    } catch (err) {
-      if (statusText) statusText.textContent = "اختر حسابك وأدخل الرقم السري الخاص به.";
-    }
   },
 
   async login() {
@@ -1031,8 +1014,6 @@ const App = {
 };
 
 document.addEventListener("DOMContentLoaded", () => {
-  App.initHealthCheck();
-
   const accountButtons = document.querySelectorAll(".account-choice button");
   accountButtons.forEach(btn => {
     btn.addEventListener("click", function (e) {
