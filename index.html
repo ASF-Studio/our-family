@@ -77,7 +77,7 @@ hr{border:0;border-top:1px solid var(--border);margin:18px 0}
     <option value="mama">ماما - الإدارة</option>
    </select>
   </div>
-  <div class="field"><label>الرقم السري</label><input id="loginPin" type="password" inputmode="numeric" maxlength="12" placeholder="أدخل الرقم السري"></div>
+  <div class="field"><label>الرقم السري</label><input id="loginPin" type="password" inputmode="numeric" maxlength="12" value="11" placeholder="أدخل الرقم السري"></div>
   <button class="btn full" id="loginButton" onclick="login()">دخول</button>
   <p class="muted" style="text-align:center">أهلًا بكم في بنك العائلة</p>
  </div>
@@ -167,7 +167,7 @@ function logout(){
  if(!confirm("هل أنت متأكد من تسجيل الخروج؟"))return;
  token="";currentUser=null;appData={};currentPage="home";localStorage.removeItem("family_token");
  el("app").classList.add("hidden");el("header").classList.add("hidden");el("loginScreen").classList.remove("hidden");
- el("loginPin").value="";toast("تم تسجيل الخروج");
+ el("loginPin").value="11";toast("تم تسجيل الخروج");
 }
 async function restoreSession(){
  const saved=localStorage.getItem("family_token");if(!saved)return;
