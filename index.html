@@ -129,7 +129,7 @@ label{font-size:13px;font-weight:bold;display:block;margin-top:8px}
 .login-card input{text-align:center}
 .account-choice{display:flex;gap:8px;margin:15px 0}
 .account-choice button{flex:1}
-.account-choice .selected{background:var(--main);color:white}
+.account-choice .selected{background:var(--main)!important;color:white!important}
 .page-heading{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:18px}
 .color-options{display:flex;gap:10px;flex-wrap:wrap}
 .color-dot{width:37px;height:37px;border-radius:50%;border:3px solid white;outline:1px solid #bbb}
@@ -155,7 +155,7 @@ footer{text-align:center;color:var(--muted);font-size:11px;padding:15px}
     <div class="brand">🌿 عائلتنا الجميلة</div>
     <div class="header-small" id="headerAccount"></div>
   </div>
-  <button class="btn btn-light btn-small" onclick="goHome()">الرئيسية</button>
+  <button type="button" class="btn btn-light btn-small" onclick="goHome()">الرئيسية</button>
 </header>
 
 <section id="loginScreen" class="login-wrap">
@@ -165,14 +165,14 @@ footer{text-align:center;color:var(--muted);font-size:11px;padding:15px}
     <p class="muted">محفظتنا العائلية الخاصة</p>
 
     <div class="account-choice">
-      <button type="button" class="btn btn-light selected" data-account="azoz" onclick="chooseAccount('azoz',this)">عزوز</button>
-      <button type="button" class="btn btn-light" data-account="sahab" onclick="chooseAccount('sahab',this)">سحاب</button>
-      <button type="button" class="btn btn-light" data-account="mama" onclick="chooseAccount('mama',this)">ماما</button>
+      <button type="button" class="btn btn-light selected" data-account="azoz">عزوز</button>
+      <button type="button" class="btn btn-light" data-account="sahab">سحاب</button>
+      <button type="button" class="btn btn-light" data-account="mama">ماما</button>
     </div>
 
     <label for="loginPin">الرقم السري</label>
     <input id="loginPin" type="password" inputmode="numeric" placeholder="أدخل الرقم السري" autocomplete="current-password">
-    <button type="button" class="btn btn-block" id="loginBtn" onclick="login()">دخول</button>
+    <button type="button" class="btn btn-block" id="loginBtn">دخول</button>
     <p class="small-info">اختر حسابك وأدخل الرقم السري الخاص فيه.</p>
   </div>
 </section>
@@ -205,36 +205,36 @@ footer{text-align:center;color:var(--muted);font-size:11px;padding:15px}
 
     <h2 class="section-title">الخدمات</h2>
     <div class="menu-grid" id="memberMenu">
-      <button class="menu-btn" onclick="openPage('convertPage')"><span class="menu-icon">💱</span>تحويل النقاط</button>
-      <button class="menu-btn" onclick="openPage('giftPage')"><span class="menu-icon">🎁</span>إرسال هدية</button>
-      <button class="menu-btn" onclick="openPage('purchasePage')"><span class="menu-icon">🛍️</span>شراء</button>
-      <button class="menu-btn" onclick="openPage('rewardsPage')"><span class="menu-icon">🎉</span>هدايا ومكافآتي</button>
-      <button class="menu-btn" onclick="openPage('recordsPage')"><span class="menu-icon">📒</span>سجل العمليات</button>
-      <button class="menu-btn" onclick="openPage('settingsPage')"><span class="menu-icon">⚙️</span>الإعدادات</button>
+      <button type="button" class="menu-btn" onclick="openPage('convertPage')"><span class="menu-icon">💱</span>تحويل النقاط</button>
+      <button type="button" class="menu-btn" onclick="openPage('giftPage')"><span class="menu-icon">🎁</span>إرسال هدية</button>
+      <button type="button" class="menu-btn" onclick="openPage('purchasePage')"><span class="menu-icon">🛍️</span>شراء</button>
+      <button type="button" class="menu-btn" onclick="openPage('rewardsPage')"><span class="menu-icon">🎉</span>هدايا ومكافآتي</button>
+      <button type="button" class="menu-btn" onclick="openPage('recordsPage')"><span class="menu-icon">📒</span>سجل العمليات</button>
+      <button type="button" class="menu-btn" onclick="openPage('settingsPage')"><span class="menu-icon">⚙️</span>الإعدادات</button>
     </div>
 
     <div class="menu-grid hidden" id="adminMenu">
-      <button class="menu-btn" onclick="openPage('adminMoneyPage')"><span class="menu-icon">💵</span>إدارة الفلوس</button>
-      <button class="menu-btn" onclick="openPage('adminPointsPage')"><span class="menu-icon">⭐</span>إدارة النقاط</button>
-      <button class="menu-btn" onclick="openPage('adminRewardPage')"><span class="menu-icon">🎁</span>إرسال مكافأة</button>
-      <button class="menu-btn" onclick="openPage('adminAccountsPage')"><span class="menu-icon">👨‍👩‍👧</span>الحسابات</button>
-      <button class="menu-btn" onclick="openPage('adminNoticesPage')"><span class="menu-icon">🔔</span>الإشعارات</button>
-      <button class="menu-btn" onclick="openPage('adminRecordsPage')"><span class="menu-icon">📚</span>السجلات</button>
-      <button class="menu-btn" onclick="openPage('settingsPage')"><span class="menu-icon">⚙️</span>الإعدادات</button>
+      <button type="button" class="menu-btn" onclick="openPage('adminMoneyPage')"><span class="menu-icon">💵</span>إدارة الفلوس</button>
+      <button type="button" class="menu-btn" onclick="openPage('adminPointsPage')"><span class="menu-icon">⭐</span>إدارة النقاط</button>
+      <button type="button" class="menu-btn" onclick="openPage('adminRewardPage')"><span class="menu-icon">🎁</span>إرسال مكافأة</button>
+      <button type="button" class="menu-btn" onclick="openPage('adminAccountsPage')"><span class="menu-icon">👨‍👩‍👧</span>الحسابات</button>
+      <button type="button" class="menu-btn" onclick="openPage('adminNoticesPage')"><span class="menu-icon">🔔</span>الإشعارات</button>
+      <button type="button" class="menu-btn" onclick="openPage('adminRecordsPage')"><span class="menu-icon">📚</span>السجلات</button>
+      <button type="button" class="menu-btn" onclick="openPage('settingsPage')"><span class="menu-icon">⚙️</span>الإعدادات</button>
     </div>
 
     <div class="card" style="margin-top:18px">
       <h3>حسابك</h3>
       <div class="row">
         <span id="accountName"></span>
-        <button class="btn btn-danger btn-small" onclick="logoutPrompt()">تسجيل الخروج</button>
+        <button type="button" class="btn btn-danger btn-small" onclick="logoutPrompt()">تسجيل الخروج</button>
       </div>
     </div>
   </section>
 
   <!-- تحويل النقاط -->
   <section id="convertPage" class="hidden">
-    <button class="btn btn-light back" onclick="goHome()">← رجوع</button>
+    <button type="button" class="btn btn-light back" onclick="goHome()">← رجوع</button>
     <h1>تحويل النقاط</h1>
     <p class="muted">اختر عدد النقاط، وبتوصلك بطاقة استرداد بقيمتها.</p>
     <div class="card">
@@ -244,20 +244,20 @@ footer{text-align:center;color:var(--muted);font-size:11px;padding:15px}
       </div>
       <label>كم نقطة تبي تحوّل؟</label>
       <div class="preset-row" id="convertPresets">
-        <button class="preset" onclick="selectPreset('convert',25,this)">25</button>
-        <button class="preset" onclick="selectPreset('convert',50,this)">50</button>
-        <button class="preset" onclick="selectPreset('convert',100,this)">100</button>
-        <button class="preset" onclick="selectPreset('convert',1000,this)">1000</button>
+        <button type="button" class="preset" onclick="selectPreset('convert',25,this)">25</button>
+        <button type="button" class="preset" onclick="selectPreset('convert',50,this)">50</button>
+        <button type="button" class="preset" onclick="selectPreset('convert',100,this)">100</button>
+        <button type="button" class="preset" onclick="selectPreset('convert',1000,this)">1000</button>
       </div>
       <input id="convertAmount" type="number" min="25" placeholder="عدد النقاط">
       <div class="small-info">كل 1000 نقطة = 5 ريال. يتم خصم النقاط عند إنشاء البطاقة، وتضاف الفلوس عند الضغط على استرداد.</div>
-      <button class="btn btn-block" id="convertBtn" onclick="requestConversion(this)">إنشاء بطاقة الاسترداد</button>
+      <button type="button" class="btn btn-block" id="convertBtn" onclick="requestConversion(this)">إنشاء بطاقة الاسترداد</button>
     </div>
   </section>
 
   <!-- الهدايا -->
   <section id="giftPage" class="hidden">
-    <button class="btn btn-light back" onclick="goHome()">← رجوع</button>
+    <button type="button" class="btn btn-light back" onclick="goHome()">← رجوع</button>
     <h1>إرسال هدية</h1>
     <p class="muted">أرسل نقاطًا للشخص الثاني.</p>
     <div class="card">
@@ -268,25 +268,25 @@ footer{text-align:center;color:var(--muted);font-size:11px;padding:15px}
       </select>
       <label>عدد النقاط</label>
       <div class="preset-row">
-        <button class="preset" onclick="selectPreset('gift',25,this)">25</button>
-        <button class="preset" onclick="selectPreset('gift',50,this)">50</button>
-        <button class="preset" onclick="selectPreset('gift',100,this)">100</button>
-        <button class="preset" onclick="selectPreset('gift',250,this)">250</button>
-        <button class="preset" onclick="selectPreset('gift',500,this)">500</button>
-        <button class="preset" onclick="selectPreset('gift',1000,this)">1000</button>
-        <button class="preset" onclick="selectPreset('gift',2500,this)">2500</button>
-        <button class="preset" onclick="selectPreset('gift',5000,this)">5000</button>
+        <button type="button" class="preset" onclick="selectPreset('gift',25,this)">25</button>
+        <button type="button" class="preset" onclick="selectPreset('gift',50,this)">50</button>
+        <button type="button" class="preset" onclick="selectPreset('gift',100,this)">100</button>
+        <button type="button" class="preset" onclick="selectPreset('gift',250,this)">250</button>
+        <button type="button" class="preset" onclick="selectPreset('gift',500,this)">500</button>
+        <button type="button" class="preset" onclick="selectPreset('gift',1000,this)">1000</button>
+        <button type="button" class="preset" onclick="selectPreset('gift',2500,this)">2500</button>
+        <button type="button" class="preset" onclick="selectPreset('gift',5000,this)">5000</button>
       </div>
       <input id="giftPoints" type="number" min="25" placeholder="عدد النقاط">
       <label>رسالة مع الهدية (اختياري)</label>
       <textarea id="giftMessage" maxlength="250" placeholder="اكتب رسالة لطيفة..."></textarea>
-      <button class="btn btn-block" id="giftBtn" onclick="sendGift(this)">إرسال الهدية 🎁</button>
+      <button type="button" class="btn btn-block" id="giftBtn" onclick="sendGift(this)">إرسال الهدية 🎁</button>
     </div>
   </section>
 
   <!-- الشراء -->
   <section id="purchasePage" class="hidden">
-    <button class="btn btn-light back" onclick="goHome()">← رجوع</button>
+    <button type="button" class="btn btn-light back" onclick="goHome()">← رجوع</button>
     <h1>الشراء</h1>
     <p class="muted">اختر القسم واكتب طلبك والمبلغ. المبلغ يخصم من رصيد الفلوس.</p>
     <div class="card">
@@ -309,7 +309,7 @@ footer{text-align:center;color:var(--muted);font-size:11px;padding:15px}
       <input id="purchaseItem" maxlength="100" placeholder="مثال: وجبة أو بطاقة Roblox">
       <label>السعر بالريال</label>
       <input id="purchaseAmount" type="number" min="0.01" step="0.01" placeholder="مثال: 15">
-      <button class="btn btn-block" id="purchaseBtn" onclick="makePurchase(this)">اشتري</button>
+      <button type="button" class="btn btn-block" id="purchaseBtn" onclick="makePurchase(this)">اشتري</button>
       <p class="small-info">هذه عملية تسجيل شراء داخل المحفظة العائلية، وليست دفعًا إلكترونيًا لمتجر خارجي.</p>
     </div>
     <h2 class="section-title">مشترياتي السابقة</h2>
@@ -318,7 +318,7 @@ footer{text-align:center;color:var(--muted);font-size:11px;padding:15px}
 
   <!-- المكافآت -->
   <section id="rewardsPage" class="hidden">
-    <button class="btn btn-light back" onclick="goHome()">← رجوع</button>
+    <button type="button" class="btn btn-light back" onclick="goHome()">← رجوع</button>
     <h1>هدايا ومكافآتي 🎁</h1>
     <p class="muted">هنا تظهر بطاقات الهدايا والمكافآت اللي وصلتك.</p>
     <div id="rewardsList"></div>
@@ -326,14 +326,14 @@ footer{text-align:center;color:var(--muted);font-size:11px;padding:15px}
 
   <!-- سجل العضو -->
   <section id="recordsPage" class="hidden">
-    <button class="btn btn-light back" onclick="goHome()">← رجوع</button>
+    <button type="button" class="btn btn-light back" onclick="goHome()">← رجوع</button>
     <h1>سجل العمليات</h1>
     <div id="memberLedger"></div>
   </section>
 
   <!-- ماما: إدارة الفلوس -->
   <section id="adminMoneyPage" class="hidden">
-    <button class="btn btn-light back" onclick="goHome()">← رجوع</button>
+    <button type="button" class="btn btn-light back" onclick="goHome()">← رجوع</button>
     <h1>إدارة الفلوس 💵</h1>
     <div class="card">
       <h2>زيادة فلوس</h2>
@@ -343,7 +343,7 @@ footer{text-align:center;color:var(--muted);font-size:11px;padding:15px}
       <input id="moneyAddAmount" type="number" min="0.01" step="0.01" placeholder="المبلغ">
       <label>السبب</label>
       <input id="moneyAddReason" maxlength="250" placeholder="سبب الإضافة">
-      <button class="btn btn-block" onclick="adminAdjust('money',1,this)">إضافة فلوس</button>
+      <button type="button" class="btn btn-block" onclick="adminAdjust('money',1,this)">إضافة فلوس</button>
     </div>
     <div class="card">
       <h2>خصم فلوس</h2>
@@ -353,13 +353,13 @@ footer{text-align:center;color:var(--muted);font-size:11px;padding:15px}
       <input id="moneySubAmount" type="number" min="0.01" step="0.01" placeholder="المبلغ">
       <label>السبب</label>
       <input id="moneySubReason" maxlength="250" placeholder="سبب الخصم">
-      <button class="btn btn-danger btn-block" onclick="adminAdjust('money',-1,this)">خصم فلوس</button>
+      <button type="button" class="btn btn-danger btn-block" onclick="adminAdjust('money',-1,this)">خصم فلوس</button>
     </div>
   </section>
 
   <!-- ماما: إدارة النقاط -->
   <section id="adminPointsPage" class="hidden">
-    <button class="btn btn-light back" onclick="goHome()">← رجوع</button>
+    <button type="button" class="btn btn-light back" onclick="goHome()">← رجوع</button>
     <h1>إدارة النقاط ⭐</h1>
     <div class="card">
       <h2>زيادة نقاط</h2>
@@ -367,17 +367,17 @@ footer{text-align:center;color:var(--muted);font-size:11px;padding:15px}
       <select id="pointsAddAccount"></select>
       <label>كمية النقاط</label>
       <div class="preset-row">
-        <button class="preset" onclick="setAdminPoints('pointsAddAmount',25)">25</button>
-        <button class="preset" onclick="setAdminPoints('pointsAddAmount',50)">50</button>
-        <button class="preset" onclick="setAdminPoints('pointsAddAmount',100)">100</button>
-        <button class="preset" onclick="setAdminPoints('pointsAddAmount',500)">500</button>
-        <button class="preset" onclick="setAdminPoints('pointsAddAmount',1000)">1000</button>
-        <button class="preset" onclick="setAdminPoints('pointsAddAmount',2500)">2500</button>
+        <button type="button" class="preset" onclick="setAdminPoints('pointsAddAmount',25)">25</button>
+        <button type="button" class="preset" onclick="setAdminPoints('pointsAddAmount',50)">50</button>
+        <button type="button" class="preset" onclick="setAdminPoints('pointsAddAmount',100)">100</button>
+        <button type="button" class="preset" onclick="setAdminPoints('pointsAddAmount',500)">500</button>
+        <button type="button" class="preset" onclick="setAdminPoints('pointsAddAmount',1000)">1000</button>
+        <button type="button" class="preset" onclick="setAdminPoints('pointsAddAmount',2500)">2500</button>
       </div>
       <input id="pointsAddAmount" type="number" min="1" step="1" placeholder="عدد النقاط">
       <label>السبب</label>
       <input id="pointsAddReason" maxlength="250" placeholder="سبب الإضافة">
-      <button class="btn btn-block" onclick="adminAdjust('points',1,this)">زيادة نقاط</button>
+      <button type="button" class="btn btn-block" onclick="adminAdjust('points',1,this)">زيادة نقاط</button>
     </div>
     <div class="card">
       <h2>خصم نقاط</h2>
@@ -385,23 +385,23 @@ footer{text-align:center;color:var(--muted);font-size:11px;padding:15px}
       <select id="pointsSubAccount"></select>
       <label>كمية النقاط</label>
       <div class="preset-row">
-        <button class="preset" onclick="setAdminPoints('pointsSubAmount',25)">25</button>
-        <button class="preset" onclick="setAdminPoints('pointsSubAmount',50)">50</button>
-        <button class="preset" onclick="setAdminPoints('pointsSubAmount',100)">100</button>
-        <button class="preset" onclick="setAdminPoints('pointsSubAmount',500)">500</button>
-        <button class="preset" onclick="setAdminPoints('pointsSubAmount',1000)">1000</button>
-        <button class="preset" onclick="setAdminPoints('pointsSubAmount',2500)">2500</button>
+        <button type="button" class="preset" onclick="setAdminPoints('pointsSubAmount',25)">25</button>
+        <button type="button" class="preset" onclick="setAdminPoints('pointsSubAmount',50)">50</button>
+        <button type="button" class="preset" onclick="setAdminPoints('pointsSubAmount',100)">100</button>
+        <button type="button" class="preset" onclick="setAdminPoints('pointsSubAmount',500)">500</button>
+        <button type="button" class="preset" onclick="setAdminPoints('pointsSubAmount',1000)">1000</button>
+        <button type="button" class="preset" onclick="setAdminPoints('pointsSubAmount',2500)">2500</button>
       </div>
       <input id="pointsSubAmount" type="number" min="1" step="1" placeholder="عدد النقاط">
       <label>السبب</label>
       <input id="pointsSubReason" maxlength="250" placeholder="سبب الخصم">
-      <button class="btn btn-danger btn-block" onclick="adminAdjust('points',-1,this)">خصم نقاط</button>
+      <button type="button" class="btn btn-danger btn-block" onclick="adminAdjust('points',-1,this)">خصم نقاط</button>
     </div>
   </section>
 
   <!-- مكافأة ماما -->
   <section id="adminRewardPage" class="hidden">
-    <button class="btn btn-light back" onclick="goHome()">← رجوع</button>
+    <button type="button" class="btn btn-light back" onclick="goHome()">← رجوع</button>
     <h1>إرسال مكافأة 🎁</h1>
     <div class="card">
       <label>إلى حساب</label>
@@ -417,21 +417,21 @@ footer{text-align:center;color:var(--muted);font-size:11px;padding:15px}
       </select>
       <label>المبلغ أو النقاط</label>
       <input id="rewardAmount" type="number" min="0.01" step="0.01" placeholder="الكمية">
-      <button class="btn btn-block" onclick="sendAdminReward(this)">إرسال بطاقة المكافأة</button>
+      <button type="button" class="btn btn-block" onclick="sendAdminReward(this)">إرسال بطاقة المكافأة</button>
       <p class="small-info">المكافأة ما تضاف للرصيد إلا بعد ما يضغط العضو على «استرداد».</p>
     </div>
   </section>
 
   <!-- الحسابات -->
   <section id="adminAccountsPage" class="hidden">
-    <button class="btn btn-light back" onclick="goHome()">← رجوع</button>
+    <button type="button" class="btn btn-light back" onclick="goHome()">← رجوع</button>
     <h1>إدارة الحسابات</h1>
     <div id="accountsList"></div>
   </section>
 
   <!-- إشعارات ماما -->
   <section id="adminNoticesPage" class="hidden">
-    <button class="btn btn-light back" onclick="goHome()">← رجوع</button>
+    <button type="button" class="btn btn-light back" onclick="goHome()">← رجوع</button>
     <h1>إدارة الإشعارات</h1>
     <p class="muted">تقدرين تحذفين كل إشعار بشكل مستقل.</p>
     <div id="adminNotifications"></div>
@@ -439,7 +439,7 @@ footer{text-align:center;color:var(--muted);font-size:11px;padding:15px}
 
   <!-- سجلات ماما -->
   <section id="adminRecordsPage" class="hidden">
-    <button class="btn btn-light back" onclick="goHome()">← رجوع</button>
+    <button type="button" class="btn btn-light back" onclick="goHome()">← رجوع</button>
     <h1>سجلات العائلة</h1>
     <label>اختر الحساب</label>
     <select id="adminRecordsAccount" onchange="loadAdminRecords()">
@@ -451,7 +451,7 @@ footer{text-align:center;color:var(--muted);font-size:11px;padding:15px}
 
   <!-- الإعدادات -->
   <section id="settingsPage" class="hidden">
-    <button class="btn btn-light back" onclick="goHome()">← رجوع</button>
+    <button type="button" class="btn btn-light back" onclick="goHome()">← رجوع</button>
     <h1>الإعدادات ⚙️</h1>
     <div class="card">
       <h2>الاسم والمظهر</h2>
@@ -459,14 +459,14 @@ footer{text-align:center;color:var(--muted);font-size:11px;padding:15px}
       <input id="settingsName" maxlength="30" placeholder="اسم الحساب">
       <label>لون التطبيق</label>
       <div class="color-options">
-        <button class="color-dot" style="background:#183d35" onclick="chooseColor('#183d35',this)"></button>
-        <button class="color-dot" style="background:#315c91" onclick="chooseColor('#315c91',this)"></button>
-        <button class="color-dot" style="background:#75458c" onclick="chooseColor('#75458c',this)"></button>
-        <button class="color-dot" style="background:#a45b36" onclick="chooseColor('#a45b36',this)"></button>
-        <button class="color-dot" style="background:#276b62" onclick="chooseColor('#276b62',this)"></button>
-        <button class="color-dot" style="background:#46536e" onclick="chooseColor('#46536e',this)"></button>
+        <button type="button" class="color-dot" style="background:#183d35" onclick="chooseColor('#183d35',this)"></button>
+        <button type="button" class="color-dot" style="background:#315c91" onclick="chooseColor('#315c91',this)"></button>
+        <button type="button" class="color-dot" style="background:#75458c" onclick="chooseColor('#75458c',this)"></button>
+        <button type="button" class="color-dot" style="background:#a45b36" onclick="chooseColor('#a45b36',this)"></button>
+        <button type="button" class="color-dot" style="background:#276b62" onclick="chooseColor('#276b62',this)"></button>
+        <button type="button" class="color-dot" style="background:#46536e" onclick="chooseColor('#46536e',this)"></button>
       </div>
-      <button class="btn btn-block" onclick="saveSettings(this)">حفظ الإعدادات</button>
+      <button type="button" class="btn btn-block" onclick="saveSettings(this)">حفظ الإعدادات</button>
     </div>
     <div class="card">
       <h2>تغيير الرقم السري</h2>
@@ -474,7 +474,7 @@ footer{text-align:center;color:var(--muted);font-size:11px;padding:15px}
       <input id="oldPin" type="password" inputmode="numeric">
       <label>الرقم السري الجديد</label>
       <input id="newPin" type="password" inputmode="numeric">
-      <button class="btn btn-block" onclick="changePin(this)">تغيير الرقم السري</button>
+      <button type="button" class="btn btn-block" onclick="changePin(this)">تغيير الرقم السري</button>
     </div>
   </section>
 </main>
@@ -526,17 +526,6 @@ function escapeHTML(value){
   }[c]));
 }
 
-function chooseAccount(id,button){
-  selectedAccount=id;
-  document.querySelectorAll(".account-choice button").forEach(b=>b.classList.remove("selected"));
-  if(button){
-    button.classList.add("selected");
-  }else{
-    const btn = document.querySelector(`.account-choice button[data-account="${id}"]`);
-    if(btn)btn.classList.add("selected");
-  }
-}
-
 async function api(action,data={}){
   const headers={"Content-Type":"application/json","apikey":SUPABASE_KEY};
   if(token)headers.Authorization="Bearer "+token;
@@ -549,7 +538,7 @@ async function api(action,data={}){
       body:JSON.stringify({action,...data})
     });
   }catch(err){
-    throw new Error("تعذر الاتصال بالسيرفر (Failed to fetch)");
+    throw new Error("تعذر الاتصال بالسيرفر (تأكد من الإنترنت أو سياسات المتصفح)");
   }
 
   let result;
@@ -1070,10 +1059,26 @@ function logoutPrompt(){
 }
 
 document.addEventListener("DOMContentLoaded",()=>{
+  // تفعيل أزرار اختيار الحساب بشكل برمجي قاطع
+  const accountButtons = document.querySelectorAll(".account-choice button");
+  accountButtons.forEach(btn=>{
+    btn.addEventListener("click",function(){
+      accountButtons.forEach(b=>b.classList.remove("selected"));
+      this.classList.add("selected");
+      selectedAccount = this.getAttribute("data-account");
+    });
+  });
+
+  // تفعيل زر الدخول برمجيًا
+  const loginBtn = $("loginBtn");
+  if(loginBtn){
+    loginBtn.addEventListener("click", login);
+  }
+
   const pinInput = $("loginPin");
   if(pinInput){
     pinInput.addEventListener("keydown",e=>{
-      if(e.key==="Enter")login();
+      if(e.key==="Enter") login();
     });
   }
 });
