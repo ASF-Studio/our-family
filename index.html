@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
@@ -8,13 +7,15 @@
 <title>عائلتنا الجميلة</title>
 <style>
 *{box-sizing:border-box}
-body{margin:0;background:#f2f6f4;color:#183d35;font-family:Tahoma,Arial,sans-serif}
-button,input,select{font:inherit}
-button{cursor:pointer;border:0;border-radius:12px;padding:12px 16px;background:#183d35;color:white}
+:root{--main:#183d35;--soft:#eaf3ee;--bg:#f2f6f4}
+body{margin:0;background:var(--bg);color:var(--main);font-family:Tahoma,Arial,sans-serif}
+button,input,select,textarea{font:inherit}
+button{cursor:pointer;border:0;border-radius:12px;padding:12px 16px;background:var(--main);color:white}
 button:disabled{opacity:.5;cursor:not-allowed}
-input,select{width:100%;padding:13px;border:1px solid #dce6e1;border-radius:12px;background:white;color:#183d35;outline:none}
-input:focus,select:focus{border-color:#367d66}
-header{background:#183d35;color:white;padding:18px 5%;display:flex;align-items:center;justify-content:space-between;gap:12px}
+input,select,textarea{width:100%;padding:13px;border:1px solid #dce6e1;border-radius:12px;background:white;color:#183d35;outline:none}
+textarea{resize:vertical;min-height:85px}
+input:focus,select:focus,textarea:focus{border-color:#367d66}
+header{background:var(--main);color:white;padding:18px 5%;display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap}
 header h2{margin:0;font-size:20px}
 main{max-width:1050px;margin:25px auto;padding:0 15px}
 .card{background:white;border-radius:20px;padding:20px;margin-bottom:16px;box-shadow:0 5px 22px #183d350c}
@@ -24,31 +25,42 @@ h1,h2,h3{margin-top:0}
 .field{margin:14px 0}
 .field label{display:block;font-size:13px;margin-bottom:7px}
 .grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}
-.wallet{padding:22px;border-radius:18px;background:#eaf3ee}
+.wallet{padding:22px;border-radius:18px;background:var(--soft)}
 .wallet strong{font-size:28px;display:block;margin-top:12px}
 .wallet small{color:#71877c}
 .actions{display:flex;gap:9px;flex-wrap:wrap}
 .actions button{flex:1;min-width:115px}
-.secondary{background:#e9f1ed;color:#183d35}
+.secondary{background:#e9f1ed;color:var(--main)}
 .danger{background:#a63d3d}
 .success{background:#2d785b}
-.notice{padding:13px;border-radius:12px;background:#eaf3ee;margin:12px 0;display:none}
+.notice{padding:13px;border-radius:12px;background:var(--soft);margin:12px 0;display:none}
 .notice.error{background:#fceaea;color:#9c3030}
 .row{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:13px 0;border-bottom:1px solid #edf1ef}
 .row:last-child{border:0}
 .hidden{display:none!important}
-.pill{padding:5px 9px;background:#eaf3ee;border-radius:30px;font-size:12px}
+.pill{padding:5px 9px;background:var(--soft);border-radius:30px;font-size:12px}
 .tabs{display:flex;gap:8px;overflow:auto;margin-bottom:16px}
 .tabs button{white-space:nowrap}
 .tabs button.active{background:#3e8068}
 .section{display:none}
 .section.active{display:block}
+.color-list{display:flex;gap:12px;flex-wrap:wrap;margin:12px 0}
+.color-choice{width:39px;height:39px;border-radius:50%;padding:0;border:3px solid white;outline:2px solid #ddd}
+.color-choice.selected{outline:3px solid #183d35}
+.notification{padding:14px;border:1px solid #edf1ef;border-radius:13px;margin:10px 0}
+.notification.unread{background:var(--soft);border-color:#c6ded1}
+.notification p{margin:7px 0}
+.small-btn{padding:8px 11px;font-size:12px}
+.preset-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}
+.preset{background:#eaf3ee;color:#183d35;border:2px solid transparent}
+.preset.selected{border-color:var(--main);background:#d6e9df}
 @media(max-width:600px){
  header{padding:15px}
  .grid{grid-template-columns:1fr}
  .login{margin:35px auto}
  .card{padding:16px}
  header h2{font-size:17px}
+ .preset-grid{grid-template-columns:repeat(2,1fr)}
 }
 </style>
 </head>
@@ -56,7 +68,10 @@ h1,h2,h3{margin-top:0}
 
 <header>
   <h2>🌿 عائلتنا الجميلة</h2>
-  <button id="logoutBtn" class="secondary hidden">تسجيل الخروج</button>
+  <div class="actions" style="flex:0 0 auto">
+    <button id="settingsTop" class="secondary hidden">⚙️ الإعدادات</button>
+    <button id="logoutBtn" class="secondary hidden">تسجيل الخروج</button>
+  </div>
 </header>
 
 <main>
@@ -73,7 +88,7 @@ h1,h2,h3{margin-top:0}
     </div>
     <div class="field">
       <label>رمز الدخول</label>
-      <input id="pin" type="password" inputmode="numeric" maxlength="8" placeholder="أدخل رمز الدخول">
+      <input id="pin" type="password" inputmode="numeric" placeholder="أدخل رمز الدخول">
     </div>
     <button id="loginBtn" style="width:100%">دخول</button>
     <div id="loginNotice" class="notice"></div>
@@ -107,10 +122,64 @@ h1,h2,h3{margin-top:0}
         <h3>تحويل النقاط إلى فلوس</h3>
         <p class="muted">كل 1000 نقطة تساوي 5 ريالات</p>
         <div class="field">
-          <label>عدد النقاط</label>
-          <input id="convertPoints" type="number" min="1000" step="1000" placeholder="مثال: 1000">
+          <label>اختر عدد النقاط</label>
+          <select id="convertPoints">
+            <option value="">اختر الكمية</option>
+            <option value="1000">1000 نقطة = 5 ريال</option>
+            <option value="2000">2000 نقطة = 10 ريال</option>
+            <option value="3000">3000 نقطة = 15 ريال</option>
+            <option value="5000">5000 نقطة = 25 ريال</option>
+            <option value="10000">10000 نقطة = 50 ريال</option>
+          </select>
         </div>
         <button id="convertBtn" class="success" style="width:100%">تحويل إلى رصيد مالي</button>
+      </div>
+
+      <div class="card">
+        <h3>🎁 إرسال هدية</h3>
+        <p class="muted">أرسل نقاطًا مع رسالة للشخص الثاني</p>
+        <div class="field">
+          <label>المستلم</label>
+          <select id="giftTo">
+            <option value="sahab">سحاب</option>
+            <option value="azoz">عزوز</option>
+          </select>
+        </div>
+        <div class="field">
+          <label>عدد نقاط الهدية</label>
+          <div class="preset-grid" id="giftPresets">
+            <button class="preset" data-points="25">25</button>
+            <button class="preset" data-points="50">50</button>
+            <button class="preset" data-points="100">100</button>
+            <button class="preset" data-points="250">250</button>
+            <button class="preset" data-points="500">500</button>
+            <button class="preset" data-points="1000">1000</button>
+            <button class="preset" data-points="2500">2500</button>
+            <button class="preset" data-points="5000">5000</button>
+          </div>
+        </div>
+        <div class="field">
+          <label>رسالة الهدية</label>
+          <textarea id="giftMessage" maxlength="250" placeholder="اكتب رسالة جميلة..."></textarea>
+        </div>
+        <button id="giftBtn" style="width:100%">إرسال الهدية 🎁</button>
+      </div>
+
+      <div class="card">
+        <h3>⭐ شحن النقاط</h3>
+        <p class="muted">اختر باقة النقاط التي تبيها</p>
+        <div class="preset-grid" id="chargePresets">
+          <button class="preset" data-charge="25">25 نقطة</button>
+          <button class="preset" data-charge="50">50 نقطة</button>
+          <button class="preset" data-charge="100">100 نقطة</button>
+          <button class="preset" data-charge="250">250 نقطة</button>
+          <button class="preset" data-charge="500">500 نقطة</button>
+          <button class="preset" data-charge="1000">1000 نقطة</button>
+          <button class="preset" data-charge="2500">2500 نقطة</button>
+          <button class="preset" data-charge="5000">5000 نقطة</button>
+        </div>
+        <button id="chargeBtn" class="success" style="width:100%;margin-top:12px">طلب شحن</button>
+        <p class="muted">طلب الشحن يحتاج تفعيل عملية الشحن في السيرفر قبل إضافة النقاط فعليًا.</p>
       </div>
     </div>
 
@@ -121,7 +190,7 @@ h1,h2,h3{margin-top:0}
       </div>
 
       <div class="tabs">
-        <button class="active" data-tab="adjust">إضافة وخصم</button>
+        <button class="active" data-tab="adjust">إدارة الأرصدة</button>
         <button data-tab="transfer">تحويل</button>
         <button data-tab="accounts">الحسابات</button>
         <button data-tab="records">السجلات</button>
@@ -129,45 +198,59 @@ h1,h2,h3{margin-top:0}
 
       <div id="adjust" class="section active card">
         <h3>إدارة الأرصدة</h3>
-        <div class="field"><label>الحساب</label>
+        <div class="field">
+          <label>الحساب</label>
           <select id="adjustAccount">
             <option value="azoz">عزوز</option>
             <option value="sahab">سحاب</option>
           </select>
         </div>
-        <div class="field"><label>نوع الرصيد</label>
+        <div class="field">
+          <label>نوع الرصيد</label>
           <select id="adjustUnit">
             <option value="money">فلوس</option>
             <option value="points">نقاط</option>
           </select>
         </div>
-        <div class="field"><label>المبلغ أو النقاط (استخدم السالب للخصم)</label>
-          <input id="adjustAmount" type="number" placeholder="مثال: 50 أو -20">
+        <div class="field">
+          <label>الكمية</label>
+          <input id="adjustAmount" type="number" min="0.01" placeholder="اكتب الكمية">
         </div>
-        <div class="field"><label>سبب العملية</label>
+        <div class="field">
+          <label>سبب العملية</label>
           <input id="adjustDescription" placeholder="مثال: مكافأة">
         </div>
-        <button id="adjustBtn" style="width:100%">تنفيذ العملية</button>
+        <div class="actions">
+          <button id="addBalanceBtn" class="success">زيادة الرصيد</button>
+          <button id="deductBalanceBtn" class="danger">خصم من الرصيد</button>
+        </div>
       </div>
 
       <div id="transfer" class="section card">
         <h3>تحويل بين الحسابات</h3>
-        <div class="field"><label>من حساب</label>
+        <div class="field">
+          <label>من حساب</label>
           <select id="fromAccount">
-            <option value="azoz">عزوز</option><option value="sahab">سحاب</option>
+            <option value="azoz">عزوز</option>
+            <option value="sahab">سحاب</option>
           </select>
         </div>
-        <div class="field"><label>إلى حساب</label>
+        <div class="field">
+          <label>إلى حساب</label>
           <select id="toAccount">
-            <option value="sahab">سحاب</option><option value="azoz">عزوز</option>
+            <option value="sahab">سحاب</option>
+            <option value="azoz">عزوز</option>
           </select>
         </div>
-        <div class="field"><label>نوع الرصيد</label>
+        <div class="field">
+          <label>نوع الرصيد</label>
           <select id="transferUnit">
-            <option value="money">فلوس</option><option value="points">نقاط</option>
+            <option value="money">فلوس</option>
+            <option value="points">نقاط</option>
           </select>
         </div>
-        <div class="field"><label>الكمية</label>
+        <div class="field">
+          <label>الكمية</label>
           <input id="transferAmount" type="number" min="0.01" placeholder="الكمية">
         </div>
         <button id="transferBtn" style="width:100%">تحويل</button>
@@ -182,17 +265,55 @@ h1,h2,h3{margin-top:0}
         <h3>سجل العمليات</h3>
         <div class="field">
           <select id="recordAccount">
-            <option value="azoz">عزوز</option><option value="sahab">سحاب</option>
+            <option value="azoz">عزوز</option>
+            <option value="sahab">سحاب</option>
           </select>
         </div>
         <div id="adminLedger"></div>
       </div>
     </div>
 
+    <div class="card" id="notificationsCard">
+      <div class="row">
+        <h3 style="margin:0">🔔 الإشعارات</h3>
+        <span id="unreadCount" class="pill">0 جديد</span>
+      </div>
+      <div id="notificationsList"></div>
+      <button id="readNotificationsBtn" class="secondary" style="width:100%;margin-top:10px">تحديد الكل كمقروء</button>
+      <button id="deleteNotificationsBtn" class="danger" style="width:100%;margin-top:8px">حذف الإشعارات</button>
+    </div>
+
+    <div class="card">
+      <h3>⚙️ الإعدادات</h3>
+      <div class="field">
+        <label>اسم العرض</label>
+        <input id="displayName" maxlength="30" placeholder="اسمك">
+      </div>
+      <div class="field">
+        <label>لون التطبيق</label>
+        <div class="color-list" id="colorList">
+          <button class="color-choice" data-color="#183d35" style="background:#183d35" aria-label="لون"></button>
+          <button class="color-choice" data-color="#24558a" style="background:#24558a" aria-label="لون"></button>
+          <button class="color-choice" data-color="#71458c" style="background:#71458c" aria-label="لون"></button>
+          <button class="color-choice" data-color="#9a5734" style="background:#9a5734" aria-label="لون"></button>
+          <button class="color-choice" data-color="#a33f5a" style="background:#a33f5a" aria-label="لون"></button>
+          <button class="color-choice" data-color="#536b39" style="background:#536b39" aria-label="لون"></button>
+          <button class="color-choice" data-color="#34465e" style="background:#34465e" aria-label="لون"></button>
+        </div>
+      </div>
+      <button id="saveSettingsBtn" class="success" style="width:100%">حفظ الإعدادات</button>
+    </div>
+
     <div class="card">
       <h3>🔐 تغيير رمز الدخول</h3>
-      <div class="field"><label>الرمز الحالي</label><input id="oldPin" type="password" inputmode="numeric" maxlength="8"></div>
-      <div class="field"><label>الرمز الجديد</label><input id="newPin" type="password" inputmode="numeric" maxlength="8"></div>
+      <div class="field">
+        <label>الرمز الحالي</label>
+        <input id="oldPin" type="password" inputmode="numeric">
+      </div>
+      <div class="field">
+        <label>الرمز الجديد (رقمين أو أكثر)</label>
+        <input id="newPin" type="password" inputmode="numeric">
+      </div>
       <button id="changePinBtn" style="width:100%">تغيير الرمز</button>
     </div>
 
@@ -208,6 +329,10 @@ const API=SUPABASE_URL+"/functions/v1/family-api";
 let token=sessionStorage.getItem("family_token")||"";
 let profile=null;
 let refreshTimer=null;
+let selectedGift=25;
+let selectedCharge=25;
+let selectedColor="#183d35";
+let currentNotifications=[];
 
 const $=id=>document.getElementById(id);
 const names={azoz:"عزوز",sahab:"سحاب",mama:"ماما"};
@@ -217,7 +342,7 @@ function notice(id,message,error=false){
   el.textContent=message;
   el.classList.toggle("error",error);
   el.style.display="block";
-  setTimeout(()=>el.style.display="none",4500);
+  setTimeout(()=>el.style.display="none",5000);
 }
 
 async function call(action,data={}){
@@ -230,10 +355,25 @@ async function call(action,data={}){
     },
     body:JSON.stringify({action,...data})
   });
-
   const result=await response.json().catch(()=>({error:"استجابة غير مفهومة من الخادم"}));
-  if(!response.ok)throw new Error(result.error||"حدث خطأ");
+  if(!response.ok){
+    if(response.status===403&&result.blocked){
+      logout();
+      notice("loginNotice",result.error||"تم إيقاف حسابك من ماما",true);
+    }
+    throw new Error(result.error||"حدث خطأ");
+  }
   return result;
+}
+
+function applyColor(color){
+  selectedColor=color;
+  document.documentElement.style.setProperty("--main",color);
+  document.documentElement.style.setProperty("--soft",color+"18");
+  document.querySelectorAll(".color-choice").forEach(b=>{
+    b.classList.toggle("selected",b.dataset.color===color);
+  });
+  document.querySelector('meta[name="theme-color"]').content=color;
 }
 
 function setLoggedIn(p){
@@ -241,13 +381,14 @@ function setLoggedIn(p){
   $("loginView").classList.add("hidden");
   $("appView").classList.remove("hidden");
   $("logoutBtn").classList.remove("hidden");
-  $("welcome").textContent=p.display_name;
+  $("settingsTop").classList.remove("hidden");
+  $("welcome").textContent=p.display_name||names[p.id]||"أهلًا";
   $("roleBadge").textContent=p.role==="admin"?"إدارة":"عضو";
   $("memberArea").classList.toggle("hidden",p.role==="admin");
   $("adminArea").classList.toggle("hidden",p.role!=="admin");
   refresh();
   clearInterval(refreshTimer);
-  refreshTimer=setInterval(refresh,5000);
+  refreshTimer=setInterval(refresh,10000);
 }
 
 async function login(){
@@ -273,17 +414,30 @@ async function login(){
 async function refresh(){
   if(!profile)return;
   try{
+    const result=await call("get",profile.role==="admin"?{account_id:"azoz"}:{});
     if(profile.role==="admin"){
-      const result=await call("get",{account_id:"azoz"});
       renderBalances(result.allBalances||[]);
-      renderRecords();
-      renderAccountControls();
+      renderAccountControls(result.allBalances||[]);
     }else{
-      const result=await call("get");
-      $("money").textContent=Number(result.balance.money).toFixed(2)+" ر.س";
-      $("points").textContent=Number(result.balance.points).toLocaleString("ar-SA");
+      if(result.balance){
+        $("money").textContent=Number(result.balance.money).toFixed(2)+" ر.س";
+        $("points").textContent=Number(result.balance.points).toLocaleString("ar-SA");
+      }
     }
+
+    profile=result.profile||profile;
+    $("welcome").textContent=profile.display_name||names[profile.id]||"أهلًا";
+
+    currentNotifications=result.notifications||[];
+    renderNotifications(currentNotifications);
+
+    const settings=result.settings||{};
+    $("displayName").value=settings.display_name||profile.display_name||"";
+    if(settings.theme_color)applyColor(settings.theme_color);
+
     $("syncStatus").textContent="آخر تحديث: "+new Date().toLocaleTimeString("ar-SA");
+
+    if(profile.role==="admin")await renderRecords();
   }catch(e){
     $("syncStatus").textContent="تعذر التحديث: "+e.message;
   }
@@ -292,22 +446,28 @@ async function refresh(){
 function renderBalances(balances){
   $("allBalances").innerHTML=balances.map(b=>`
     <div class="wallet">
-      <small>${names[b.account_id]}</small>
+      <small>${names[b.account_id]||b.account_id}</small>
       <strong>${Number(b.money).toFixed(2)} ر.س</strong>
       <small>${Number(b.points).toLocaleString("ar-SA")} نقطة</small>
+      <div class="muted">${b.blocked?"الحساب موقوف":"الحساب نشط"}</div>
     </div>
   `).join("");
 }
 
-async function adjust(){
+async function adjust(sign){
+  const amount=Number($("adjustAmount").value);
+  if(!Number.isFinite(amount)||amount<=0){
+    notice("appNotice","اكتب كمية صحيحة أكبر من صفر",true);
+    return;
+  }
   try{
     await call("adjust",{
       account_id:$("adjustAccount").value,
       unit:$("adjustUnit").value,
-      amount:Number($("adjustAmount").value),
+      amount:amount*sign,
       description:$("adjustDescription").value
     });
-    notice("appNotice","تم تعديل الرصيد بنجاح");
+    notice("appNotice",sign>0?"تمت زيادة الرصيد بنجاح":"تم خصم الرصيد بنجاح");
     $("adjustAmount").value="";
     $("adjustDescription").value="";
     refresh();
@@ -331,11 +491,36 @@ async function transfer(){
 async function convert(){
   try{
     const points=Number($("convertPoints").value);
+    if(!points)throw new Error("اختر كمية النقاط أولاً");
     const result=await call("convert",{points});
     notice("appNotice",`تم تحويل النقاط وإضافة ${result.money} ريال`);
     $("convertPoints").value="";
     refresh();
   }catch(e){notice("appNotice",e.message,true)}
+}
+
+async function sendGift(){
+  const to=$("giftTo").value;
+  if(!selectedGift)return notice("appNotice","اختر كمية الهدية",true);
+  if(to===profile.id)return notice("appNotice","ما تقدر ترسل هدية لنفسك",true);
+
+  const btn=$("giftBtn");
+  btn.disabled=true;
+  try{
+    await call("gift",{
+      to,
+      points:selectedGift,
+      message:$("giftMessage").value
+    });
+    notice("appNotice","🎁 تم إرسال الهدية بنجاح");
+    $("giftMessage").value="";
+    refresh();
+  }catch(e){notice("appNotice",e.message,true)}
+  finally{btn.disabled=false}
+}
+
+function requestCharge(){
+  notice("appNotice","واجهة الشحن جاهزة، لكن إضافة النقاط فعليًا تحتاج تفعيل عملية الشحن في السيرفر.",true);
 }
 
 async function changePin(){
@@ -350,9 +535,7 @@ async function changePin(){
   }catch(e){notice("appNotice",e.message,true)}
 }
 
-async function renderAccountControls(){
-  const result=await call("get",{account_id:"azoz"});
-  const balances=result.allBalances||[];
+function renderAccountControls(balances){
   $("accountControls").innerHTML=balances.map(b=>`
     <div class="row">
       <strong>${names[b.account_id]}</strong>
@@ -378,19 +561,67 @@ async function renderAccountControls(){
 
 async function renderRecords(){
   try{
-    const id=$("recordAccount").value;
-    const result=await call("get",{account_id:id});
-    $("adminLedger").innerHTML=result.ledger.length?result.ledger.map(item=>`
+    const result=await call("get",{account_id:$("recordAccount").value});
+    const rows=result.ledger||[];
+    $("adminLedger").innerHTML=rows.length?rows.map(item=>`
       <div class="row">
         <div>
-          <strong>${item.action}</strong>
-          <div class="muted">${item.description||""}</div>
+          <strong>${escapeHTML(item.action)}</strong>
+          <div class="muted">${escapeHTML(item.description||"")}</div>
           <div class="muted">${new Date(item.created_at).toLocaleString("ar-SA")}</div>
         </div>
         <span class="pill">${Number(item.amount).toLocaleString("ar-SA")} ${item.unit==="money"?"ر.س":"نقطة"}</span>
       </div>
     `).join(""):"<p class='muted'>ما فيه عمليات مسجلة</p>";
   }catch(e){$("adminLedger").textContent=e.message}
+}
+
+function escapeHTML(value){
+  return String(value).replace(/[&<>"']/g,c=>({
+    "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"
+  }[c]));
+}
+
+function renderNotifications(items){
+  const unread=items.filter(n=>!n.read_at).length;
+  $("unreadCount").textContent=unread+" جديد";
+  $("notificationsList").innerHTML=items.length?items.map(n=>`
+    <div class="notification ${n.read_at?"":"unread"}">
+      <strong>${escapeHTML(n.title)}</strong>
+      <p>${escapeHTML(n.message)}</p>
+      <div class="muted">${new Date(n.created_at).toLocaleString("ar-SA")}</div>
+    </div>
+  `).join(""):"<p class='muted'>ما عندك إشعارات حاليًا</p>";
+}
+
+async function markNotificationsRead(){
+  try{
+    await call("notifications_read",{});
+    notice("appNotice","تم تحديد الإشعارات كمقروءة");
+    refresh();
+  }catch(e){notice("appNotice",e.message,true)}
+}
+
+async function deleteNotifications(){
+  if(!confirm("متأكد من حذف كل الإشعارات؟"))return;
+  try{
+    await call("notifications_delete",{});
+    notice("appNotice","تم حذف الإشعارات");
+    refresh();
+  }catch(e){notice("appNotice","حذف الإشعارات يحتاج إضافة عملية notifications_delete إلى السيرفر أولًا.",true)}
+}
+
+async function saveSettings(){
+  try{
+    const display_name=$("displayName").value.trim();
+    if(!display_name)throw new Error("اكتب اسم العرض");
+    await call("save_settings",{
+      display_name,
+      theme_color:selectedColor
+    });
+    notice("appNotice","تم حفظ الإعدادات");
+    $("welcome").textContent=display_name;
+  }catch(e){notice("appNotice",e.message,true)}
 }
 
 function logout(){
@@ -401,15 +632,23 @@ function logout(){
   $("appView").classList.add("hidden");
   $("loginView").classList.remove("hidden");
   $("logoutBtn").classList.add("hidden");
+  $("settingsTop").classList.add("hidden");
   $("pin").value="";
 }
 
 $("loginBtn").onclick=login;
 $("logoutBtn").onclick=logout;
-$("adjustBtn").onclick=adjust;
+$("settingsTop").onclick=()=>$("displayName").scrollIntoView({behavior:"smooth"});
+$("addBalanceBtn").onclick=()=>adjust(1);
+$("deductBalanceBtn").onclick=()=>adjust(-1);
 $("transferBtn").onclick=transfer;
 $("convertBtn").onclick=convert;
+$("giftBtn").onclick=sendGift;
+$("chargeBtn").onclick=requestCharge;
 $("changePinBtn").onclick=changePin;
+$("saveSettingsBtn").onclick=saveSettings;
+$("readNotificationsBtn").onclick=markNotificationsRead;
+$("deleteNotificationsBtn").onclick=deleteNotifications;
 $("recordAccount").onchange=renderRecords;
 $("pin").onkeydown=e=>{if(e.key==="Enter")login()};
 
@@ -423,7 +662,28 @@ document.querySelectorAll("[data-tab]").forEach(btn=>{
   };
 });
 
-// استعادة الجلسة
+$("giftPresets").querySelectorAll("button").forEach(btn=>{
+  btn.onclick=()=>{
+    selectedGift=Number(btn.dataset.points);
+    $("giftPresets").querySelectorAll("button").forEach(x=>x.classList.remove("selected"));
+    btn.classList.add("selected");
+  };
+});
+$("giftPresets").querySelector('[data-points="25"]').classList.add("selected");
+
+$("chargePresets").querySelectorAll("button").forEach(btn=>{
+  btn.onclick=()=>{
+    selectedCharge=Number(btn.dataset.charge);
+    $("chargePresets").querySelectorAll("button").forEach(x=>x.classList.remove("selected"));
+    btn.classList.add("selected");
+  };
+});
+$("chargePresets").querySelector('[data-charge="25"]').classList.add("selected");
+
+$("colorList").querySelectorAll("button").forEach(btn=>{
+  btn.onclick=()=>applyColor(btn.dataset.color);
+});
+
 async function restore(){
   if(!token)return;
   try{
@@ -432,8 +692,10 @@ async function restore(){
   }catch(e){
     token="";
     sessionStorage.removeItem("family_token");
+    if(e.message.includes("إيقاف"))notice("loginNotice",e.message,true);
   }
 }
+
 restore();
 </script>
 </body>
