@@ -153,10 +153,10 @@ footer{text-align:center;color:var(--muted);font-size:11px;padding:15px}
 </head>
 <body>
 
-<!-- شاشة التحميل الأولية -->
-<div id="loadingOverlay" class="loading-overlay">
+<!-- شاشة التحميل تظهر فقط عند الطلب والانتظار الفعلي -->
+<div id="loadingOverlay" class="loading-overlay hidden">
   <div class="spinner"></div>
-  <div id="loadingText">جاري تهيئة تطبيق عائلتنا الجميلة...</div>
+  <div id="loadingText">جاري المعالجة...</div>
 </div>
 
 <header id="topHeader" class="hidden">
@@ -167,8 +167,8 @@ footer{text-align:center;color:var(--muted);font-size:11px;padding:15px}
   <button type="button" class="btn btn-light btn-small" onclick="App.goHome()">الرئيسية</button>
 </header>
 
-<!-- شاشة تسجيل الدخول -->
-<section id="loginScreen" class="login-wrap hidden">
+<!-- شاشة تسجيل الدخول تظهر مباشرة عند فتح التطبيق -->
+<section id="loginScreen" class="login-wrap">
   <div class="card login-card">
     <div class="login-logo">🏡</div>
     <h1>عائلتنا الجميلة</h1>
@@ -490,7 +490,7 @@ const App = {
 
   $(id) { return document.getElementById(id); },
 
-  showLoading(show, text = "جاري التحميل...") {
+  showLoading(show, text = "جاري المعالجة...") {
     const el = this.$("loadingOverlay");
     if (el) {
       this.$("loadingText").textContent = text;
@@ -544,24 +544,6 @@ const App = {
     return result;
   },
 
-  async startup() {
-    this.showLoading(true, "جاري الاتصال بالنظام...");
-    try {
-      // اختبار الاتصال السريع بـ Supabase
-      const res = await fetch(SUPABASE_URL + "/rest/v1/", {
-        headers: { "apikey": SUPABASE_KEY }
-      });
-      // إخفاء شاشة التحميل الأولية وإظهار شاشة تسجيل الدخول مباشرة
-      setTimeout(() => {
-        this.showLoading(false);
-        this.$("loginScreen").classList.remove("hidden");
-      }, 400);
-    } catch (e) {
-      this.showLoading(false);
-      this.$("loginScreen").classList.remove("hidden");
-    }
-  },
-
   async login() {
     if (this.isBusy) return;
     const pinInput = this.$("loginPin");
@@ -585,7 +567,7 @@ const App = {
       this.$("topHeader").classList.remove("hidden");
       this.$("footer").classList.remove("hidden");
       
-      this.showToast("تم تسجيل الدخول بنجاح بنجاح 🎉");
+      this.showToast("تم تسجيل الدخول بنجاح 🎉");
       this.goHome();
     } catch (error) {
       this.showToast(error.message, true);
@@ -1018,4 +1000,70 @@ const App = {
       await this.api("change_pin", { old_pin, new_pin });
       this.$("oldPin").value = "";
       this.$("newPin").value = "";
-      this.showToast("تم تغيير الرقم
+      this.showToast("تم تغيير الرقم السري بنجاح");
+    } catch (e) {
+      this.showToast(e.message, true);
+    } finally {
+      this.showLoading(false);
+    }
+  },
+
+  logout() {
+    this.token = null;
+    this.currentUser = null;
+    this.currentData = null;
+    this.$("app").classList.add("hidden");
+    this.$("topHeader").classList.add("hidden");
+    this.$("footer").classList.add("hidden");
+    this.$("loginScreen").classList.remove("hidden");
+    this.applyTheme("#183d35");
+    this.showToast("تم تسجيل الخروج");
+  }
+};
+
+document.addEventListener("DOMContentLoaded", () => {
+  // تفعيل أزرار اختيار الحسابات في شاشة الدخول مع إدارة حالة التحديد بصرياً
+  const accountButtons = document.querySelectorAll("#accountChoiceBtns button");
+  
+  // تعيين الحساب الافتراضي الأول (عزوز) كـ مفعّل مبدئياً
+  accountButtons.forEach(b => {
+    if (b.getAttribute("data-account") === App.selectedAccount) {
+      b.classList.add("selected");
+    }
+  });
+
+  accountButtons.forEach(btn => {
+    btn.addEventListener("click", function (e) {
+      e.preventDefault();
+      accountButtons.forEach(b => b.classList.remove("selected"));
+      this.classList.add("selected");
+      App.selectedAccount = this.getAttribute("data-account");
+      const pinInput = App.$("loginPin");
+      if (pinInput) pinInput.value = "";
+      App.$("loginStatusInfo").textContent = "تم اختيار حساب: " + (App.accountNames[App.selectedAccount] || App.selectedAccount);
+    });
+  });
+
+  // تفعيل زر الدخول
+  const loginBtn = App.$("loginBtn");
+  if (loginBtn) {
+    loginBtn.addEventListener("click", function (e) {
+      e.preventDefault();
+      App.login();
+    });
+  }
+
+  // تفعيل الضغط على زر Enter داخل حقل PIN
+  const pinInput = App.$("loginPin");
+  if (pinInput) {
+    pinInput.addEventListener("keydown", e => {
+      if (e.key === "Enter") {
+        e.preventDefault();
+        App.login();
+      }
+    });
+  }
+});
+</script>
+</body>
+</html>
