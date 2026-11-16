@@ -165,14 +165,14 @@ footer{text-align:center;color:var(--muted);font-size:11px;padding:15px}
     <p class="muted">محفظتنا العائلية الخاصة</p>
 
     <div class="account-choice">
-      <button class="btn btn-light selected" data-account="azoz" onclick="chooseAccount('azoz',this)">عزوز</button>
-      <button class="btn btn-light" data-account="sahab" onclick="chooseAccount('sahab',this)">سحاب</button>
-      <button class="btn btn-light" data-account="mama" onclick="chooseAccount('mama',this)">ماما</button>
+      <button type="button" class="btn btn-light selected" data-account="azoz" onclick="chooseAccount('azoz',this)">عزوز</button>
+      <button type="button" class="btn btn-light" data-account="sahab" onclick="chooseAccount('sahab',this)">سحاب</button>
+      <button type="button" class="btn btn-light" data-account="mama" onclick="chooseAccount('mama',this)">ماما</button>
     </div>
 
-    <label>الرقم السري</label>
+    <label for="loginPin">الرقم السري</label>
     <input id="loginPin" type="password" inputmode="numeric" placeholder="أدخل الرقم السري" autocomplete="current-password">
-    <button class="btn btn-block" id="loginBtn" onclick="login()">دخول</button>
+    <button type="button" class="btn btn-block" id="loginBtn" onclick="login()">دخول</button>
     <p class="small-info">اختر حسابك وأدخل الرقم السري الخاص فيه.</p>
   </div>
 </section>
@@ -508,6 +508,7 @@ function $(id){return document.getElementById(id)}
 
 function showToast(message,error=false){
   const el=$("toast");
+  if(!el)return;
   el.textContent=message;
   el.classList.remove("hidden","error");
   if(error)el.classList.add("error");
@@ -528,22 +529,35 @@ function escapeHTML(value){
 function chooseAccount(id,button){
   selectedAccount=id;
   document.querySelectorAll(".account-choice button").forEach(b=>b.classList.remove("selected"));
-  button.classList.add("selected");
+  if(button){
+    button.classList.add("selected");
+  }else{
+    const btn = document.querySelector(`.account-choice button[data-account="${id}"]`);
+    if(btn)btn.classList.add("selected");
+  }
 }
 
 async function api(action,data={}){
   const headers={"Content-Type":"application/json","apikey":SUPABASE_KEY};
   if(token)headers.Authorization="Bearer "+token;
 
-  const response=await fetch(API_URL,{
-    method:"POST",
-    headers,
-    body:JSON.stringify({action,...data})
-  });
+  let response;
+  try{
+    response=await fetch(API_URL,{
+      method:"POST",
+      headers,
+      body:JSON.stringify({action,...data})
+    });
+  }catch(err){
+    throw new Error("تعذر الاتصال بالسيرفر (Failed to fetch)");
+  }
 
   let result;
-  try{result=await response.json()}
-  catch(e){throw new Error("استجابة السيرفر غير مفهومة")}
+  try{
+    result=await response.json();
+  }catch(e){
+    throw new Error("استجابة السيرفر غير مفهومة");
+  }
 
   if(!response.ok)throw new Error(result.error||"حدث خطأ في الاتصال");
   return result;
@@ -569,7 +583,8 @@ async function runLocked(key,button,fn){
 }
 
 async function login(){
-  const pin=$("loginPin").value.trim();
+  const pinInput = $("loginPin");
+  const pin = pinInput ? pinInput.value.trim() : "";
   if(!pin)return showToast("أدخل الرقم السري",true);
 
   const button=$("loginBtn");
@@ -578,7 +593,7 @@ async function login(){
       const result=await api("login",{account_id:selectedAccount,pin});
       token=result.token;
       currentUser=result.profile;
-      $("loginPin").value="";
+      if(pinInput)pinInput.value="";
       await loadData();
       $("loginScreen").classList.add("hidden");
       $("app").classList.remove("hidden");
@@ -648,7 +663,8 @@ function applyTheme(color){
   selectedColor=color||"#183d35";
   document.documentElement.style.setProperty("--main",selectedColor);
   document.documentElement.style.setProperty("--soft",hexToSoft(selectedColor));
-  $("topHeader").style.background=selectedColor;
+  const th = $("topHeader");
+  if(th)th.style.background=selectedColor;
 }
 
 function hexToSoft(hex){
@@ -738,7 +754,7 @@ function renderAccounts(){
         <strong>${escapeHTML(a.display_name||accountNames[a.id]||a.id)}</strong>
         <span class="tag">${a.blocked?"موقوف":"نشط"}</span>
       </div>
-      <button class="btn ${a.blocked?"":"btn-danger"} btn-block"
+      <button type="button" class="btn ${a.blocked?"":"btn-danger"} btn-block"
         onclick="toggleBlock('${escapeHTML(a.id)}',${!a.blocked},this)">
         ${a.blocked?"تفعيل الحساب":"إيقاف الحساب"}
       </button>
@@ -756,7 +772,7 @@ function renderAdminNotifications(){
       </div>
       <p>${escapeHTML(n.message)}</p>
       <div class="muted">${new Date(n.created_at).toLocaleString("ar-SA")}</div>
-      <button class="btn btn-danger btn-small" style="margin-top:10px"
+      <button type="button" class="btn btn-danger btn-small" style="margin-top:10px"
         onclick="deleteNotice('${escapeHTML(n.id)}',this)">حذف الإشعار</button>
     </div>
   `).join("")||'<div class="empty">ما فيه إشعارات حاليًا</div>';
@@ -850,8 +866,8 @@ function renderRewards(){
         <p>${escapeHTML(r.message||"مكافأة من العائلة")}</p>
         <div class="muted">${new Date(r.created_at).toLocaleString("ar-SA")}</div>
         ${redeemed?
-          '<button class="btn btn-light btn-block" disabled>تم الاسترداد ✓</button>':
-          `<button class="btn btn-block" onclick="redeemReward('${escapeHTML(r.id)}',this)">استرداد</button>`
+          '<button type="button" class="btn btn-light btn-block" disabled>تم الاسترداد ✓</button>':
+          `<button type="button" class="btn btn-block" onclick="redeemReward('${escapeHTML(r.id)}',this)">استرداد</button>`
         }
       </div>
     `;
@@ -1010,7 +1026,7 @@ function renderAdminLedger(){
 function chooseColor(color,dot){
   selectedColor=color;
   document.querySelectorAll(".color-dot").forEach(d=>d.classList.remove("selected"));
-  dot.classList.add("selected");
+  if(dot)dot.classList.add("selected");
   applyTheme(color);
 }
 
@@ -1053,7 +1069,14 @@ function logoutPrompt(){
   showToast("تم تسجيل الخروج");
 }
 
-$("loginPin").addEventListener("keydown",e=>{if(e.key==="Enter")login()});
+document.addEventListener("DOMContentLoaded",()=>{
+  const pinInput = $("loginPin");
+  if(pinInput){
+    pinInput.addEventListener("keydown",e=>{
+      if(e.key==="Enter")login();
+    });
+  }
+});
 </script>
 </body>
 </html>
