@@ -3,1258 +3,956 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<meta name="theme-color" content="#1b4d3e">
+<meta name="theme-color" content="#183d35">
 <title>عائلتنا الجميلة</title>
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <style>
 :root{
-  --main:#1b4d3e;
-  --main-dark:#12352a;
-  --accent:#2d6a4f;
-  --soft:#eaf2ef;
-  --bg:#f4f7f6;
-  --card:#ffffff;
-  --text:#1c2d26;
-  --muted:#657770;
-  --danger:#c93b3b;
-  --danger-bg:#fdf2f2;
-  --line:#e2ece8;
-  --shadow:0 10px 30px -5px rgba(27, 77, 62, 0.08);
-  --radius:16px;
-  --transition:all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+--main:#183d35;--main2:#24584b;--soft:#e9f1ee;
+--bg:#f3f6f5;--card:#fff;--text:#1e302b;
+--muted:#81918b;--border:#e5ece8;--red:#c34c4c;
+--gold:#d69c32;--shadow:0 8px 28px #183d3510
 }
 *{box-sizing:border-box}
-body{
-  margin:0;
-  background:var(--bg);
-  color:var(--text);
-  font-family:system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
-  min-height:100vh;
-  -webkit-font-smoothing:antialiased
-}
-button,input,select,textarea{font:inherit}
-button{cursor:pointer;border:none;background:none}
+body{margin:0;background:var(--bg);color:var(--text);font-family:Tahoma,Arial,sans-serif}
+button,input,select{font:inherit}
+button{cursor:pointer}
 .hidden{display:none!important}
-
-header{
-  background:var(--main);
-  color:white;
-  padding:20px 24px;
-  display:flex;
-  align-items:center;
-  justify-content:space-between;
-  gap:16px;
-  position:sticky;
-  top:0;
-  z-index:100;
-  box-shadow:0 4px 20px rgba(0,0,0,0.06);
-  backdrop-filter: blur(8px);
-}
-.brand{font-size:18px;font-weight:700;letter-spacing:-0.3px;display:flex;align-items:center;gap:8px}
-.header-small{font-size:12px;opacity:0.8;margin-top:4px;font-weight:400}
-
-main{max-width:960px;margin:0 auto;padding:32px 20px 60px}
-
-h1{font-size:22px;margin:0 0 6px;font-weight:700;color:var(--main-dark);letter-spacing:-0.5px}
-h2{font-size:18px;margin:0 0 16px;font-weight:600;color:var(--main-dark)}
-h3{font-size:15px;margin:0 0 10px;font-weight:600}
-p{line-height:1.6;margin:0 0 12px}
-
-.muted{color:var(--muted);font-size:13.5px}
-
-.card{
-  background:var(--card);
-  border:1px solid var(--line);
-  border-radius:var(--radius);
-  padding:24px;
-  margin-bottom:18px;
-  box-shadow:var(--shadow);
-  transition:var(--transition);
-}
-.card:hover{
-  border-color:#d0e2db;
-}
-
-.balance-grid{
-  display:grid;
-  grid-template-columns:repeat(2,1fr);
-  gap:16px;
-  margin:20px 0
-}
-.balance-box{
-  background:var(--soft);
-  padding:20px;
-  border-radius:14px;
-  border:1px solid #d4e4de;
-  transition:var(--transition);
-}
-.balance-box strong{
-  display:block;
-  font-size:28px;
-  margin-top:8px;
-  color:var(--main);
-  font-weight:700;
-  letter-spacing:-0.5px
-}
-.balance-box span{font-size:13px;color:var(--muted);font-weight:500}
-
-.menu-grid{
-  display:grid;
-  grid-template-columns:repeat(3,minmax(0,1fr));
-  gap:16px;
-  margin-top:8px
-}
-.menu-btn{
-  border:1px solid var(--line);
-  background:white;
-  border-radius:var(--radius);
-  min-height:110px;
-  padding:20px 12px;
-  color:var(--text);
-  display:flex;
-  flex-direction:column;
-  align-items:center;
-  justify-content:center;
-  gap:12px;
-  font-weight:600;
-  font-size:14px;
-  box-shadow:0 2px 8px rgba(0,0,0,0.02);
-  transition:var(--transition)
-}
-.menu-btn:hover{
-  border-color:var(--accent);
-  background:var(--soft);
-  transform: translateY(-2px);
-  box-shadow:0 8px 20px rgba(27,77,62,0.06);
-}
-.menu-icon{font-size:28px}
-
-.btn{
-  border-radius:12px;
-  padding:13px 20px;
-  background:var(--main);
-  color:white;
-  font-weight:600;
-  font-size:14px;
-  transition:var(--transition);
-  display:inline-flex;
-  align-items:center;
-  justify-content:center;
-  gap:8px
-}
-.btn:hover{
-  background:var(--accent);
-  transform: translateY(-1px);
-  box-shadow:0 6px 16px rgba(27,77,62,0.15)
-}
-.btn:active{transform: translateY(0)}
-.btn:disabled{opacity:0.5;cursor:not-allowed;transform:none!important;box-shadow:none!important}
-.btn-light{background:var(--soft);color:var(--main);border:1px solid #d4e4de}
-.btn-light:hover{background:#dcedc9;color:var(--main-dark)}
-.btn-danger{background:var(--danger-bg);color:var(--danger);border:1px solid #f9d8d8}
-.btn-danger:hover{background:var(--danger);color:white}
-.btn-small{padding:8px 14px;font-size:13px;border-radius:10px}
-.btn-block{width:100%;margin-top:14px}
-
-.back{
-  margin-bottom:20px;
-  display:inline-flex;
-  align-items:center;
-  gap:6px;
-  font-weight:600;
-  font-size:14px
-}
-
-input,select,textarea{
-  width:100%;
-  padding:12px 16px;
-  border:1px solid #d4e0db;
-  border-radius:12px;
-  background:white;
-  color:var(--text);
-  outline:none;
-  margin:8px 0 16px;
-  font-size:14.5px;
-  transition:var(--transition)
-}
-input:focus,select:focus,textarea:focus{
-  border-color:var(--main);
-  box-shadow:0 0 0 3px rgba(27,77,62,0.1)
-}
-textarea{resize:vertical;min-height:90px}
-label{font-size:13.5px;font-weight:600;display:block;margin-top:12px;color:var(--main-dark)}
-
-.row{display:flex;align-items:center;gap:12px;flex-wrap:wrap}
-.row>*{flex:1}
-
-.preset-row{display:flex;flex-wrap:wrap;gap:10px;margin:12px 0 18px}
-.preset{
-  border:1px solid #d4e0db;
-  background:white;
-  color:var(--main);
-  border-radius:10px;
-  padding:10px 18px;
-  font-weight:600;
-  font-size:13.5px;
-  transition:var(--transition)
-}
-.preset:hover{border-color:var(--main);background:var(--soft)}
-.preset.active{background:var(--main);color:white;border-color:var(--main)}
-
-.section-title{margin:28px 0 14px;font-size:17px;font-weight:700;color:var(--main-dark)}
-
-.list-item{
-  border:1px solid var(--line);
-  border-radius:14px;
-  padding:16px 20px;
-  margin:12px 0;
-  background:white;
-  box-shadow:0 2px 6px rgba(0,0,0,0.01);
-  transition:var(--transition)
-}
-.list-item:hover{border-color:#d0e2db}
-.list-item p{margin:6px 0}
-.amount{font-weight:700;color:var(--main);font-size:15px}
-
-.tag{
-  display:inline-flex;
-  align-items:center;
-  background:var(--soft);
-  color:var(--main);
-  border-radius:20px;
-  padding:4px 12px;
-  font-size:12px;
-  font-weight:600
-}
-
-.reward{
-  border:1px solid #d4e4de;
-  background:linear-gradient(135deg, #f7fbf9 0%, #edf5f1 100%);
-  border-radius:var(--radius);
-  padding:20px;
-  margin:16px 0;
-  box-shadow:0 4px 15px rgba(27,77,62,0.03)
-}
-.reward-amount{font-size:28px;font-weight:700;color:var(--main);margin:10px 0;letter-spacing:-0.5px}
-.reward.redeemed{opacity:0.6;background:#f4f6f5;border-color:var(--line)}
-
-.notice{
-  border:1px solid var(--line);
-  padding:16px 20px;
-  border-radius:14px;
-  margin:12px 0;
-  background:white
-}
-.notice-head{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:8px}
-
-.toast{
-  position:fixed;
-  bottom:24px;
-  left:50%;
-  transform:translateX(-50%);
-  z-index:99999;
-  background:var(--main-dark);
-  color:white;
-  padding:14px 24px;
-  border-radius:14px;
-  box-shadow:0 10px 30px rgba(0,0,0,0.15);
-  max-width:90%;
-  text-align:center;
-  font-weight:500;
-  font-size:14px;
-  backdrop-filter: blur(10px);
-  animation: slideUp 0.3s ease-out;
-}
-@keyframes slideUp {
-  from { transform: translate(-50%, 20px); opacity: 0; }
-  to { transform: translate(-50%, 0); opacity: 1; }
-}
-.toast.error{background:var(--danger)}
-
-.loading-overlay{
-  position:fixed;
-  top:0;left:0;
-  width:100%;height:100%;
-  background:rgba(255,255,255,0.85);
-  z-index:99999;
-  display:flex;
-  flex-direction:column;
-  align-items:center;
-  justify-content:center;
-  gap:16px;
-  font-weight:600;
-  color:var(--main);
-  backdrop-filter: blur(4px);
-}
-.spinner{
-  width:44px;height:44px;
-  border:3px solid var(--soft);
-  border-top-color:var(--main);
-  border-radius:50%;
-  animation:spin 0.7s linear infinite
-}
+header{background:var(--main);color:white;padding:18px 5%;display:flex;align-items:center;justify-content:space-between;gap:12px}
+.brand{font-size:19px;font-weight:bold}
+.header-user{font-size:13px;color:#dce9e4}
+.container{max-width:1050px;margin:auto;padding:22px 16px 60px}
+.card{background:var(--card);border:1px solid var(--border);border-radius:19px;padding:19px;margin-bottom:15px;box-shadow:var(--shadow)}
+h2,h3{margin-top:0}
+h2{font-size:21px}
+h3{font-size:16px}
+.muted{color:var(--muted);font-size:13px;line-height:1.8}
+.login-wrap{max-width:420px;margin:9vh auto;padding:18px}
+.logo{text-align:center;margin-bottom:25px}
+.logo-icon{width:65px;height:65px;border-radius:21px;background:var(--main);color:white;display:grid;place-items:center;font-size:27px;margin:auto auto 12px}
+.logo h1{font-size:23px;margin:0 0 7px}
+.field{margin:13px 0}
+.field label{display:block;font-size:13px;font-weight:bold;margin-bottom:7px}
+input,select{width:100%;padding:13px;border:1px solid var(--border);border-radius:12px;background:#fff;outline:none;color:var(--text)}
+input:focus,select:focus{border-color:var(--main2)}
+.btn{border:0;border-radius:12px;padding:12px 17px;background:var(--main);color:white;font-weight:bold}
+.btn:hover{filter:brightness(1.08)}
+.btn:disabled{opacity:.5;cursor:not-allowed}
+.btn.light{background:var(--soft);color:var(--main)}
+.btn.red{background:#fae9e9;color:var(--red)}
+.btn.gold{background:#fff3d9;color:#946313}
+.btn.full{width:100%}
+.btn.small{padding:8px 12px;font-size:12px}
+.topline{display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap}
+.grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:13px}
+.stat{background:var(--soft);border-radius:15px;padding:16px}
+.stat span{display:block;color:var(--muted);font-size:12px;margin-bottom:9px}
+.stat strong{font-size:23px;color:var(--main)}
+.stat.money{background:#e8f3ed}
+.stat.points{background:#fff4dd}
+.stat.points strong{color:#986c16}
+.nav{display:flex;gap:8px;overflow:auto;padding:4px 0 15px}
+.nav button{white-space:nowrap;border:1px solid var(--border);background:white;color:var(--main);padding:10px 14px;border-radius:12px}
+.nav button.active{background:var(--main);color:white}
+.row{display:flex;justify-content:space-between;align-items:center;gap:10px;padding:13px 0;border-bottom:1px solid var(--border)}
+.row:last-child{border-bottom:0}
+.row-title{font-weight:bold;font-size:14px}
+.row-sub{font-size:12px;color:var(--muted);margin-top:5px}
+.amount{font-weight:bold;white-space:nowrap}
+.plus{color:#26845b}.minus{color:var(--red)}
+.notice{background:#f0f5f2;border-radius:12px;padding:12px;font-size:13px;line-height:1.8;margin-bottom:10px}
+.empty{text-align:center;padding:25px;color:var(--muted);font-size:13px}
+.actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}
+.toast{position:fixed;bottom:20px;right:50%;transform:translateX(50%);background:#203d34;color:white;padding:13px 20px;border-radius:13px;z-index:20;box-shadow:var(--shadow);max-width:90%;font-size:13px}
+.loading{position:fixed;inset:0;background:#ffffffc9;z-index:30;display:grid;place-items:center;font-weight:bold;color:var(--main)}
+.spinner{width:35px;height:35px;border:4px solid var(--soft);border-top-color:var(--main);border-radius:50%;animation:spin .8s linear infinite;margin:auto auto 12px}
 @keyframes spin{to{transform:rotate(360deg)}}
-
-.login-wrap{max-width:420px;margin:60px auto;padding:20px;position:relative;z-index:10}
-.login-logo{
-  width:72px;height:72px;
-  border-radius:20px;
-  background:var(--main);
-  color:white;
-  display:grid;
-  place-items:center;
-  font-size:32px;
-  margin:0 auto 20px;
-  box-shadow:0 8px 20px rgba(27,77,62,0.2)
-}
-.login-card{text-align:center;padding:32px 24px}
-.login-card input{text-align:center;font-weight:600;letter-spacing:1px}
-
-.account-choice{display:flex;gap:10px;margin:20px 0}
-.account-choice button{
-  flex:1;
-  padding:14px 10px;
-  border:1px solid var(--line);
-  border-radius:12px;
-  font-weight:600;
-  font-size:14px;
-  transition:var(--transition);
-  background:white;
-  color:var(--text)
-}
-.account-choice button:hover{border-color:var(--main);background:var(--soft)}
-.account-choice button.selected{
-  background:var(--main)!important;
-  color:white!important;
-  border-color:var(--main)!important;
-  box-shadow:0 4px 12px rgba(27,77,62,0.2)
-}
-
-.color-options{display:flex;gap:12px;flex-wrap:wrap;margin:10px 0 16px}
-.color-dot{
-  width:38px;height:38px;
-  border-radius:50%;
-  border:3px solid white;
-  outline:2px solid #cbd5d0;
-  transition:var(--transition)
-}
-.color-dot.selected{outline:3px solid var(--main);transform:scale(1.1)}
-
-footer{text-align:center;color:var(--muted);font-size:12px;padding:30px 20px;font-weight:500}
-
+.profile-chip{background:#ffffff20;border-radius:20px;padding:8px 12px}
+hr{border:0;border-top:1px solid var(--border);margin:17px 0}
 @media(max-width:600px){
-  main{padding:20px 14px 40px}
-  .menu-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
-  .login-wrap{margin:20px auto}
+header{padding:15px}.container{padding:15px 12px 45px}
+.grid{gap:9px}.stat{padding:13px}.stat strong{font-size:19px}
+.card{padding:15px}.login-wrap{margin:5vh auto}
 }
 </style>
 </head>
 <body>
 
-<div id="loadingOverlay" class="loading-overlay hidden">
+<div id="loading" class="loading hidden">
+ <div>
   <div class="spinner"></div>
-  <div id="loadingText">جاري المعالجة...</div>
+  <div id="loadingText">جاري التحميل...</div>
+ </div>
 </div>
 
-<header id="topHeader" class="hidden">
-  <div>
-    <div class="brand">🌿 عائلتنا الجميلة</div>
-    <div class="header-small" id="headerAccount"></div>
-  </div>
-  <button type="button" class="btn btn-light btn-small" onclick="App.goHome()">الرئيسية</button>
+<header id="header" class="hidden">
+ <div>
+  <div class="brand">🌿 عائلتنا الجميلة</div>
+  <div class="header-user" id="headerName"></div>
+ </div>
+ <button class="btn light small" onclick="logout()">تسجيل الخروج</button>
 </header>
 
 <section id="loginScreen" class="login-wrap">
-  <div class="card login-card">
-    <div class="login-logo">🏡</div>
-    <h1>عائلتنا الجميلة</h1>
-    <p class="muted">اختر حسابك وأدخل الرقم السري</p>
-
-    <div class="account-choice" id="accountChoiceBtns">
-      <button type="button" data-account="azoz">عزوز</button>
-      <button type="button" data-account="sahab">سحاب</button>
-      <button type="button" data-account="mama">ماما</button>
-    </div>
-
-    <label for="loginPin">الرقم السري</label>
-    <input id="loginPin" type="password" inputmode="numeric" placeholder="أدخل الرقم السري" autocomplete="current-password">
-    <button type="button" class="btn btn-block" id="loginBtn">دخول</button>
-    <p class="muted" id="loginStatusInfo" style="margin-top:14px;font-size:13px;">جاهز لتسجيل الدخول</p>
+ <div class="logo">
+  <div class="logo-icon">🌿</div>
+  <h1>عائلتنا الجميلة</h1>
+  <p class="muted">محفظتنا العائلية ومكافآتنا</p>
+ </div>
+ <div class="card">
+  <h2>تسجيل الدخول</h2>
+  <div class="field">
+   <label>اختر الحساب</label>
+   <select id="loginAccount">
+    <option value="azoz">عزوز</option>
+    <option value="sahab">سحاب</option>
+    <option value="mama">ماما - الإدارة</option>
+   </select>
   </div>
+  <div class="field">
+   <label>الرقم السري</label>
+   <input id="loginPin" type="password" inputmode="numeric" maxlength="12" placeholder="أدخل الرقم السري">
+  </div>
+  <button class="btn full" id="loginButton" onclick="login()">دخول</button>
+  <p class="muted" style="text-align:center">سيتم حفظ تسجيل الدخول تلقائيًا على هذا الجهاز.</p>
+  <p class="muted" style="text-align:center">أهلًا بكم في عائلتنا ❤️</p>
+ </div>
 </section>
 
-<main id="app" class="hidden">
-  <section id="homePage">
-    <div class="page-heading">
-      <div>
-        <h1 id="welcomeTitle">أهلًا بك</h1>
-        <div class="muted" id="welcomeSubtitle">محفظتك العائلية</div>
-      </div>
-      <span class="tag" id="roleTag"></span>
-    </div>
+<main id="app" class="container hidden">
+ <div class="card">
+  <div class="topline">
+   <div>
+    <div class="muted">مرحبًا بك</div>
+    <h2 id="welcomeName" style="margin:5px 0">أهلًا</h2>
+   </div>
+   <span class="profile-chip" id="roleLabel"></span>
+  </div>
+ </div>
 
-    <div id="memberBalances" class="balance-grid">
-      <div class="balance-box">
-        <span>رصيد الفلوس</span>
-        <strong id="moneyValue">0.00 ر.س</strong>
-      </div>
-      <div class="balance-box">
-        <span>رصيد النقاط</span>
-        <strong id="pointsValue">0</strong>
-      </div>
-    </div>
+ <div id="memberArea">
+  <div class="grid">
+   <div class="stat money">
+    <span>💵 رصيدك المالي</span>
+    <strong id="moneyValue">0 ر.س</strong>
+   </div>
+   <div class="stat points">
+    <span>⭐ نقاطك</span>
+    <strong id="pointsValue">0</strong>
+   </div>
+  </div>
+ </div>
 
-    <div id="adminBalances" class="card hidden">
-      <h2>ملخص أرصدة العائلة</h2>
-      <div id="adminBalanceSummary"></div>
-    </div>
+ <div id="adminArea" class="hidden">
+  <div class="grid" id="adminStats"></div>
+ </div>
 
-    <h2 class="section-title">الخدمات</h2>
-    <div class="menu-grid" id="memberMenu">
-      <button type="button" class="menu-btn" onclick="App.openPage('convertPage')"><span class="menu-icon">💱</span>تحويل النقاط</button>
-      <button type="button" class="menu-btn" onclick="App.openPage('giftPage')"><span class="menu-icon">🎁</span>إرسال هدية</button>
-      <button type="button" class="menu-btn" onclick="App.openPage('purchasePage')"><span class="menu-icon">🛍️</span>شراء</button>
-      <button type="button" class="menu-btn" onclick="App.openPage('rewardsPage')"><span class="menu-icon">🎉</span>هدايا ومكافآتي</button>
-      <button type="button" class="menu-btn" onclick="App.openPage('recordsPage')"><span class="menu-icon">📒</span>سجل العمليات</button>
-      <button type="button" class="menu-btn" onclick="App.openPage('settingsPage')"><span class="menu-icon">⚙️</span>الإعدادات</button>
-    </div>
-
-    <div class="menu-grid hidden" id="adminMenu">
-      <button type="button" class="menu-btn" onclick="App.openPage('adminMoneyPage')"><span class="menu-icon">💵</span>إدارة الفلوس</button>
-      <button type="button" class="menu-btn" onclick="App.openPage('adminPointsPage')"><span class="menu-icon">⭐</span>إدارة النقاط</button>
-      <button type="button" class="menu-btn" onclick="App.openPage('adminRewardPage')"><span class="menu-icon">🎁</span>إرسال مكافأة</button>
-      <button type="button" class="menu-btn" onclick="App.openPage('adminAccountsPage')"><span class="menu-icon">👨‍👩‍👧</span>الحسابات</button>
-      <button type="button" class="menu-btn" onclick="App.openPage('adminNoticesPage')"><span class="menu-icon">🔔</span>الإشعارات</button>
-      <button type="button" class="menu-btn" onclick="App.openPage('adminRecordsPage')"><span class="menu-icon">📚</span>السجلات</button>
-      <button type="button" class="menu-btn" onclick="App.openPage('settingsPage')"><span class="menu-icon">⚙️</span>الإعدادات</button>
-    </div>
-
-    <div class="card" style="margin-top:22px">
-      <h3>حسابك</h3>
-      <div class="row">
-        <span id="accountName"></span>
-        <button type="button" class="btn btn-danger btn-small" onclick="App.logout()">تسجيل الخروج</button>
-      </div>
-    </div>
-  </section>
-
-  <!-- تحويل النقاط -->
-  <section id="convertPage" class="hidden">
-    <button type="button" class="btn btn-light back" onclick="App.goHome()">← رجوع</button>
-    <h1>تحويل النقاط</h1>
-    <p class="muted">اختر عدد النقاط، وبتوصلك بطاقة استرداد بقيمتها المالية (كل 1000 نقطة = 5 ريالات).</p>
-    <div class="card">
-      <div class="balance-box">
-        <span>رصيد نقاطك الحالي</span>
-        <strong id="convertPointsBalance">0</strong>
-      </div>
-      <label>كم نقطة تبي تحوّل؟</label>
-      <div class="preset-row">
-        <button type="button" class="preset" onclick="App.selectPreset('convert',25,this)">25</button>
-        <button type="button" class="preset" onclick="App.selectPreset('convert',50,this)">50</button>
-        <button type="button" class="preset" onclick="App.selectPreset('convert',100,this)">100</button>
-        <button type="button" class="preset" onclick="App.selectPreset('convert',1000,this)">1000</button>
-      </div>
-      <input id="convertAmount" type="number" min="25" placeholder="عدد النقاط" oninput="App.calcConversionPreview()">
-      <div class="small-info" id="convertPreview">قيمة الاسترداد المتوقعة: 0.00 ر.س</div>
-      <button type="button" class="btn btn-block" onclick="App.requestConversion()">إنشاء بطاقة الاسترداد</button>
-    </div>
-  </section>
-
-  <!-- الهدايا -->
-  <section id="giftPage" class="hidden">
-    <button type="button" class="btn btn-light back" onclick="App.goHome()">← رجوع</button>
-    <h1>إرسال هدية</h1>
-    <p class="muted">أرسل نقاطًا لأحد أفراد العائلة.</p>
-    <div class="card">
-      <label>المستلم</label>
-      <select id="giftTo">
-        <option value="sahab">سحاب</option>
-        <option value="azoz">عزوز</option>
-        <option value="mama">ماما</option>
-      </select>
-      <label>عدد النقاط</label>
-      <div class="preset-row">
-        <button type="button" class="preset" onclick="App.selectPreset('gift',25,this)">25</button>
-        <button type="button" class="preset" onclick="App.selectPreset('gift',50,this)">50</button>
-        <button type="button" class="preset" onclick="App.selectPreset('gift',100,this)">100</button>
-        <button type="button" class="preset" onclick="App.selectPreset('gift',500,this)">500</button>
-      </div>
-      <input id="giftPoints" type="number" min="25" placeholder="عدد النقاط">
-      <label>رسالة مع الهدية (اختياري)</label>
-      <textarea id="giftMessage" maxlength="250" placeholder="اكتب رسالة لطيفة..."></textarea>
-      <button type="button" class="btn btn-block" onclick="App.sendGift()">إرسال الهدية 🎁</button>
-    </div>
-  </section>
-
-  <!-- الشراء -->
-  <section id="purchasePage" class="hidden">
-    <button type="button" class="btn btn-light back" onclick="App.goHome()">← رجوع</button>
-    <h1>الشراء</h1>
-    <p class="muted">اختر القسم واكتب طلبك والسعر. يتم الخصم من رصيد الفلوس.</p>
-    <div class="card">
-      <div class="balance-box">
-        <span>رصيدك المتاح</span>
-        <strong id="purchaseBalance">0.00 ر.س</strong>
-      </div>
-      <label>قسم الشراء</label>
-      <select id="purchaseCategory">
-        <option value="ألعاب">ألعاب</option>
-        <option value="Roblox">Roblox</option>
-        <option value="بقالة">بقالة</option>
-        <option value="مطاعم">مطاعم</option>
-        <option value="مستلزمات مدرسية">مستلزمات مدرسية</option>
-        <option value="ملابس">ملابس</option>
-        <option value="إلكترونيات">إلكترونيات</option>
-        <option value="أخرى">أخرى</option>
-      </select>
-      <label>اسم المنتج أو الطلب</label>
-      <input id="purchaseItem" maxlength="100" placeholder="مثال: وجبة أو بطاقة Roblox">
-      <label>السعر بالريال</label>
-      <input id="purchaseAmount" type="number" min="0.01" step="0.01" placeholder="مثال: 15">
-      <button type="button" class="btn btn-block" onclick="App.makePurchase()">اشتري الآن</button>
-    </div>
-    <h2 class="section-title">مشترياتي السابقة</h2>
-    <div id="purchaseHistory"></div>
-  </section>
-
-  <!-- المكافآت -->
-  <section id="rewardsPage" class="hidden">
-    <button type="button" class="btn btn-light back" onclick="App.goHome()">← رجوع</button>
-    <h1>هدايا ومكافآتي 🎁</h1>
-    <p class="muted">استعرض البطاقات والمكافآت واستردها إلى رصيدك.</p>
-    <div id="rewardsList"></div>
-  </section>
-
-  <!-- السجلات -->
-  <section id="recordsPage" class="hidden">
-    <button type="button" class="btn btn-light back" onclick="App.goHome()">← رجوع</button>
-    <h1>سجل العمليات</h1>
-    <div id="memberLedger"></div>
-  </section>
-
-  <!-- ماما: إدارة الفلوس -->
-  <section id="adminMoneyPage" class="hidden">
-    <button type="button" class="btn btn-light back" onclick="App.goHome()">← رجوع</button>
-    <h1>إدارة الفلوس 💵</h1>
-    <div class="card">
-      <h2>إضافة أو خصم فلوس</h2>
-      <label>الحساب المستهدف</label>
-      <select id="adminMoneyAccount">
-        <option value="azoz">عزوز</option>
-        <option value="sahab">سحاب</option>
-      </select>
-      <label>العملية</label>
-      <select id="adminMoneySign">
-        <option value="1">إضافة رصيد (+)</option>
-        <option value="-1">خصم رصيد (-)</option>
-      </select>
-      <label>المبلغ بالريال</label>
-      <input id="adminMoneyAmount" type="number" min="0.01" step="0.01" placeholder="المبلغ">
-      <label>السبب</label>
-      <input id="adminMoneyReason" placeholder="سبب التعديل">
-      <button type="button" class="btn btn-block" onclick="App.adminAdjustMoney()">تنفيذ التعديل المالي</button>
-    </div>
-  </section>
-
-  <!-- ماما: إدارة النقاط -->
-  <section id="adminPointsPage" class="hidden">
-    <button type="button" class="btn btn-light back" onclick="App.goHome()">← رجوع</button>
-    <h1>إدارة النقاط ⭐</h1>
-    <div class="card">
-      <h2>إضافة أو خصم نقاط</h2>
-      <label>الحساب المستهدف</label>
-      <select id="adminPointsAccount">
-        <option value="azoz">عزوز</option>
-        <option value="sahab">سحاب</option>
-      </select>
-      <label>العملية</label>
-      <select id="adminPointsSign">
-        <option value="1">إضافة نقاط (+)</option>
-        <option value="-1">خصم نقاط (-)</option>
-      </select>
-      <label>عدد النقاط</label>
-      <input id="adminPointsAmount" type="number" min="1" placeholder="عدد النقاط">
-      <label>السبب</label>
-      <input id="adminPointsReason" placeholder="سبب التعديل">
-      <button type="button" class="btn btn-block" onclick="App.adminAdjustPoints()">تنفيذ تعديل النقاط</button>
-    </div>
-  </section>
-
-  <!-- ماما: إرسال مكافأة -->
-  <section id="adminRewardPage" class="hidden">
-    <button type="button" class="btn btn-light back" onclick="App.goHome()">← رجوع</button>
-    <h1>إرسال مكافأة 🎁</h1>
-    <div class="card">
-      <label>إلى حساب</label>
-      <select id="adminRewardAccount">
-        <option value="azoz">عزوز</option>
-        <option value="sahab">سحاب</option>
-      </select>
-      <label>عنوان البطاقة</label>
-      <input id="adminRewardTitle" value="مكافأة من ماما">
-      <label>رسالة المكافأة</label>
-      <textarea id="adminRewardMessage" placeholder="سبب المكافأة..."></textarea>
-      <label>نوع المكافأة</label>
-      <select id="adminRewardUnit">
-        <option value="money">فلوس (ريال)</option>
-        <option value="points">نقاط</option>
-      </select>
-      <label>الكمية</label>
-      <input id="adminRewardAmount" type="number" min="0.01" step="0.01" placeholder="المبلغ أو النقاط">
-      <button type="button" class="btn btn-block" onclick="App.sendAdminRewardCard()">إرسال بطاقة المكافأة</button>
-    </div>
-  </section>
-
-  <!-- ماما: إدارة الحسابات -->
-  <section id="adminAccountsPage" class="hidden">
-    <button type="button" class="btn btn-light back" onclick="App.goHome()">← رجوع</button>
-    <h1>إدارة الحسابات</h1>
-    <div id="accountsList"></div>
-  </section>
-
-  <!-- ماما: الإشعارات -->
-  <section id="adminNoticesPage" class="hidden">
-    <button type="button" class="btn btn-light back" onclick="App.goHome()">← رجوع</button>
-    <h1>إدارة الإشعارات</h1>
-    <div id="adminNotifications"></div>
-  </section>
-
-  <!-- ماما: السجلات -->
-  <section id="adminRecordsPage" class="hidden">
-    <button type="button" class="btn btn-light back" onclick="App.goHome()">← رجوع</button>
-    <h1>سجلات العائلة</h1>
-    <label>اختر الحساب</label>
-    <select id="adminRecordsAccount" onchange="App.loadAdminRecords()">
-      <option value="azoz">عزوز</option>
-      <option value="sahab">سحاب</option>
-    </select>
-    <div id="adminLedger"></div>
-  </section>
-
-  <!-- الإعدادات -->
-  <section id="settingsPage" class="hidden">
-    <button type="button" class="btn btn-light back" onclick="App.goHome()">← رجوع</button>
-    <h1>الإعدادات ⚙️</h1>
-    <div class="card">
-      <h2>الاسم والمظهر</h2>
-      <label>الاسم الظاهر</label>
-      <input id="settingsName" maxlength="30">
-      <label>لون التطبيق</label>
-      <div class="color-options">
-        <button type="button" class="color-dot" style="background:#1b4d3e" onclick="App.chooseColor('#1b4d3e',this)"></button>
-        <button type="button" class="color-dot" style="background:#2b5c8f" onclick="App.chooseColor('#2b5c8f',this)"></button>
-        <button type="button" class="color-dot" style="background:#6b3b82" onclick="App.chooseColor('#6b3b82',this)"></button>
-        <button type="button" class="color-dot" style="background:#9e4c2b" onclick="App.chooseColor('#9e4c2b',this)"></button>
-      </div>
-      <button type="button" class="btn btn-block" onclick="App.saveSettings()">حفظ الإعدادات</button>
-    </div>
-    <div class="card">
-      <h2>تغيير الرقم السري PIN</h2>
-      <label>الرقم السري الحالي</label>
-      <input id="oldPin" type="password" inputmode="numeric">
-      <label>الرقم السري الجديد</label>
-      <input id="newPin" type="password" inputmode="numeric">
-      <button type="button" class="btn btn-block" onclick="App.changePin()">تغيير الرقم السري</button>
-    </div>
-  </section>
+ <div class="nav" id="navigation"></div>
+ <section id="pageContent"></section>
 </main>
 
-<footer id="footer" class="hidden">عائلتنا الجميلة · محفظة عائلية خاصة</footer>
 <div id="toast" class="toast hidden"></div>
 
 <script>
-const SUPABASE_URL = "https://ayfxtomfqrantxmpqgof.supabase.co";
-const SUPABASE_KEY = "sb_publishable_2d8TzhMCRIuc6daKrObBGA_7i0jUIxe";
-const API_URL = SUPABASE_URL + "/functions/v1/family-api";
+const API_URL="https://ayfxtomfqrantxmpqgof.supabase.co/functions/v1/family-api";
+const API_KEY="sb_publishable_2d8TzhMCRIuc6daKrObBGA_7i0jUIxe";
 
-const App = {
-  selectedAccount: "azoz",
-  currentUser: null,
-  token: null,
-  currentData: null,
-  selectedColor: "#1b4d3e",
-  toastTimer: null,
-  isBusy: false,
+const names={azoz:"عزوز",sahab:"سحاب",mama:"ماما"};
+const CHILDREN=["azoz","sahab"];
 
-  accountNames: {
-    azoz: "عزوز",
-    sahab: "سحاب",
-    mama: "ماما"
-  },
+let token="";
+let currentUser=null;
+let appData={};
+let currentPage="home";
+let adminTarget="azoz";
 
-  $(id) { return document.getElementById(id); },
+function el(id){return document.getElementById(id)}
 
-  showLoading(show, text = "جاري المعالجة...") {
-    const el = this.$("loadingOverlay");
-    if (el) {
-      this.$("loadingText").textContent = text;
-      el.classList.toggle("hidden", !show);
-    }
-  },
+function escapeHTML(value){
+ return String(value??"").replace(/[&<>"']/g,c=>({
+  "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"
+ }[c]));
+}
 
-  showToast(message, error = false) {
-    const el = this.$("toast");
-    if (!el) return;
-    el.textContent = message;
-    el.classList.remove("hidden", "error");
-    if (error) el.classList.add("error");
-    clearTimeout(this.toastTimer);
-    this.toastTimer = setTimeout(() => el.classList.add("hidden"), 3500);
-  },
+function money(value){
+ return (Number(value)||0).toLocaleString("ar-SA",{maximumFractionDigits:2})+" ر.س";
+}
 
-  money(value) {
-    return Number(value || 0).toFixed(2) + " ر.س";
-  },
+function points(value){
+ return (Number(value)||0).toLocaleString("ar-SA");
+}
 
-  escapeHTML(value) {
-    return String(value ?? "").replace(/[&<>"']/g, c => ({
-      "&": "&", "<": "<", ">": ">", '"': """, "'": "'"
-    }[c]));
-  },
+function showLoading(show,text="جاري التحميل..."){
+ el("loadingText").textContent=text;
+ el("loading").classList.toggle("hidden",!show);
+}
 
-  async api(action, data = {}) {
-    const headers = { "Content-Type": "application/json", "apikey": SUPABASE_KEY };
-    if (this.token) headers.Authorization = "Bearer " + this.token;
+let toastTimer;
+function toast(message){
+ el("toast").textContent=message;
+ el("toast").classList.remove("hidden");
+ clearTimeout(toastTimer);
+ toastTimer=setTimeout(()=>el("toast").classList.add("hidden"),3000);
+}
 
-    let response;
-    try {
-      response = await fetch(API_URL, {
-        method: "POST",
-        headers,
-        body: JSON.stringify({ action, ...data })
-      });
-    } catch (err) {
-      throw new Error("تعذر الاتصال بالخادم، تحقق من الإنترنت أو إعدادات الشبكة.");
-    }
+function isAdmin(){
+ return currentUser?.id==="mama"&&currentUser?.role==="admin";
+}
 
-    let result;
-    try {
-      result = await response.json();
-    } catch (e) {
-      throw new Error("استجابة الخادم غير صالحة.");
-    }
+async function api(action,data={}){
+ const headers={
+  "Content-Type":"application/json",
+  "apikey":API_KEY
+ };
 
-    if (!response.ok) throw new Error(result.error || "حدث خطأ غير متوقع في الخادم");
-    return result;
-  },
+ if(token)headers.Authorization="Bearer "+token;
 
-  async login() {
-    if (this.isBusy) return;
-    const pinInput = this.$("loginPin");
-    const pin = pinInput ? pinInput.value.trim() : "";
-    if (!pin) return this.showToast("أدخل الرقم السري", true);
+ const res=await fetch(API_URL,{
+  method:"POST",
+  headers,
+  body:JSON.stringify({action,...data})
+ });
 
-    this.isBusy = true;
-    this.showLoading(true, "جاري التحقق وتسجيل الدخول...");
-    this.$("loginStatusInfo").textContent = "جاري التحقق من البيانات...";
+ let result={};
+ try{result=await res.json()}catch{}
 
-    try {
-      const result = await this.api("login", { account_id: this.selectedAccount, pin });
-      this.token = result.token;
-      this.currentUser = result.profile;
-      if (pinInput) pinInput.value = "";
-      
-      await this.loadData();
-      
-      this.$("loginScreen").classList.add("hidden");
-      this.$("app").classList.remove("hidden");
-      this.$("topHeader").classList.remove("hidden");
-      this.$("footer").classList.remove("hidden");
-      
-      this.showToast("تم تسجيل الدخول بنجاح 🎉");
-      this.goHome();
-    } catch (error) {
-      this.showToast(error.message, true);
-      this.$("loginStatusInfo").textContent = error.message;
-    } finally {
-      this.isBusy = false;
-      this.showLoading(false);
-    }
-  },
+ if(!res.ok||result.error){
+  throw new Error(result.error||"تعذر تنفيذ الطلب");
+ }
 
-  async loadData(target) {
-    const data = await this.api("get", target ? { account_id: target } : {});
-    this.currentData = data;
-    if (data.profile) {
-      this.currentUser = data.profile;
-      this.accountNames[data.profile.id] = data.profile.display_name || this.accountNames[data.profile.id];
-    }
-    this.renderHome();
-    return data;
-  },
+ return result;
+}
 
-  applyTheme(color) {
-    this.selectedColor = color || "#1b4d3e";
-    document.documentElement.style.setProperty("--main", this.selectedColor);
-    document.documentElement.style.setProperty("--soft", this.hexToSoft(this.selectedColor));
-    const th = this.$("topHeader");
-    if (th) th.style.background = this.selectedColor;
-  },
+/* تسجيل الدخول مع حفظ الجلسة */
+async function login(){
+ const account_id=el("loginAccount").value;
+ const pin=el("loginPin").value.trim();
 
-  hexToSoft(hex) {
-    try {
-      const n = parseInt(hex.replace("#", ""), 16);
-      const r = (n >> 16) & 255, g = (n >> 8) & 255, b = n & 255;
-      return `rgba(${r},${g},${b},0.08)`;
-    } catch (e) { return "rgba(27,77,62,0.08)"; }
-  },
+ if(!pin)return toast("أدخل الرقم السري");
 
-  renderHome() {
-    if (!this.currentData) return;
-    const profile = this.currentData.profile || this.currentUser;
-    const admin = profile.role === "admin";
-    const name = profile.display_name || this.accountNames[profile.id] || "مستخدم";
+ const button=el("loginButton");
+ button.disabled=true;
+ showLoading(true,"جاري تسجيل الدخول...");
 
-    this.$("welcomeTitle").textContent = "أهلًا " + name;
-    this.$("welcomeSubtitle").textContent = admin ? "إدارة المحفظة العائلية" : "محفظتك العائلية";
-    this.$("headerAccount").textContent = name;
-    this.$("accountName").textContent = name;
-    this.$("roleTag").textContent = admin ? "ماما · إدارة" : "عضو العائلة";
+ try{
+  const result=await api("login",{account_id,pin});
 
-    this.$("memberMenu").classList.toggle("hidden", admin);
-    this.$("adminMenu").classList.toggle("hidden", !admin);
-    this.$("memberBalances").classList.toggle("hidden", admin);
-    this.$("adminBalances").classList.toggle("hidden", !admin);
-
-    if (!admin) {
-      const balance = this.currentData.balance || {};
-      this.$("moneyValue").textContent = this.money(balance.money);
-      this.$("pointsValue").textContent = Number(balance.points || 0).toLocaleString("en");
-      this.$("convertPointsBalance").textContent = Number(balance.points || 0).toLocaleString("en");
-      this.$("purchaseBalance").textContent = this.money(balance.money);
-      if (document.activeElement !== this.$("settingsName")) {
-        this.$("settingsName").value = profile.display_name || "";
-      }
-    } else {
-      this.renderAdminSummary();
-      this.renderAccounts();
-      this.renderAdminNotifications();
-      if (document.activeElement !== this.$("settingsName")) {
-        this.$("settingsName").value = profile.display_name || "";
-      }
-    }
-
-    this.applyTheme(this.currentData.settings?.theme_color || profile.theme_color || "#1b4d3e");
-  },
-
-  renderAdminSummary() {
-    const balances = this.currentData.allBalances || [];
-    this.$("adminBalanceSummary").innerHTML = balances.map(b => `
-      <div class="list-item">
-        <strong>${this.escapeHTML(this.accountNames[b.account_id] || b.account_id)}</strong>
-        <p>الفلوس: <b>${this.money(b.money)}</b></p>
-        <p>النقاط: <b>${Number(b.points || 0).toLocaleString("en")}</b></p>
-      </div>
-    `).join("") || '<div class="empty">لا توجد أرصدة</div>';
-  },
-
-  renderAccounts() {
-    const accounts = this.currentData.accounts || [];
-    this.$("accountsList").innerHTML = accounts.map(a => `
-      <div class="list-item">
-        <div class="row">
-          <strong>${this.escapeHTML(a.display_name || this.accountNames[a.id] || a.id)}</strong>
-          <span class="tag">${a.blocked ? "موقوف" : "نشط"}</span>
-        </div>
-        <button type="button" class="btn ${a.blocked ? "" : "btn-danger"} btn-block" onclick="App.toggleBlock('${this.escapeHTML(a.id)}', ${!a.blocked})">
-          ${a.blocked ? "تفعيل الحساب" : "إيقاف الحساب"}
-        </button>
-      </div>
-    `).join("") || '<div class="empty">لا توجد حسابات</div>';
-  },
-
-  renderAdminNotifications() {
-    const notices = this.currentData.notifications || [];
-    this.$("adminNotifications").innerHTML = notices.map(n => `
-      <div class="notice">
-        <div class="notice-head">
-          <strong>${this.escapeHTML(n.title)}</strong>
-          <span class="tag">${this.escapeHTML(this.accountNames[n.account_id] || n.account_id)}</span>
-        </div>
-        <p>${this.escapeHTML(n.message)}</p>
-        <button type="button" class="btn btn-danger btn-small" style="margin-top:10px" onclick="App.deleteNotice('${this.escapeHTML(n.id)}')">حذف</button>
-      </div>
-    `).join("") || '<div class="empty">لا توجد إشعارات</div>';
-  },
-
-  async openPage(id) {
-    document.querySelectorAll("main>section").forEach(s => s.classList.add("hidden"));
-    this.$(id).classList.remove("hidden");
-    window.scrollTo({ top: 0, behavior: "smooth" });
-
-    this.showLoading(true, "جاري التحميل...");
-    try {
-      if (id === "adminRecordsPage") {
-        await this.loadAdminRecords();
-      } else {
-        await this.loadData();
-        if (id === "rewardsPage") this.renderRewards();
-        if (id === "recordsPage") this.renderMemberLedger();
-        if (id === "purchasePage") this.renderPurchases();
-      }
-    } catch (e) {
-      this.showToast(e.message, true);
-    } finally {
-      this.showLoading(false);
-    }
-  },
-
-  goHome() {
-    document.querySelectorAll("main>section").forEach(s => s.classList.add("hidden"));
-    this.$("homePage").classList.remove("hidden");
-    window.scrollTo({ top: 0, behavior: "smooth" });
-  },
-
-  selectPreset(type, value, button) {
-    const input = type === "convert" ? "convertAmount" : "giftPoints";
-    this.$(input).value = value;
-    const parent = button.parentElement;
-    parent.querySelectorAll(".preset").forEach(b => b.classList.remove("active"));
-    button.classList.add("active");
-    if (type === "convert") this.calcConversionPreview();
-  },
-
-  calcConversionPreview() {
-    const pts = Number(this.$("convertAmount").value || 0);
-    const val = (pts / 1000) * 5;
-    this.$("convertPreview").textContent = "قيمة الاسترداد المتوقعة: " + this.money(val);
-  },
-
-  async requestConversion() {
-    const points = Number(this.$("convertAmount").value);
-    if (!Number.isInteger(points) || points <= 0) return this.showToast("أدخل عدد نقاط صحيح", true);
-
-    this.showLoading(true, "جاري إنشاء البطاقة...");
-    try {
-      const res = await this.api("convert", { points });
-      await this.loadData();
-      this.$("convertAmount").value = "";
-      this.$("convertPreview").textContent = "قيمة الاسترداد المتوقعة: 0.00 ر.س";
-      this.showToast("تم إنشاء بطاقة الاسترداد بقيمة " + this.money(res.money));
-      this.goHome();
-    } catch (e) {
-      this.showToast(e.message, true);
-    } finally {
-      this.showLoading(false);
-    }
-  },
-
-  async sendGift() {
-    const to = this.$("giftTo").value;
-    const points = Number(this.$("giftPoints").value);
-    const message = this.$("giftMessage").value.trim();
-
-    if (!Number.isInteger(points) || points <= 0) return this.showToast("حدد عدد النقاط", true);
-    if (to === this.currentUser.id) return this.showToast("لا يمكنك إرسال هدية لنفسك", true);
-
-    this.showLoading(true, "جاري إرسال الهدية...");
-    try {
-      await this.api("gift", { to, points, message });
-      await this.loadData();
-      this.$("giftPoints").value = "";
-      this.$("giftMessage").value = "";
-      this.showToast("تم إرسال الهدية بنجاح 🎁");
-      this.goHome();
-    } catch (e) {
-      this.showToast(e.message, true);
-    } finally {
-      this.showLoading(false);
-    }
-  },
-
-  renderRewards() {
-    const rewards = this.currentData.rewards || [];
-    this.$("rewardsList").innerHTML = rewards.map(r => {
-      const redeemed = r.status === "redeemed";
-      return `
-        <div class="reward ${redeemed ? "redeemed" : ""}">
-          <div class="row">
-            <strong>🎁 ${this.escapeHTML(r.title)}</strong>
-            <span class="tag">${redeemed ? "تم الاسترداد" : "بطاقة نشطة"}</span>
-          </div>
-          <div class="reward-amount">${Number(r.amount).toFixed(2)} ${r.unit === "money" ? "ريال" : "نقطة"}</div>
-          <p>${this.escapeHTML(r.message || "")}</p>
-          ${redeemed ? '<button class="btn btn-light btn-block" disabled>تم الاسترداد ✓</button>' : `<button class="btn btn-block" onclick="App.redeemReward('${this.escapeHTML(r.id)}')">استرداد وإضافة لرصيدي</button>`}
-        </div>
-      `;
-    }).join("") || '<div class="empty">لا توجد بطاقات أو مكافآت حالياً</div>';
-  },
-
-  async redeemReward(id) {
-    this.showLoading(true, "جاري الاسترداد...");
-    try {
-      await this.api("redeem", { reward_id: id });
-      await this.loadData();
-      this.renderRewards();
-      this.showToast("تم استرداد البطاقة وإضافة الرصيد بنجاح!");
-    } catch (e) {
-      this.showToast(e.message, true);
-    } finally {
-      this.showLoading(false);
-    }
-  },
-
-  async makePurchase() {
-    const category = this.$("purchaseCategory").value;
-    const item = this.$("purchaseItem").value.trim();
-    const amount = Number(this.$("purchaseAmount").value);
-
-    if (!item) return this.showToast("اكتب اسم المنتج أو الطلب", true);
-    if (isNaN(amount) || amount <= 0) return this.showToast("أدخل سعرًا صحيحًا", true);
-
-    this.showLoading(true, "جاري إتمام الشراء...");
-    try {
-      await this.api("purchase", { category, item, amount });
-      await this.loadData();
-      this.renderPurchases();
-      this.$("purchaseItem").value = "";
-      this.$("purchaseAmount").value = "";
-      this.showToast("تم الشراء بنجاح!");
-    } catch (e) {
-      this.showToast(e.message, true);
-    } finally {
-      this.showLoading(false);
-    }
-  },
-
-  renderPurchases() {
-    const purchases = (this.currentData.ledger || []).filter(l => l.type === "purchase");
-    this.$("purchaseHistory").innerHTML = purchases.map(p => `
-      <div class="list-item">
-        <div class="row">
-          <strong>${this.escapeHTML(p.title)}</strong>
-          <span class="amount">${this.money(Math.abs(p.money_change))}</span>
-        </div>
-        <p>${this.escapeHTML(p.details || "")}</p>
-      </div>
-    `).join("") || '<div class="empty">لا توجد مشتريات سابقة</div>';
-  },
-
-  renderMemberLedger() {
-    const ledger = this.currentData.ledger || [];
-    this.$("memberLedger").innerHTML = ledger.map(l => {
-      const m = Number(l.money_change || 0);
-      const p = Number(l.points_change || 0);
-      const badge = m !== 0 ? (m > 0 ? `+${this.money(m)}` : `-${this.money(Math.abs(m))}`) : (p > 0 ? `+${p} نقطة` : `${p} نقطة`);
-      return `
-        <div class="list-item">
-          <div class="row">
-            <strong>${this.escapeHTML(l.title)}</strong>
-            <span class="tag">${badge}</span>
-          </div>
-          <p>${this.escapeHTML(l.details || "")}</p>
-        </div>
-      `;
-    }).join("") || '<div class="empty">لا توجد عمليات مسجلة</div>';
-  },
-
-  async adminAdjustMoney() {
-    const account_id = this.$("adminMoneyAccount").value;
-    const sign = Number(this.$("adminMoneySign").value);
-    const amount = Number(this.$("adminMoneyAmount").value) * sign;
-    const reason = this.$("adminMoneyReason").value.trim();
-
-    if (isNaN(amount) || amount === 0) return this.showToast("أدخل مبلغًا صحيحًا", true);
-
-    this.showLoading(true, "جاري تنفيذ التعديل...");
-    try {
-      await this.api("admin_adjust", { account_id, unit: "money", amount, reason });
-      await this.loadData();
-      this.$("adminMoneyAmount").value = "";
-      this.$("adminMoneyReason").value = "";
-      this.showToast("تم تحديث الرصيد بنجاح");
-    } catch (e) {
-      this.showToast(e.message, true);
-    } finally {
-      this.showLoading(false);
-    }
-  },
-
-  async adminAdjustPoints() {
-    const account_id = this.$("adminPointsAccount").value;
-    const sign = Number(this.$("adminPointsSign").value);
-    const amount = Number(this.$("adminPointsAmount").value) * sign;
-    const reason = this.$("adminPointsReason").value.trim();
-
-    if (isNaN(amount) || amount === 0) return this.showToast("أدخل عدد نقاط صحيح", true);
-
-    this.showLoading(true, "جاري تنفيذ تعديل النقاط...");
-    try {
-      await this.api("admin_adjust", { account_id, unit: "points", amount, reason });
-      await this.loadData();
-      this.$("adminPointsAmount").value = "";
-      this.$("adminPointsReason").value = "";
-      this.showToast("تم تحديث النقاط بنجاح");
-    } catch (e) {
-      this.showToast(e.message, true);
-    } finally {
-      this.showLoading(false);
-    }
-  },
-
-  async sendAdminRewardCard() {
-    const account_id = this.$("adminRewardAccount").value;
-    const title = this.$("adminRewardTitle").value.trim() || "مكافأة من ماما";
-    const message = this.$("adminRewardMessage").value.trim();
-    const unit = this.$("adminRewardUnit").value;
-    const amount = Number(this.$("adminRewardAmount").value);
-
-    if (isNaN(amount) || amount <= 0) return this.showToast("أدخل كمية صحيحة", true);
-
-    this.showLoading(true, "جاري إرسال المكافأة...");
-    try {
-      await this.api("admin_reward", { account_id, title, message, unit, amount });
-      this.$("adminRewardMessage").value = "";
-      this.$("adminRewardAmount").value = "";
-      this.showToast("تم إرسال بطاقة المكافأة بنجاح 🎁");
-    } catch (e) {
-      this.showToast(e.message, true);
-    } finally {
-      this.showLoading(false);
-    }
-  },
-
-  async toggleBlock(account_id, blocked) {
-    this.showLoading(true, "جاري التحديث...");
-    try {
-      await this.api("toggle_block", { account_id, blocked });
-      await this.loadData();
-      this.showToast(blocked ? "تم إيقاف الحساب" : "تم تفعيل الحساب");
-    } catch (e) {
-      this.showToast(e.message, true);
-    } finally {
-      this.showLoading(false);
-    }
-  },
-
-  async deleteNotice(id) {
-    this.showLoading(true, "جاري الحذف...");
-    try {
-      await this.api("delete_notification", { id });
-      await this.loadData();
-      this.showToast("تم حذف الإشعار");
-    } catch (e) {
-      this.showToast(e.message, true);
-    } finally {
-      this.showLoading(false);
-    }
-  },
-
-  async loadAdminRecords() {
-    const target = this.$("adminRecordsAccount").value;
-    const data = await this.loadData(target);
-    this.$("adminLedger").innerHTML = this.renderLedgerItems(data.ledger || []);
-  },
-
-  renderLedgerItems(items) {
-    return items.map(l => {
-      const m = Number(l.money_change || 0);
-      const p = Number(l.points_change || 0);
-      const badge = m !== 0 ? (m > 0 ? `+${this.money(m)}` : `-${this.money(Math.abs(m))}`) : (p > 0 ? `+${p} نقطة` : `${p} نقطة`);
-      return `
-        <div class="list-item">
-          <div class="row">
-            <strong>${this.escapeHTML(l.title)}</strong>
-            <span class="tag">${badge}</span>
-          </div>
-          <p>${this.escapeHTML(l.details || "")}</p>
-        </div>
-      `;
-    }).join("") || '<div class="empty">لا توجد عمليات مسجلة</div>';
-  },
-
-  chooseColor(color, dot) {
-    this.selectedColor = color;
-    document.querySelectorAll(".color-dot").forEach(d => d.classList.remove("selected"));
-    if (dot) dot.classList.add("selected");
-    this.applyTheme(color);
-  },
-
-  async saveSettings() {
-    const display_name = this.$("settingsName").value.trim();
-    this.showLoading(true, "جاري الحفظ...");
-    try {
-      await this.api("settings", { display_name, theme_color: this.selectedColor });
-      await this.loadData();
-      this.showToast("تم حفظ الإعدادات بنجاح");
-    } catch (e) {
-      this.showToast(e.message, true);
-    } finally {
-      this.showLoading(false);
-    }
-  },
-
-  async changePin() {
-    const old_pin = this.$("oldPin").value.trim();
-    const new_pin = this.$("newPin").value.trim();
-    if (!old_pin || !new_pin) return this.showToast("أدخل الرقم السري الحالي والجديد", true);
-
-    this.showLoading(true, "جاري تغيير الرقم السري...");
-    try {
-      await this.api("change_pin", { old_pin, new_pin });
-      this.$("oldPin").value = "";
-      this.$("newPin").value = "";
-      this.showToast("تم تغيير الرقم السري بنجاح");
-    } catch (e) {
-      this.showToast(e.message, true);
-    } finally {
-      this.showLoading(false);
-    }
-  },
-
-  logout() {
-    this.token = null;
-    this.currentUser = null;
-    this.currentData = null;
-    this.$("app").classList.add("hidden");
-    this.$("topHeader").classList.add("hidden");
-    this.$("footer").classList.add("hidden");
-    this.$("loginScreen").classList.remove("hidden");
-    this.applyTheme("#1b4d3e");
-    this.showToast("تم تسجيل الخروج");
-  }
-};
-
-document.addEventListener("DOMContentLoaded", () => {
-  const accountButtons = document.querySelectorAll("#accountChoiceBtns button");
-  
-  accountButtons.forEach(b => {
-    if (b.getAttribute("data-account") === App.selectedAccount) {
-      b.classList.add("selected");
-    }
-  });
-
-  accountButtons.forEach(btn => {
-    btn.addEventListener("click", function (e) {
-      e.preventDefault();
-      accountButtons.forEach(b => b.classList.remove("selected"));
-      this.classList.add("selected");
-      App.selectedAccount = this.getAttribute("data-account");
-      const pinInput = App.$("loginPin");
-      if (pinInput) pinInput.value = "";
-      App.$("loginStatusInfo").textContent = "تم اختيار حساب: " + (App.accountNames[App.selectedAccount] || App.selectedAccount);
-    });
-  });
-
-  const loginBtn = App.$("loginBtn");
-  if (loginBtn) {
-    loginBtn.addEventListener("click", function (e) {
-      e.preventDefault();
-      App.login();
-    });
+  if(!result.token||!result.profile){
+   throw new Error("بيانات تسجيل الدخول غير مكتملة");
   }
 
-  const pinInput = App.$("loginPin");
-  if (pinInput) {
-    pinInput.addEventListener("keydown", e => {
-      if (e.key === "Enter") {
-        e.preventDefault();
-        App.login();
-      }
-    });
+  token=result.token;
+  currentUser=result.profile;
+
+  await loadData();
+
+  // حفظ الجلسة تلقائيًا على الجهاز
+  localStorage.setItem("family_token",token);
+
+  openApp();
+  el("loginPin").value="";
+  toast("تم تسجيل الدخول وحفظ الحساب");
+ }catch(e){
+  token="";
+  currentUser=null;
+  appData={};
+  localStorage.removeItem("family_token");
+  toast(e.message);
+ }finally{
+  button.disabled=false;
+  showLoading(false);
+ }
+}
+
+/* إظهار التطبيق بعد نجاح الدخول أو استعادة الجلسة */
+function openApp(){
+ el("loginScreen").classList.add("hidden");
+ el("header").classList.remove("hidden");
+ el("app").classList.remove("hidden");
+ renderApp();
+}
+
+/* جلب البيانات */
+async function loadData(target){
+ const data=await api("get",target?{account_id:target}:{});
+ appData=data;
+
+ if(isAdmin()&&target)adminTarget=target;
+
+ return data;
+}
+
+async function refresh(){
+ try{
+  showLoading(true);
+  await loadData(isAdmin()&&currentPage==="account"?adminTarget:null);
+  renderApp();
+ }catch(e){
+  toast(e.message);
+ }finally{
+  showLoading(false);
+ }
+}
+
+/* تسجيل الخروج ومسح الحساب المحفوظ */
+function logout(){
+ token="";
+ currentUser=null;
+ appData={};
+ currentPage="home";
+ adminTarget="azoz";
+
+ localStorage.removeItem("family_token");
+
+ el("app").classList.add("hidden");
+ el("header").classList.add("hidden");
+ el("loginScreen").classList.remove("hidden");
+ el("loginPin").value="";
+
+ toast("تم تسجيل الخروج");
+}
+
+/* استعادة الحساب تلقائيًا عند فتح الموقع */
+async function restoreSession(){
+ const saved=localStorage.getItem("family_token");
+
+ if(!saved)return;
+
+ token=saved;
+ showLoading(true,"جاري استعادة حسابك...");
+
+ try{
+  // السيرفر يتحقق من صلاحية الجلسة ويرجع بيانات الحساب
+  const data=await api("get");
+
+  if(!data.profile){
+   throw new Error("الجلسة غير صالحة");
   }
-});
+
+  currentUser=data.profile;
+  appData=data;
+
+  openApp();
+ }catch(e){
+  token="";
+  currentUser=null;
+  appData={};
+  localStorage.removeItem("family_token");
+  el("loginScreen").classList.remove("hidden");
+  toast("انتهت الجلسة، سجل دخولك مرة ثانية");
+ }finally{
+  showLoading(false);
+ }
+}
+
+function renderApp(){
+ if(!currentUser)return;
+
+ el("headerName").textContent=currentUser.display_name||names[currentUser.id];
+ el("welcomeName").textContent=currentUser.display_name||names[currentUser.id];
+ el("roleLabel").textContent=isAdmin()?"لوحة الإدارة":"عضو العائلة";
+
+ el("memberArea").classList.toggle("hidden",isAdmin());
+ el("adminArea").classList.toggle("hidden",!isAdmin());
+
+ if(isAdmin()){
+  const balances=appData.allBalances||[];
+
+  el("adminStats").innerHTML=balances.map(b=>`
+   <div class="stat">
+    <span>${escapeHTML(names[b.account_id]||b.account_id)}</span>
+    <strong>${money(b.money)}</strong>
+    <div class="muted">${points(b.points)} نقطة</div>
+   </div>
+  `).join("");
+ }else{
+  el("moneyValue").textContent=money(appData.balance?.money);
+  el("pointsValue").textContent=points(appData.balance?.points);
+ }
+
+ renderNav();
+ renderPage();
+}
+
+function renderNav(){
+ let items=isAdmin()
+ ?[
+  ["home","الرئيسية"],
+  ["account","حسابات العائلة"],
+  ["adjust","تعديل الأرصدة"],
+  ["reward","إرسال مكافأة"],
+  ["notifications","الإشعارات"],
+  ["settings","الإعدادات"]
+ ]
+ :[
+  ["home","الرئيسية"],
+  ["convert","تحويل النقاط"],
+  ["gift","إرسال هدية"],
+  ["rewards","مكافآتي"],
+  ["purchase","المشتريات"],
+  ["ledger","السجل"],
+  ["notifications","الإشعارات"],
+  ["settings","الإعدادات"]
+ ];
+
+ el("navigation").innerHTML=items.map(([id,label])=>
+  `<button class="${currentPage===id?"active":""}" onclick="go('${id}')">${label}</button>`
+ ).join("");
+}
+
+async function go(page){
+ currentPage=page;
+ showLoading(true);
+
+ try{
+  if(isAdmin()&&page==="account"){
+   await loadData(adminTarget);
+  }else{
+   await loadData();
+  }
+
+  renderApp();
+ }catch(e){
+  toast(e.message);
+ }finally{
+  showLoading(false);
+ }
+}
+
+function renderPage(){
+ const content=el("pageContent");
+
+ if(currentPage==="home")return pageHome(content);
+ if(currentPage==="convert")return pageConvert(content);
+ if(currentPage==="gift")return pageGift(content);
+ if(currentPage==="rewards")return pageRewards(content);
+ if(currentPage==="purchase")return pagePurchase(content);
+ if(currentPage==="ledger")return pageLedger(content);
+ if(currentPage==="notifications")return pageNotifications(content);
+ if(currentPage==="settings")return pageSettings(content);
+ if(currentPage==="account")return pageAccount(content);
+ if(currentPage==="adjust")return pageAdjust(content);
+ if(currentPage==="reward")return pageAdminReward(content);
+
+ pageHome(content);
+}
+
+function pageHome(content){
+ content.innerHTML=`
+ <div class="card">
+  <h2>الرئيسية 🌿</h2>
+  <p class="muted">
+   ${isAdmin()?"من هنا تقدرين تديرين أرصدة العائلة ومكافآتهم.":"تابع رصيدك ونقاطك واستمتع بالمكافآت."}
+  </p>
+
+  ${isAdmin()?`
+   <div class="notice">حساب ماما إداري فقط، وما له رصيد مالي أو نقاط.</div>
+   <button class="btn" onclick="go('account')">إدارة حسابات العائلة</button>
+  `:`
+   <div class="notice">كل 1000 نقطة تساوي 5 ريالات عند تحويلها إلى بطاقة استرداد.</div>
+   <div class="actions">
+    <button class="btn" onclick="go('convert')">تحويل نقاطي</button>
+    <button class="btn light" onclick="go('rewards')">مكافآتي</button>
+   </div>
+  `}
+ </div>
+
+ <div class="card">
+  <h3>آخر العمليات</h3>
+  ${ledgerHTML((appData.ledger||[]).slice(0,5))}
+ </div>`;
+}
+
+function pageConvert(content){
+ const balance=Number(appData.balance?.points)||0;
+
+ content.innerHTML=`
+ <div class="card">
+  <h2>تحويل النقاط ⭐</h2>
+  <p class="muted">كل 1000 نقطة = 5 ريالات. يتم خصم النقاط عند إصدار البطاقة.</p>
+  <div class="notice">رصيدك الحالي: <b>${points(balance)} نقطة</b></div>
+
+  <div class="field">
+   <label>عدد النقاط</label>
+   <input id="convertPoints" type="number" min="1000" step="1000" placeholder="مثال: 1000">
+  </div>
+
+  <div class="grid">
+   ${[1000,2000,5000].map(n=>
+    `<button class="btn light" onclick="el('convertPoints').value=${n};updateConvertValue()">${points(n)} نقطة</button>`
+   ).join("")}
+  </div>
+
+  <p id="convertValue" class="muted"></p>
+  <button class="btn full" onclick="convertPoints()">إصدار بطاقة الاسترداد</button>
+ </div>`;
+
+ el("convertPoints").addEventListener("input",updateConvertValue);
+}
+
+function updateConvertValue(){
+ const n=Number(el("convertPoints").value);
+ el("convertValue").textContent=
+  n>0&&n%1000===0?`قيمة البطاقة: ${money(n/1000*5)}`:"";
+}
+
+async function convertPoints(){
+ const n=Number(el("convertPoints").value);
+
+ if(!Number.isSafeInteger(n)||n<1000||n%1000!==0){
+  return toast("النقاط لازم تكون من مضاعفات 1000");
+ }
+
+ if(n>Number(appData.balance.points)){
+  return toast("رصيد النقاط ما يكفي");
+ }
+
+ await runAction("convert",{points:n},"تم إصدار بطاقة الاسترداد");
+}
+
+function pageGift(content){
+ content.innerHTML=`
+ <div class="card">
+  <h2>إرسال هدية 🎁</h2>
+  <p class="muted">أرسل نقاط من رصيدك إلى فرد من العائلة.</p>
+
+  <div class="field">
+   <label>إلى</label>
+   <select id="giftTo">
+    ${CHILDREN.filter(id=>id!==currentUser.id).map(id=>
+     `<option value="${id}">${names[id]}</option>`
+    ).join("")}
+   </select>
+  </div>
+
+  <div class="field">
+   <label>عدد النقاط</label>
+   <input id="giftPoints" type="number" min="1" step="1" placeholder="عدد النقاط">
+  </div>
+
+  <div class="field">
+   <label>رسالة (اختياري)</label>
+   <input id="giftMessage" maxlength="200" placeholder="اكتب رسالة جميلة">
+  </div>
+
+  <button class="btn full" onclick="sendGift()">إرسال الهدية</button>
+ </div>`;
+}
+
+async function sendGift(){
+ const to=el("giftTo").value;
+ const n=Number(el("giftPoints").value);
+
+ if(!Number.isSafeInteger(n)||n<=0)return toast("أدخل عدد نقاط صحيح");
+ if(n>Number(appData.balance.points))return toast("رصيد النقاط ما يكفي");
+
+ await runAction("gift",{
+  to,
+  points:n,
+  message:el("giftMessage").value
+ },"تم إرسال الهدية");
+}
+
+function pageRewards(content){
+ const list=appData.rewards||[];
+
+ content.innerHTML=`
+ <div class="card">
+  <h2>مكافآتي 🎁</h2>
+
+  ${list.length?list.map(r=>`
+   <div class="row">
+    <div>
+     <div class="row-title">${escapeHTML(r.title)}</div>
+     <div class="row-sub">
+      ${escapeHTML(r.message||"")} ·
+      ${r.unit==="points"?points(r.amount)+" نقطة":money(r.amount)}
+     </div>
+     <div class="row-sub">${r.status==="redeemed"?"تم الاسترداد":"متاحة للاسترداد"}</div>
+    </div>
+
+    ${r.status==="pending"
+     ?`<button class="btn small" onclick="redeem('${r.id}')">استرداد</button>`
+     :"<span class='muted'>مكتملة</span>"}
+   </div>
+  `).join(""):`<div class="empty">ما عندك مكافآت حاليًا</div>`}
+ </div>`;
+}
+
+async function redeem(id){
+ await runAction("redeem",{reward_id:id},"تم استرداد المكافأة");
+}
+
+function pagePurchase(content){
+ content.innerHTML=`
+ <div class="card">
+  <h2>المشتريات 🛍️</h2>
+  <p class="muted">تسجيل عملية شراء وخصم قيمتها من رصيدك.</p>
+
+  <div class="field">
+   <label>القسم</label>
+   <select id="purchaseCategory">
+    <option>مشتريات</option>
+    <option>ألعاب</option>
+    <option>أكل</option>
+    <option>أخرى</option>
+   </select>
+  </div>
+
+  <div class="field">
+   <label>اسم المنتج</label>
+   <input id="purchaseItem" placeholder="اسم المنتج">
+  </div>
+
+  <div class="field">
+   <label>السعر بالريال</label>
+   <input id="purchaseAmount" type="number" min=".01" step=".01" placeholder="0.00">
+  </div>
+
+  <button class="btn full" onclick="purchase()">تأكيد الشراء</button>
+ </div>`;
+}
+
+async function purchase(){
+ const amount=Number(el("purchaseAmount").value);
+ const item=el("purchaseItem").value.trim();
+
+ if(!item)return toast("اكتب اسم المنتج");
+ if(!Number.isFinite(amount)||amount<=0)return toast("أدخل سعر صحيح");
+ if(amount>Number(appData.balance.money))return toast("رصيدك المالي ما يكفي");
+
+ await runAction("purchase",{
+  category:el("purchaseCategory").value,
+  item,
+  amount
+ },"تم تسجيل عملية الشراء");
+}
+
+function ledgerHTML(list){
+ if(!list.length)return `<div class="empty">ما فيه عمليات مسجلة</div>`;
+
+ return list.map(x=>{
+  const m=Number(x.money_change)||0;
+  const p=Number(x.points_change)||0;
+
+  const value=m
+   ?`${m>0?"+":""}${money(m)}`
+   :`${p>0?"+":""}${points(p)} نقطة`;
+
+  const cls=(m||p)>=0?"plus":"minus";
+
+  return `
+   <div class="row">
+    <div>
+     <div class="row-title">${escapeHTML(x.title||"عملية")}</div>
+     <div class="row-sub">${escapeHTML(x.details||"")}</div>
+     <div class="row-sub">
+      ${x.created_at?new Date(x.created_at).toLocaleString("ar-SA"):""}
+     </div>
+    </div>
+    <div class="amount ${cls}">${value}</div>
+   </div>
+  `;
+ }).join("");
+}
+
+function pageLedger(content){
+ content.innerHTML=`
+ <div class="card">
+  <h2>سجل العمليات</h2>
+  ${ledgerHTML(appData.ledger||[])}
+ </div>`;
+}
+
+function pageNotifications(content){
+ const list=appData.notifications||[];
+
+ content.innerHTML=`
+ <div class="card">
+  <h2>الإشعارات 🔔</h2>
+
+  ${list.length?list.map(n=>`
+   <div class="notice">
+    <b>${escapeHTML(n.title)}</b>
+    <div>${escapeHTML(n.message)}</div>
+    <div class="muted">
+     ${n.created_at?new Date(n.created_at).toLocaleString("ar-SA"):""}
+    </div>
+    ${isAdmin()?`<button class="btn red small" onclick="deleteNotification('${n.id}')">حذف</button>`:""}
+   </div>
+  `).join(""):`<div class="empty">ما عندك إشعارات</div>`}
+ </div>`;
+}
+
+async function deleteNotification(id){
+ await runAction("delete_notification",{id},"تم حذف الإشعار");
+}
+
+function pageSettings(content){
+ content.innerHTML=`
+ <div class="card">
+  <h2>الإعدادات ⚙️</h2>
+
+  <div class="field">
+   <label>الاسم الظاهر</label>
+   <input id="settingName" maxlength="30" value="${escapeHTML(currentUser.display_name||"")}">
+  </div>
+
+  <div class="field">
+   <label>لون التطبيق</label>
+   <input id="settingColor" type="color"
+    value="${/^#[0-9a-fA-F]{6}$/.test(currentUser.theme_color||"")?currentUser.theme_color:"#183d35"}">
+  </div>
+
+  <button class="btn full" onclick="saveSettings()">حفظ الإعدادات</button>
+
+  <hr>
+
+  <h3>تغيير الرقم السري</h3>
+
+  <div class="field">
+   <label>الرقم الحالي</label>
+   <input id="oldPin" type="password" inputmode="numeric">
+  </div>
+
+  <div class="field">
+   <label>الرقم الجديد</label>
+   <input id="newPin" type="password" inputmode="numeric" maxlength="12">
+  </div>
+
+  <button class="btn light full" onclick="changePin()">تغيير الرقم السري</button>
+ </div>`;
+}
+
+async function saveSettings(){
+ const display_name=el("settingName").value.trim();
+ const theme_color=el("settingColor").value;
+
+ if(!display_name)return toast("اكتب الاسم");
+
+ try{
+  await api("settings",{display_name,theme_color});
+
+  currentUser.display_name=display_name;
+  currentUser.theme_color=theme_color;
+
+  document.documentElement.style.setProperty("--main",theme_color);
+
+  toast("تم حفظ الإعدادات");
+  renderApp();
+ }catch(e){
+  toast(e.message);
+ }
+}
+
+async function changePin(){
+ const old_pin=el("oldPin").value;
+ const new_pin=el("newPin").value;
+
+ if(!/^[0-9]{4,12}$/.test(new_pin)){
+  return toast("الرقم الجديد لازم يكون من 4 إلى 12 رقم");
+ }
+
+ await runAction("change_pin",{old_pin,new_pin},"تم تغيير الرقم السري");
+}
+
+function pageAccount(content){
+ const accounts=appData.accounts||[];
+ const balances=appData.allBalances||[];
+ const selected=adminTarget;
+ const b=balances.find(x=>x.account_id===selected)||{};
+ const account=accounts.find(a=>a.id===selected)||{};
+
+ content.innerHTML=`
+ <div class="card">
+  <h2>حسابات العائلة</h2>
+
+  <div class="field">
+   <label>اختاري الحساب</label>
+   <select id="adminTargetSelect" onchange="selectAdminTarget(this.value)">
+    ${CHILDREN.map(id=>
+     `<option value="${id}" ${id===selected?"selected":""}>${names[id]}</option>`
+    ).join("")}
+   </select>
+  </div>
+
+  <div class="grid">
+   <div class="stat money">
+    <span>الرصيد المالي</span>
+    <strong>${money(b.money)}</strong>
+   </div>
+   <div class="stat points">
+    <span>النقاط</span>
+    <strong>${points(b.points)}</strong>
+   </div>
+  </div>
+
+  <div class="actions">
+   <button class="btn" onclick="go('adjust')">تعديل الرصيد</button>
+   <button class="btn light" onclick="go('reward')">إرسال مكافأة</button>
+  </div>
+
+  <hr>
+
+  <h3>حالة الحساب</h3>
+  <p class="muted">${account.blocked?"الحساب موقوف":"الحساب نشط"}</p>
+
+  <button class="btn red" onclick="toggleBlock('${selected}',${!account.blocked})">
+   ${account.blocked?"تفعيل الحساب":"إيقاف الحساب"}
+  </button>
+ </div>
+
+ <div class="card">
+  <h3>سجل ${names[selected]}</h3>
+  ${ledgerHTML(appData.ledger||[])}
+ </div>`;
+}
+
+async function selectAdminTarget(id){
+ adminTarget=id;
+ showLoading(true);
+
+ try{
+  await loadData(id);
+  renderApp();
+ }catch(e){
+  toast(e.message);
+ }finally{
+  showLoading(false);
+ }
+}
+
+async function toggleBlock(id,blocked){
+ await runAction("toggle_block",{account_id:id,blocked},"تم تحديث حالة الحساب");
+}
+
+function pageAdjust(content){
+ content.innerHTML=`
+ <div class="card">
+  <h2>تعديل الأرصدة</h2>
+
+  <div class="field">
+   <label>الحساب</label>
+   <select id="adjustAccount">
+    ${CHILDREN.map(id=>
+     `<option value="${id}" ${id===adminTarget?"selected":""}>${names[id]}</option>`
+    ).join("")}
+   </select>
+  </div>
+
+  <div class="field">
+   <label>نوع الرصيد</label>
+   <select id="adjustUnit">
+    <option value="money">فلوس (ريال)</option>
+    <option value="points">نقاط</option>
+   </select>
+  </div>
+
+  <div class="field">
+   <label>القيمة</label>
+   <input id="adjustAmount" type="number" step="any" placeholder="استخدم السالب للخصم">
+  </div>
+
+  <div class="field">
+   <label>السبب</label>
+   <input id="adjustReason" maxlength="200" placeholder="سبب التعديل">
+  </div>
+
+  <button class="btn full" onclick="adjustBalance()">حفظ التعديل</button>
+ </div>`;
+}
+
+async function adjustBalance(){
+ const account_id=el("adjustAccount").value;
+ const unit=el("adjustUnit").value;
+ const amount=Number(el("adjustAmount").value);
+
+ if(!Number.isFinite(amount)||amount===0)return toast("أدخل قيمة صحيحة");
+ if(unit==="points"&&!Number.isSafeInteger(amount))return toast("النقاط لازم تكون عددًا صحيحًا");
+
+ await runAction("admin_adjust",{
+  account_id,
+  unit,
+  amount,
+  reason:el("adjustReason").value
+ },"تم تعديل الرصيد");
+}
+
+function pageAdminReward(content){
+ content.innerHTML=`
+ <div class="card">
+  <h2>إرسال مكافأة 🎁</h2>
+
+  <div class="field">
+   <label>إلى الحساب</label>
+   <select id="rewardAccount">
+    ${CHILDREN.map(id=>
+     `<option value="${id}" ${id===adminTarget?"selected":""}>${names[id]}</option>`
+    ).join("")}
+   </select>
+  </div>
+
+  <div class="field">
+   <label>اسم المكافأة</label>
+   <input id="rewardTitle" maxlength="100" placeholder="مكافأة جميلة">
+  </div>
+
+  <div class="field">
+   <label>رسالة</label>
+   <input id="rewardMessage" maxlength="200" placeholder="رسالة المكافأة">
+  </div>
+
+  <div class="field">
+   <label>نوع المكافأة</label>
+   <select id="rewardUnit">
+    <option value="points">نقاط</option>
+    <option value="money">ريالات</option>
+   </select>
+  </div>
+
+  <div class="field">
+   <label>الكمية</label>
+   <input id="rewardAmount" type="number" min="1" step="any">
+  </div>
+
+  <button class="btn full" onclick="sendAdminReward()">إرسال المكافأة</button>
+ </div>`;
+}
+
+async function sendAdminReward(){
+ const account_id=el("rewardAccount").value;
+ const unit=el("rewardUnit").value;
+ const amount=Number(el("rewardAmount").value);
+
+ if(!Number.isFinite(amount)||amount<=0)return toast("أدخل كمية صحيحة");
+ if(unit==="points"&&!Number.isSafeInteger(amount))return toast("النقاط لازم تكون عددًا صحيحًا");
+
+ await runAction("admin_reward",{
+  account_id,
+  title:el("rewardTitle").value,
+  message:el("rewardMessage").value,
+  unit,
+  amount
+ },"تم إرسال المكافأة");
+}
+
+async function runAction(action,data,message){
+ showLoading(true,"جاري تنفيذ العملية...");
+
+ try{
+  await api(action,data);
+  toast(message);
+
+  await loadData(isAdmin()&&currentPage==="account"?adminTarget:null);
+  renderApp();
+ }catch(e){
+  toast(e.message);
+ }finally{
+  showLoading(false);
+ }
+}
+
+/* تشغيل استعادة الجلسة عند فتح الصفحة */
+restoreSession();
 </script>
 </body>
 </html>
