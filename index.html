@@ -1,0 +1,440 @@
+
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#183d35">
+<title>عائلتنا الجميلة</title>
+<style>
+*{box-sizing:border-box}
+body{margin:0;background:#f2f6f4;color:#183d35;font-family:Tahoma,Arial,sans-serif}
+button,input,select{font:inherit}
+button{cursor:pointer;border:0;border-radius:12px;padding:12px 16px;background:#183d35;color:white}
+button:disabled{opacity:.5;cursor:not-allowed}
+input,select{width:100%;padding:13px;border:1px solid #dce6e1;border-radius:12px;background:white;color:#183d35;outline:none}
+input:focus,select:focus{border-color:#367d66}
+header{background:#183d35;color:white;padding:18px 5%;display:flex;align-items:center;justify-content:space-between;gap:12px}
+header h2{margin:0;font-size:20px}
+main{max-width:1050px;margin:25px auto;padding:0 15px}
+.card{background:white;border-radius:20px;padding:20px;margin-bottom:16px;box-shadow:0 5px 22px #183d350c}
+.login{max-width:420px;margin:65px auto}
+h1,h2,h3{margin-top:0}
+.muted{color:#82948b;font-size:13px}
+.field{margin:14px 0}
+.field label{display:block;font-size:13px;margin-bottom:7px}
+.grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}
+.wallet{padding:22px;border-radius:18px;background:#eaf3ee}
+.wallet strong{font-size:28px;display:block;margin-top:12px}
+.wallet small{color:#71877c}
+.actions{display:flex;gap:9px;flex-wrap:wrap}
+.actions button{flex:1;min-width:115px}
+.secondary{background:#e9f1ed;color:#183d35}
+.danger{background:#a63d3d}
+.success{background:#2d785b}
+.notice{padding:13px;border-radius:12px;background:#eaf3ee;margin:12px 0;display:none}
+.notice.error{background:#fceaea;color:#9c3030}
+.row{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:13px 0;border-bottom:1px solid #edf1ef}
+.row:last-child{border:0}
+.hidden{display:none!important}
+.pill{padding:5px 9px;background:#eaf3ee;border-radius:30px;font-size:12px}
+.tabs{display:flex;gap:8px;overflow:auto;margin-bottom:16px}
+.tabs button{white-space:nowrap}
+.tabs button.active{background:#3e8068}
+.section{display:none}
+.section.active{display:block}
+@media(max-width:600px){
+ header{padding:15px}
+ .grid{grid-template-columns:1fr}
+ .login{margin:35px auto}
+ .card{padding:16px}
+ header h2{font-size:17px}
+}
+</style>
+</head>
+<body>
+
+<header>
+  <h2>🌿 عائلتنا الجميلة</h2>
+  <button id="logoutBtn" class="secondary hidden">تسجيل الخروج</button>
+</header>
+
+<main>
+  <div id="loginView" class="card login">
+    <h2 style="text-align:center">أهلًا بعائلتنا ❤️</h2>
+    <p class="muted" style="text-align:center">سجل دخولك إلى حسابك</p>
+    <div class="field">
+      <label>الحساب</label>
+      <select id="account">
+        <option value="azoz">عزوز</option>
+        <option value="sahab">سحاب</option>
+        <option value="mama">ماما</option>
+      </select>
+    </div>
+    <div class="field">
+      <label>رمز الدخول</label>
+      <input id="pin" type="password" inputmode="numeric" maxlength="8" placeholder="أدخل رمز الدخول">
+    </div>
+    <button id="loginBtn" style="width:100%">دخول</button>
+    <div id="loginNotice" class="notice"></div>
+  </div>
+
+  <div id="appView" class="hidden">
+    <div class="card">
+      <div class="row">
+        <div>
+          <div class="muted">مرحبًا بك</div>
+          <h2 id="welcome" style="margin:6px 0">أهلًا</h2>
+        </div>
+        <span id="roleBadge" class="pill"></span>
+      </div>
+      <div class="muted" id="syncStatus">متصل بالخادم</div>
+    </div>
+
+    <div id="memberArea">
+      <div class="grid">
+        <div class="wallet">
+          <small>💵 رصيدك المالي</small>
+          <strong id="money">0.00 ر.س</strong>
+        </div>
+        <div class="wallet">
+          <small>⭐ نقاطك</small>
+          <strong id="points">0</strong>
+        </div>
+      </div>
+
+      <div class="card" style="margin-top:16px">
+        <h3>تحويل النقاط إلى فلوس</h3>
+        <p class="muted">كل 1000 نقطة تساوي 5 ريالات</p>
+        <div class="field">
+          <label>عدد النقاط</label>
+          <input id="convertPoints" type="number" min="1000" step="1000" placeholder="مثال: 1000">
+        </div>
+        <button id="convertBtn" class="success" style="width:100%">تحويل إلى رصيد مالي</button>
+      </div>
+    </div>
+
+    <div id="adminArea" class="hidden">
+      <div class="card">
+        <h3>لوحة تحكم ماما 👑</h3>
+        <div class="grid" id="allBalances"></div>
+      </div>
+
+      <div class="tabs">
+        <button class="active" data-tab="adjust">إضافة وخصم</button>
+        <button data-tab="transfer">تحويل</button>
+        <button data-tab="accounts">الحسابات</button>
+        <button data-tab="records">السجلات</button>
+      </div>
+
+      <div id="adjust" class="section active card">
+        <h3>إدارة الأرصدة</h3>
+        <div class="field"><label>الحساب</label>
+          <select id="adjustAccount">
+            <option value="azoz">عزوز</option>
+            <option value="sahab">سحاب</option>
+          </select>
+        </div>
+        <div class="field"><label>نوع الرصيد</label>
+          <select id="adjustUnit">
+            <option value="money">فلوس</option>
+            <option value="points">نقاط</option>
+          </select>
+        </div>
+        <div class="field"><label>المبلغ أو النقاط (استخدم السالب للخصم)</label>
+          <input id="adjustAmount" type="number" placeholder="مثال: 50 أو -20">
+        </div>
+        <div class="field"><label>سبب العملية</label>
+          <input id="adjustDescription" placeholder="مثال: مكافأة">
+        </div>
+        <button id="adjustBtn" style="width:100%">تنفيذ العملية</button>
+      </div>
+
+      <div id="transfer" class="section card">
+        <h3>تحويل بين الحسابات</h3>
+        <div class="field"><label>من حساب</label>
+          <select id="fromAccount">
+            <option value="azoz">عزوز</option><option value="sahab">سحاب</option>
+          </select>
+        </div>
+        <div class="field"><label>إلى حساب</label>
+          <select id="toAccount">
+            <option value="sahab">سحاب</option><option value="azoz">عزوز</option>
+          </select>
+        </div>
+        <div class="field"><label>نوع الرصيد</label>
+          <select id="transferUnit">
+            <option value="money">فلوس</option><option value="points">نقاط</option>
+          </select>
+        </div>
+        <div class="field"><label>الكمية</label>
+          <input id="transferAmount" type="number" min="0.01" placeholder="الكمية">
+        </div>
+        <button id="transferBtn" style="width:100%">تحويل</button>
+      </div>
+
+      <div id="accounts" class="section card">
+        <h3>إدارة الحسابات</h3>
+        <div id="accountControls"></div>
+      </div>
+
+      <div id="records" class="section card">
+        <h3>سجل العمليات</h3>
+        <div class="field">
+          <select id="recordAccount">
+            <option value="azoz">عزوز</option><option value="sahab">سحاب</option>
+          </select>
+        </div>
+        <div id="adminLedger"></div>
+      </div>
+    </div>
+
+    <div class="card">
+      <h3>🔐 تغيير رمز الدخول</h3>
+      <div class="field"><label>الرمز الحالي</label><input id="oldPin" type="password" inputmode="numeric" maxlength="8"></div>
+      <div class="field"><label>الرمز الجديد</label><input id="newPin" type="password" inputmode="numeric" maxlength="8"></div>
+      <button id="changePinBtn" style="width:100%">تغيير الرمز</button>
+    </div>
+
+    <div id="appNotice" class="notice"></div>
+  </div>
+</main>
+
+<script>
+const SUPABASE_URL="https://ayfxtomfqrantxmpqgof.supabase.co";
+const SUPABASE_KEY="sb_publishable_2d8TzhMCRIuc6daKrObBGA_7i0jUIxe";
+const API=SUPABASE_URL+"/functions/v1/family-api";
+
+let token=sessionStorage.getItem("family_token")||"";
+let profile=null;
+let refreshTimer=null;
+
+const $=id=>document.getElementById(id);
+const names={azoz:"عزوز",sahab:"سحاب",mama:"ماما"};
+
+function notice(id,message,error=false){
+  const el=$(id);
+  el.textContent=message;
+  el.classList.toggle("error",error);
+  el.style.display="block";
+  setTimeout(()=>el.style.display="none",4500);
+}
+
+async function call(action,data={}){
+  const response=await fetch(API,{
+    method:"POST",
+    headers:{
+      "Content-Type":"application/json",
+      "apikey":SUPABASE_KEY,
+      "Authorization":"Bearer "+(token||SUPABASE_KEY)
+    },
+    body:JSON.stringify({action,...data})
+  });
+
+  const result=await response.json().catch(()=>({error:"استجابة غير مفهومة من الخادم"}));
+  if(!response.ok)throw new Error(result.error||"حدث خطأ");
+  return result;
+}
+
+function setLoggedIn(p){
+  profile=p;
+  $("loginView").classList.add("hidden");
+  $("appView").classList.remove("hidden");
+  $("logoutBtn").classList.remove("hidden");
+  $("welcome").textContent=p.display_name;
+  $("roleBadge").textContent=p.role==="admin"?"إدارة":"عضو";
+  $("memberArea").classList.toggle("hidden",p.role==="admin");
+  $("adminArea").classList.toggle("hidden",p.role!=="admin");
+  refresh();
+  clearInterval(refreshTimer);
+  refreshTimer=setInterval(refresh,5000);
+}
+
+async function login(){
+  const btn=$("loginBtn");
+  btn.disabled=true;
+  btn.textContent="جاري الدخول...";
+  try{
+    const result=await call("login",{
+      account_id:$("account").value,
+      pin:$("pin").value
+    });
+    token=result.token;
+    sessionStorage.setItem("family_token",token);
+    setLoggedIn(result.profile);
+  }catch(e){
+    notice("loginNotice",e.message,true);
+  }finally{
+    btn.disabled=false;
+    btn.textContent="دخول";
+  }
+}
+
+async function refresh(){
+  if(!profile)return;
+  try{
+    if(profile.role==="admin"){
+      const result=await call("get",{account_id:"azoz"});
+      renderBalances(result.allBalances||[]);
+      renderRecords();
+      renderAccountControls();
+    }else{
+      const result=await call("get");
+      $("money").textContent=Number(result.balance.money).toFixed(2)+" ر.س";
+      $("points").textContent=Number(result.balance.points).toLocaleString("ar-SA");
+    }
+    $("syncStatus").textContent="آخر تحديث: "+new Date().toLocaleTimeString("ar-SA");
+  }catch(e){
+    $("syncStatus").textContent="تعذر التحديث: "+e.message;
+  }
+}
+
+function renderBalances(balances){
+  $("allBalances").innerHTML=balances.map(b=>`
+    <div class="wallet">
+      <small>${names[b.account_id]}</small>
+      <strong>${Number(b.money).toFixed(2)} ر.س</strong>
+      <small>${Number(b.points).toLocaleString("ar-SA")} نقطة</small>
+    </div>
+  `).join("");
+}
+
+async function adjust(){
+  try{
+    await call("adjust",{
+      account_id:$("adjustAccount").value,
+      unit:$("adjustUnit").value,
+      amount:Number($("adjustAmount").value),
+      description:$("adjustDescription").value
+    });
+    notice("appNotice","تم تعديل الرصيد بنجاح");
+    $("adjustAmount").value="";
+    $("adjustDescription").value="";
+    refresh();
+  }catch(e){notice("appNotice",e.message,true)}
+}
+
+async function transfer(){
+  try{
+    await call("transfer",{
+      from:$("fromAccount").value,
+      to:$("toAccount").value,
+      unit:$("transferUnit").value,
+      amount:Number($("transferAmount").value)
+    });
+    notice("appNotice","تم التحويل بنجاح");
+    $("transferAmount").value="";
+    refresh();
+  }catch(e){notice("appNotice",e.message,true)}
+}
+
+async function convert(){
+  try{
+    const points=Number($("convertPoints").value);
+    const result=await call("convert",{points});
+    notice("appNotice",`تم تحويل النقاط وإضافة ${result.money} ريال`);
+    $("convertPoints").value="";
+    refresh();
+  }catch(e){notice("appNotice",e.message,true)}
+}
+
+async function changePin(){
+  try{
+    await call("change_pin",{
+      old_pin:$("oldPin").value,
+      new_pin:$("newPin").value
+    });
+    $("oldPin").value="";
+    $("newPin").value="";
+    notice("appNotice","تم تغيير رمز الدخول");
+  }catch(e){notice("appNotice",e.message,true)}
+}
+
+async function renderAccountControls(){
+  const result=await call("get",{account_id:"azoz"});
+  const balances=result.allBalances||[];
+  $("accountControls").innerHTML=balances.map(b=>`
+    <div class="row">
+      <strong>${names[b.account_id]}</strong>
+      <button class="${b.blocked?"success":"danger"}" data-account="${b.account_id}" data-block="${!b.blocked}">
+        ${b.blocked?"تفعيل الحساب":"إيقاف الحساب"}
+      </button>
+    </div>
+  `).join("");
+
+  $("accountControls").querySelectorAll("button").forEach(btn=>{
+    btn.onclick=async()=>{
+      try{
+        await call("block",{
+          account_id:btn.dataset.account,
+          blocked:btn.dataset.block==="true"
+        });
+        notice("appNotice","تم تحديث حالة الحساب");
+        refresh();
+      }catch(e){notice("appNotice",e.message,true)}
+    };
+  });
+}
+
+async function renderRecords(){
+  try{
+    const id=$("recordAccount").value;
+    const result=await call("get",{account_id:id});
+    $("adminLedger").innerHTML=result.ledger.length?result.ledger.map(item=>`
+      <div class="row">
+        <div>
+          <strong>${item.action}</strong>
+          <div class="muted">${item.description||""}</div>
+          <div class="muted">${new Date(item.created_at).toLocaleString("ar-SA")}</div>
+        </div>
+        <span class="pill">${Number(item.amount).toLocaleString("ar-SA")} ${item.unit==="money"?"ر.س":"نقطة"}</span>
+      </div>
+    `).join(""):"<p class='muted'>ما فيه عمليات مسجلة</p>";
+  }catch(e){$("adminLedger").textContent=e.message}
+}
+
+function logout(){
+  token="";
+  profile=null;
+  sessionStorage.removeItem("family_token");
+  clearInterval(refreshTimer);
+  $("appView").classList.add("hidden");
+  $("loginView").classList.remove("hidden");
+  $("logoutBtn").classList.add("hidden");
+  $("pin").value="";
+}
+
+$("loginBtn").onclick=login;
+$("logoutBtn").onclick=logout;
+$("adjustBtn").onclick=adjust;
+$("transferBtn").onclick=transfer;
+$("convertBtn").onclick=convert;
+$("changePinBtn").onclick=changePin;
+$("recordAccount").onchange=renderRecords;
+$("pin").onkeydown=e=>{if(e.key==="Enter")login()};
+
+document.querySelectorAll("[data-tab]").forEach(btn=>{
+  btn.onclick=()=>{
+    document.querySelectorAll("[data-tab]").forEach(x=>x.classList.remove("active"));
+    document.querySelectorAll(".section").forEach(x=>x.classList.remove("active"));
+    btn.classList.add("active");
+    $(btn.dataset.tab).classList.add("active");
+    if(btn.dataset.tab==="records")renderRecords();
+  };
+});
+
+// استعادة الجلسة
+async function restore(){
+  if(!token)return;
+  try{
+    const result=await call("get");
+    setLoggedIn(result.profile);
+  }catch(e){
+    token="";
+    sessionStorage.removeItem("family_token");
+  }
+}
+restore();
+</script>
+</body>
+</html>
