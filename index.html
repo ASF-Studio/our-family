@@ -513,7 +513,7 @@ function showToast(message,error=false){
   el.classList.remove("hidden","error");
   if(error)el.classList.add("error");
   clearTimeout(toastTimer);
-  toastTimer=setTimeout(()=>el.classList.add("hidden"),3500);
+  toastTimer=setTimeout(()=>el.classList.add("hidden"),4000);
 }
 
 function money(value){
@@ -538,17 +538,17 @@ async function api(action,data={}){
       body:JSON.stringify({action,...data})
     });
   }catch(err){
-    throw new Error("تعذر الاتصال بالسيرفر (تأكد من الإنترنت أو إعدادات CORS)");
+    throw new Error("تعذر الاتصال بالخادم (تأكد من الإنترنت أو إعدادات CORS في Supabase)");
   }
 
   let result;
   try{
     result=await response.json();
   }catch(e){
-    throw new Error("استجابة السيرفر غير مفهومة");
+    throw new Error("استجابة الخادم غير صالحة (JSON Parse Error)");
   }
 
-  if(!response.ok)throw new Error(result.error||"حدث خطأ في الاتصال");
+  if(!response.ok)throw new Error(result.error||"حدث خطأ في الخادم (رمز: "+response.status+")");
   return result;
 }
 
@@ -1059,7 +1059,7 @@ function logoutPrompt(){
 }
 
 document.addEventListener("DOMContentLoaded",()=>{
-  // تفعيل ربط أزرار اختيار الحساب بشكل قاطع ومضمون
+  // تفعيل اختيار الحساب بشكل قاطع
   const accountButtons = document.querySelectorAll(".account-choice button");
   accountButtons.forEach(btn=>{
     btn.addEventListener("click",function(e){
@@ -1070,7 +1070,7 @@ document.addEventListener("DOMContentLoaded",()=>{
     });
   });
 
-  // تفعيل زر تسجيل الدخول
+  // تفعيل زر الدخول
   const loginBtn = $("loginBtn");
   if(loginBtn){
     loginBtn.addEventListener("click", function(e){
@@ -1079,7 +1079,7 @@ document.addEventListener("DOMContentLoaded",()=>{
     });
   }
 
-  // تفعيل مفتاح Enter على خانة PIN
+  // تفعيل مفتاح Enter لخانة PIN
   const pinInput = $("loginPin");
   if(pinInput){
     pinInput.addEventListener("keydown",e=>{
