@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
@@ -7,10 +8,10 @@
 <title>عائلتنا الجميلة</title>
 <style>
 :root{
---main:#183d35;--main2:#24584b;--soft:#e9f1ee;
---bg:#f3f6f5;--card:#fff;--text:#1e302b;
---muted:#81918b;--border:#e5ece8;--red:#c34c4c;
---gold:#d69c32;--shadow:0 8px 28px #183d3510
+ --main:#183d35;--main2:#24584b;--soft:#e9f1ee;
+ --bg:#f3f6f5;--card:#fff;--text:#1e302b;
+ --muted:#81918b;--border:#e5ece8;--red:#c34c4c;
+ --gold:#d69c32;--shadow:0 8px 28px #183d3510
 }
 *{box-sizing:border-box}
 body{margin:0;background:var(--bg);color:var(--text);font-family:Tahoma,Arial,sans-serif}
@@ -19,7 +20,7 @@ button{cursor:pointer}
 .hidden{display:none!important}
 header{background:var(--main);color:white;padding:18px 5%;display:flex;align-items:center;justify-content:space-between;gap:12px}
 .brand{font-size:19px;font-weight:bold}
-.header-user{font-size:13px;color:#dce9e4}
+.header-user{font-size:13px;color:#dce9e4;margin-top:5px}
 .container{max-width:1050px;margin:auto;padding:22px 16px 60px}
 .card{background:var(--card);border:1px solid var(--border);border-radius:19px;padding:19px;margin-bottom:15px;box-shadow:var(--shadow)}
 h2,h3{margin-top:0}
@@ -56,22 +57,33 @@ input:focus,select:focus{border-color:var(--main2)}
 .row{display:flex;justify-content:space-between;align-items:center;gap:10px;padding:13px 0;border-bottom:1px solid var(--border)}
 .row:last-child{border-bottom:0}
 .row-title{font-weight:bold;font-size:14px}
-.row-sub{font-size:12px;color:var(--muted);margin-top:5px}
+.row-sub{font-size:12px;color:var(--muted);margin-top:5px;line-height:1.7}
 .amount{font-weight:bold;white-space:nowrap}
 .plus{color:#26845b}.minus{color:var(--red)}
 .notice{background:#f0f5f2;border-radius:12px;padding:12px;font-size:13px;line-height:1.8;margin-bottom:10px}
 .empty{text-align:center;padding:25px;color:var(--muted);font-size:13px}
 .actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}
-.toast{position:fixed;bottom:20px;right:50%;transform:translateX(50%);background:#203d34;color:white;padding:13px 20px;border-radius:13px;z-index:20;box-shadow:var(--shadow);max-width:90%;font-size:13px}
-.loading{position:fixed;inset:0;background:#ffffffc9;z-index:30;display:grid;place-items:center;font-weight:bold;color:var(--main)}
+.toast{position:fixed;bottom:20px;right:50%;transform:translateX(50%);background:#203d34;color:white;padding:13px 20px;border-radius:13px;z-index:50;box-shadow:var(--shadow);max-width:90%;font-size:13px}
+.loading{position:fixed;inset:0;background:#ffffffc9;z-index:60;display:grid;place-items:center;font-weight:bold;color:var(--main)}
 .spinner{width:35px;height:35px;border:4px solid var(--soft);border-top-color:var(--main);border-radius:50%;animation:spin .8s linear infinite;margin:auto auto 12px}
 @keyframes spin{to{transform:rotate(360deg)}}
-.profile-chip{background:#ffffff20;border-radius:20px;padding:8px 12px}
+.profile-chip{background:#ffffff20;border-radius:20px;padding:8px 12px;font-size:12px}
 hr{border:0;border-top:1px solid var(--border);margin:17px 0}
+.confirm-backdrop{position:fixed;inset:0;background:#10251f88;z-index:70;display:grid;place-items:center;padding:18px}
+.confirm-box{background:white;width:min(390px,100%);border-radius:19px;padding:23px;box-shadow:var(--shadow);text-align:center}
+.confirm-box h3{margin-bottom:8px}
+.confirm-actions{display:flex;gap:10px;margin-top:20px}
+.confirm-actions button{flex:1}
+.adjust-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+.adjust-option{padding:16px 10px;border:1px solid var(--border);border-radius:14px;background:white;text-align:center;color:var(--main);font-weight:bold}
+.adjust-option small{display:block;font-size:12px;color:var(--muted);font-weight:normal;margin-top:6px}
+.adjust-option.selected{border:2px solid var(--main);background:var(--soft)}
 @media(max-width:600px){
-header{padding:15px}.container{padding:15px 12px 45px}
-.grid{gap:9px}.stat{padding:13px}.stat strong{font-size:19px}
-.card{padding:15px}.login-wrap{margin:5vh auto}
+ header{padding:15px}
+ .container{padding:15px 12px 45px}
+ .grid{gap:9px}.stat{padding:13px}.stat strong{font-size:19px}
+ .card{padding:15px}.login-wrap{margin:5vh auto}
+ .row{align-items:flex-start}
 }
 </style>
 </head>
@@ -89,14 +101,14 @@ header{padding:15px}.container{padding:15px 12px 45px}
   <div class="brand">🌿 عائلتنا الجميلة</div>
   <div class="header-user" id="headerName"></div>
  </div>
- <button class="btn light small" onclick="logout()">تسجيل الخروج</button>
+ <button class="btn light small" onclick="askLogout()">تسجيل الخروج</button>
 </header>
 
 <section id="loginScreen" class="login-wrap">
  <div class="logo">
   <div class="logo-icon">🌿</div>
   <h1>عائلتنا الجميلة</h1>
-  <p class="muted">محفظتنا العائلية ومكافآتنا</p>
+  <p class="muted">محفظتنا العائلية</p>
  </div>
  <div class="card">
   <h2>تسجيل الدخول</h2>
@@ -152,6 +164,17 @@ header{padding:15px}.container{padding:15px 12px 45px}
 
 <div id="toast" class="toast hidden"></div>
 
+<div id="confirmLayer" class="confirm-backdrop hidden">
+ <div class="confirm-box">
+  <h3 id="confirmTitle">تأكيد العملية</h3>
+  <p id="confirmMessage" class="muted">هل أنت متأكد؟</p>
+  <div class="confirm-actions">
+   <button class="btn red" id="confirmYes">نعم</button>
+   <button class="btn light" onclick="closeConfirm()">لا</button>
+  </div>
+ </div>
+</div>
+
 <script>
 const API_URL="https://ayfxtomfqrantxmpqgof.supabase.co/functions/v1/family-api";
 const API_KEY="sb_publishable_2d8TzhMCRIuc6daKrObBGA_7i0jUIxe";
@@ -164,6 +187,9 @@ let currentUser=null;
 let appData={};
 let currentPage="home";
 let adminTarget="azoz";
+let selectedAdjustUnit="money";
+let toastTimer;
+let confirmCallback=null;
 
 function el(id){return document.getElementById(id)}
 
@@ -186,12 +212,11 @@ function showLoading(show,text="جاري التحميل..."){
  el("loading").classList.toggle("hidden",!show);
 }
 
-let toastTimer;
 function toast(message){
  el("toast").textContent=message;
  el("toast").classList.remove("hidden");
  clearTimeout(toastTimer);
- toastTimer=setTimeout(()=>el("toast").classList.add("hidden"),3000);
+ toastTimer=setTimeout(()=>el("toast").classList.add("hidden"),3200);
 }
 
 function isAdmin(){
@@ -222,7 +247,23 @@ async function api(action,data={}){
  return result;
 }
 
-/* تسجيل الدخول مع حفظ الجلسة */
+function askConfirm(title,message,callback){
+ el("confirmTitle").textContent=title;
+ el("confirmMessage").textContent=message;
+ confirmCallback=callback;
+ el("confirmLayer").classList.remove("hidden");
+ el("confirmYes").onclick=async()=>{
+  const fn=confirmCallback;
+  closeConfirm();
+  if(fn)await fn();
+ };
+}
+
+function closeConfirm(){
+ el("confirmLayer").classList.add("hidden");
+ confirmCallback=null;
+}
+
 async function login(){
  const account_id=el("loginAccount").value;
  const pin=el("loginPin").value.trim();
@@ -236,21 +277,18 @@ async function login(){
  try{
   const result=await api("login",{account_id,pin});
 
-  if(!result.token||!result.profile){
+  if(!result.token||!result.profile)
    throw new Error("بيانات تسجيل الدخول غير مكتملة");
-  }
 
   token=result.token;
   currentUser=result.profile;
 
   await loadData();
 
-  // حفظ الجلسة تلقائيًا على الجهاز
   localStorage.setItem("family_token",token);
-
   openApp();
   el("loginPin").value="";
-  toast("تم تسجيل الدخول وحفظ الحساب");
+  toast("تم تسجيل الدخول بنجاح");
  }catch(e){
   token="";
   currentUser=null;
@@ -263,21 +301,23 @@ async function login(){
  }
 }
 
-/* إظهار التطبيق بعد نجاح الدخول أو استعادة الجلسة */
 function openApp(){
  el("loginScreen").classList.add("hidden");
  el("header").classList.remove("hidden");
  el("app").classList.remove("hidden");
+
+ if(currentUser?.theme_color){
+  document.documentElement.style.setProperty("--main",currentUser.theme_color);
+ }
+
  renderApp();
 }
 
-/* جلب البيانات */
 async function loadData(target){
  const data=await api("get",target?{account_id:target}:{});
  appData=data;
 
  if(isAdmin()&&target)adminTarget=target;
-
  return data;
 }
 
@@ -293,7 +333,14 @@ async function refresh(){
  }
 }
 
-/* تسجيل الخروج ومسح الحساب المحفوظ */
+function askLogout(){
+ askConfirm(
+  "تسجيل الخروج",
+  "هل أنت متأكد أنك تبي تسجل الخروج من الحساب؟",
+  logout
+ );
+}
+
 function logout(){
  token="";
  currentUser=null;
@@ -311,26 +358,19 @@ function logout(){
  toast("تم تسجيل الخروج");
 }
 
-/* استعادة الحساب تلقائيًا عند فتح الموقع */
 async function restoreSession(){
  const saved=localStorage.getItem("family_token");
-
  if(!saved)return;
 
  token=saved;
  showLoading(true,"جاري استعادة حسابك...");
 
  try{
-  // السيرفر يتحقق من صلاحية الجلسة ويرجع بيانات الحساب
   const data=await api("get");
-
-  if(!data.profile){
-   throw new Error("الجلسة غير صالحة");
-  }
+  if(!data.profile)throw new Error("الجلسة غير صالحة");
 
   currentUser=data.profile;
   appData=data;
-
   openApp();
  }catch(e){
   token="";
@@ -356,7 +396,6 @@ function renderApp(){
 
  if(isAdmin()){
   const balances=appData.allBalances||[];
-
   el("adminStats").innerHTML=balances.map(b=>`
    <div class="stat">
     <span>${escapeHTML(names[b.account_id]||b.account_id)}</span>
@@ -374,23 +413,19 @@ function renderApp(){
 }
 
 function renderNav(){
- let items=isAdmin()
+ const items=isAdmin()
  ?[
   ["home","الرئيسية"],
   ["account","حسابات العائلة"],
   ["adjust","تعديل الأرصدة"],
-  ["reward","إرسال مكافأة"],
-  ["notifications","الإشعارات"],
   ["settings","الإعدادات"]
  ]
  :[
   ["home","الرئيسية"],
   ["convert","تحويل النقاط"],
   ["gift","إرسال هدية"],
-  ["rewards","مكافآتي"],
   ["purchase","المشتريات"],
   ["ledger","السجل"],
-  ["notifications","الإشعارات"],
   ["settings","الإعدادات"]
  ];
 
@@ -409,7 +444,6 @@ async function go(page){
   }else{
    await loadData();
   }
-
   renderApp();
  }catch(e){
   toast(e.message);
@@ -424,14 +458,11 @@ function renderPage(){
  if(currentPage==="home")return pageHome(content);
  if(currentPage==="convert")return pageConvert(content);
  if(currentPage==="gift")return pageGift(content);
- if(currentPage==="rewards")return pageRewards(content);
  if(currentPage==="purchase")return pagePurchase(content);
  if(currentPage==="ledger")return pageLedger(content);
- if(currentPage==="notifications")return pageNotifications(content);
  if(currentPage==="settings")return pageSettings(content);
  if(currentPage==="account")return pageAccount(content);
  if(currentPage==="adjust")return pageAdjust(content);
- if(currentPage==="reward")return pageAdminReward(content);
 
  pageHome(content);
 }
@@ -441,24 +472,29 @@ function pageHome(content){
  <div class="card">
   <h2>الرئيسية 🌿</h2>
   <p class="muted">
-   ${isAdmin()?"من هنا تقدرين تديرين أرصدة العائلة ومكافآتهم.":"تابع رصيدك ونقاطك واستمتع بالمكافآت."}
+   ${isAdmin()
+    ?"من هنا تقدرين تديرين حسابات العائلة وأرصدتهم."
+    :"تابع رصيدك المالي ونقاطك وسجل عملياتك."}
   </p>
 
   ${isAdmin()?`
    <div class="notice">حساب ماما إداري فقط، وما له رصيد مالي أو نقاط.</div>
    <button class="btn" onclick="go('account')">إدارة حسابات العائلة</button>
   `:`
-   <div class="notice">كل 1000 نقطة تساوي 5 ريالات عند تحويلها إلى بطاقة استرداد.</div>
+   <div class="notice">كل 1000 نقطة تساوي 5 ريالات، وتُضاف مباشرة إلى رصيدك عند التحويل.</div>
    <div class="actions">
     <button class="btn" onclick="go('convert')">تحويل نقاطي</button>
-    <button class="btn light" onclick="go('rewards')">مكافآتي</button>
+    <button class="btn light" onclick="go('gift')">إرسال هدية</button>
    </div>
   `}
  </div>
 
  <div class="card">
   <h3>آخر العمليات</h3>
-  ${ledgerHTML((appData.ledger||[]).slice(0,5))}
+  ${ledgerHTML((appData.ledger||[]).slice(0,5),false)}
+  <div class="actions">
+   <button class="btn light small" onclick="${isAdmin()?"go('account')":"go('ledger')"}">عرض السجل</button>
+  </div>
  </div>`;
 }
 
@@ -468,7 +504,7 @@ function pageConvert(content){
  content.innerHTML=`
  <div class="card">
   <h2>تحويل النقاط ⭐</h2>
-  <p class="muted">كل 1000 نقطة = 5 ريالات. يتم خصم النقاط عند إصدار البطاقة.</p>
+  <p class="muted">كل 1000 نقطة = 5 ريالات، وتُضاف قيمة التحويل مباشرة إلى رصيدك المالي.</p>
   <div class="notice">رصيدك الحالي: <b>${points(balance)} نقطة</b></div>
 
   <div class="field">
@@ -483,7 +519,7 @@ function pageConvert(content){
   </div>
 
   <p id="convertValue" class="muted"></p>
-  <button class="btn full" onclick="convertPoints()">إصدار بطاقة الاسترداد</button>
+  <button class="btn full" onclick="convertPoints()">تأكيد التحويل</button>
  </div>`;
 
  el("convertPoints").addEventListener("input",updateConvertValue);
@@ -492,21 +528,19 @@ function pageConvert(content){
 function updateConvertValue(){
  const n=Number(el("convertPoints").value);
  el("convertValue").textContent=
-  n>0&&n%1000===0?`قيمة البطاقة: ${money(n/1000*5)}`:"";
+  n>0&&n%1000===0?`سيُضاف إلى رصيدك: ${money(n/1000*5)}`:"";
 }
 
 async function convertPoints(){
  const n=Number(el("convertPoints").value);
 
- if(!Number.isSafeInteger(n)||n<1000||n%1000!==0){
+ if(!Number.isSafeInteger(n)||n<1000||n%1000!==0)
   return toast("النقاط لازم تكون من مضاعفات 1000");
- }
 
- if(n>Number(appData.balance.points)){
+ if(n>Number(appData.balance.points))
   return toast("رصيد النقاط ما يكفي");
- }
 
- await runAction("convert",{points:n},"تم إصدار بطاقة الاسترداد");
+ await runAction("convert",{points:n},"تم تحويل النقاط وإضافة المبلغ لرصيدك");
 }
 
 function pageGift(content){
@@ -552,36 +586,6 @@ async function sendGift(){
  },"تم إرسال الهدية");
 }
 
-function pageRewards(content){
- const list=appData.rewards||[];
-
- content.innerHTML=`
- <div class="card">
-  <h2>مكافآتي 🎁</h2>
-
-  ${list.length?list.map(r=>`
-   <div class="row">
-    <div>
-     <div class="row-title">${escapeHTML(r.title)}</div>
-     <div class="row-sub">
-      ${escapeHTML(r.message||"")} ·
-      ${r.unit==="points"?points(r.amount)+" نقطة":money(r.amount)}
-     </div>
-     <div class="row-sub">${r.status==="redeemed"?"تم الاسترداد":"متاحة للاسترداد"}</div>
-    </div>
-
-    ${r.status==="pending"
-     ?`<button class="btn small" onclick="redeem('${r.id}')">استرداد</button>`
-     :"<span class='muted'>مكتملة</span>"}
-   </div>
-  `).join(""):`<div class="empty">ما عندك مكافآت حاليًا</div>`}
- </div>`;
-}
-
-async function redeem(id){
- await runAction("redeem",{reward_id:id},"تم استرداد المكافأة");
-}
-
 function pagePurchase(content){
  content.innerHTML=`
  <div class="card">
@@ -600,7 +604,7 @@ function pagePurchase(content){
 
   <div class="field">
    <label>اسم المنتج</label>
-   <input id="purchaseItem" placeholder="اسم المنتج">
+   <input id="purchaseItem" maxlength="100" placeholder="اسم المنتج">
   </div>
 
   <div class="field">
@@ -627,7 +631,7 @@ async function purchase(){
  },"تم تسجيل عملية الشراء");
 }
 
-function ledgerHTML(list){
+function ledgerHTML(list,allowDelete=false,accountId=null){
  if(!list.length)return `<div class="empty">ما فيه عمليات مسجلة</div>`;
 
  return list.map(x=>{
@@ -642,12 +646,18 @@ function ledgerHTML(list){
 
   return `
    <div class="row">
-    <div>
+    <div style="min-width:0;flex:1">
      <div class="row-title">${escapeHTML(x.title||"عملية")}</div>
      <div class="row-sub">${escapeHTML(x.details||"")}</div>
      <div class="row-sub">
       ${x.created_at?new Date(x.created_at).toLocaleString("ar-SA"):""}
      </div>
+     ${allowDelete?`
+      <button class="btn red small" style="margin-top:8px"
+       onclick="confirmDeleteLedger('${escapeHTML(x.id)}','${accountId||""}')">
+       حذف العملية
+      </button>
+     `:""}
     </div>
     <div class="amount ${cls}">${value}</div>
    </div>
@@ -658,33 +668,13 @@ function ledgerHTML(list){
 function pageLedger(content){
  content.innerHTML=`
  <div class="card">
-  <h2>سجل العمليات</h2>
-  ${ledgerHTML(appData.ledger||[])}
+  <div class="topline">
+   <h2>سجل العمليات</h2>
+   <button class="btn red small" onclick="confirmClearLedger('${currentUser.id}')">حذف السجل</button>
+  </div>
+  <p class="muted">تقدر تحذف عملية معينة أو تحذف سجل حسابك بالكامل.</p>
+  ${ledgerHTML(appData.ledger||[],true,currentUser.id)}
  </div>`;
-}
-
-function pageNotifications(content){
- const list=appData.notifications||[];
-
- content.innerHTML=`
- <div class="card">
-  <h2>الإشعارات 🔔</h2>
-
-  ${list.length?list.map(n=>`
-   <div class="notice">
-    <b>${escapeHTML(n.title)}</b>
-    <div>${escapeHTML(n.message)}</div>
-    <div class="muted">
-     ${n.created_at?new Date(n.created_at).toLocaleString("ar-SA"):""}
-    </div>
-    ${isAdmin()?`<button class="btn red small" onclick="deleteNotification('${n.id}')">حذف</button>`:""}
-   </div>
-  `).join(""):`<div class="empty">ما عندك إشعارات</div>`}
- </div>`;
-}
-
-async function deleteNotification(id){
- await runAction("delete_notification",{id},"تم حذف الإشعار");
 }
 
 function pageSettings(content){
@@ -736,7 +726,6 @@ async function saveSettings(){
   currentUser.theme_color=theme_color;
 
   document.documentElement.style.setProperty("--main",theme_color);
-
   toast("تم حفظ الإعدادات");
   renderApp();
  }catch(e){
@@ -748,9 +737,8 @@ async function changePin(){
  const old_pin=el("oldPin").value;
  const new_pin=el("newPin").value;
 
- if(!/^[0-9]{4,12}$/.test(new_pin)){
+ if(!/^[0-9]{4,12}$/.test(new_pin))
   return toast("الرقم الجديد لازم يكون من 4 إلى 12 رقم");
- }
 
  await runAction("change_pin",{old_pin,new_pin},"تم تغيير الرقم السري");
 }
@@ -788,7 +776,6 @@ function pageAccount(content){
 
   <div class="actions">
    <button class="btn" onclick="go('adjust')">تعديل الرصيد</button>
-   <button class="btn light" onclick="go('reward')">إرسال مكافأة</button>
   </div>
 
   <hr>
@@ -802,8 +789,11 @@ function pageAccount(content){
  </div>
 
  <div class="card">
-  <h3>سجل ${names[selected]}</h3>
-  ${ledgerHTML(appData.ledger||[])}
+  <div class="topline">
+   <h3>سجل ${names[selected]}</h3>
+   <button class="btn red small" onclick="confirmClearLedger('${selected}')">حذف السجل كاملًا</button>
+  </div>
+  ${ledgerHTML(appData.ledger||[],true,selected)}
  </div>`;
 }
 
@@ -822,117 +812,168 @@ async function selectAdminTarget(id){
 }
 
 async function toggleBlock(id,blocked){
- await runAction("toggle_block",{account_id:id,blocked},"تم تحديث حالة الحساب");
+ askConfirm(
+  blocked?"إيقاف الحساب":"تفعيل الحساب",
+  blocked?"هل أنت متأكد من إيقاف هذا الحساب؟":"هل تبي تفعّل هذا الحساب؟",
+  ()=>runAction("toggle_block",{account_id:id,blocked},"تم تحديث حالة الحساب")
+ );
 }
 
 function pageAdjust(content){
+ const balances=appData.allBalances||[];
+ const b=balances.find(x=>x.account_id===adminTarget)||{};
+
  content.innerHTML=`
  <div class="card">
-  <h2>تعديل الأرصدة</h2>
+  <h2>إدارة الأرصدة</h2>
+  <p class="muted">اختاري الحساب ونوع العملية، وراح يظهر الرصيد بعد التحديث.</p>
 
   <div class="field">
    <label>الحساب</label>
-   <select id="adjustAccount">
+   <select id="adjustAccount" onchange="updateAdjustBalance()">
     ${CHILDREN.map(id=>
      `<option value="${id}" ${id===adminTarget?"selected":""}>${names[id]}</option>`
     ).join("")}
    </select>
   </div>
 
-  <div class="field">
-   <label>نوع الرصيد</label>
-   <select id="adjustUnit">
-    <option value="money">فلوس (ريال)</option>
-    <option value="points">نقاط</option>
-   </select>
+  <div class="grid" id="adjustCurrentBalance">
+   <div class="stat money">
+    <span>الرصيد المالي الحالي</span>
+    <strong>${money(b.money)}</strong>
+   </div>
+   <div class="stat points">
+    <span>النقاط الحالية</span>
+    <strong>${points(b.points)}</strong>
+   </div>
+  </div>
+
+  <hr>
+
+  <label style="font-size:13px;font-weight:bold">اختاري نوع العملية</label>
+  <div class="adjust-grid" style="margin-top:10px">
+   <button class="adjust-option selected" id="opt-add-money" onclick="chooseAdjust('money',1)">
+    ＋ إضافة فلوس
+    <small>زيادة الرصيد بالريال</small>
+   </button>
+   <button class="adjust-option" id="opt-sub-money" onclick="chooseAdjust('money',-1)">
+    − خصم فلوس
+    <small>خصم مبلغ من الرصيد</small>
+   </button>
+   <button class="adjust-option" id="opt-add-points" onclick="chooseAdjust('points',1)">
+    ＋ إضافة نقاط
+    <small>زيادة نقاط الحساب</small>
+   </button>
+   <button class="adjust-option" id="opt-sub-points" onclick="chooseAdjust('points',-1)">
+    − خصم نقاط
+    <small>خصم نقاط من الحساب</small>
+   </button>
   </div>
 
   <div class="field">
-   <label>القيمة</label>
-   <input id="adjustAmount" type="number" step="any" placeholder="استخدم السالب للخصم">
+   <label id="adjustAmountLabel">المبلغ بالريال</label>
+   <input id="adjustAmount" type="number" min="0.01" step="any" placeholder="اكتب القيمة">
   </div>
 
   <div class="field">
-   <label>السبب</label>
-   <input id="adjustReason" maxlength="200" placeholder="سبب التعديل">
+   <label>سبب العملية</label>
+   <input id="adjustReason" maxlength="200" placeholder="مثال: مصروف أسبوعي أو خصم">
   </div>
 
-  <button class="btn full" onclick="adjustBalance()">حفظ التعديل</button>
+  <button class="btn full" onclick="adjustBalance()">تأكيد العملية</button>
  </div>`;
+ selectedAdjustUnit="money";
+ window.adjustDirection=1;
+}
+
+window.adjustDirection=1;
+
+function chooseAdjust(unit,direction){
+ selectedAdjustUnit=unit;
+ window.adjustDirection=direction;
+
+ ["opt-add-money","opt-sub-money","opt-add-points","opt-sub-points"]
+  .forEach(id=>el(id).classList.remove("selected"));
+
+ const key=unit==="money"
+  ?(direction>0?"opt-add-money":"opt-sub-money")
+  :(direction>0?"opt-add-points":"opt-sub-points");
+
+ el(key).classList.add("selected");
+ el("adjustAmountLabel").textContent=
+  unit==="money"?"المبلغ بالريال":"عدد النقاط";
+ el("adjustAmount").value="";
+ el("adjustAmount").step=unit==="points"?"1":"0.01";
+}
+
+async function updateAdjustBalance(){
+ const id=el("adjustAccount").value;
+ adminTarget=id;
+
+ try{
+  await loadData(id);
+  const b=(appData.allBalances||[]).find(x=>x.account_id===id)||{};
+
+  el("adjustCurrentBalance").innerHTML=`
+   <div class="stat money">
+    <span>الرصيد المالي الحالي</span>
+    <strong>${money(b.money)}</strong>
+   </div>
+   <div class="stat points">
+    <span>النقاط الحالية</span>
+    <strong>${points(b.points)}</strong>
+   </div>`;
+ }catch(e){
+  toast(e.message);
+ }
 }
 
 async function adjustBalance(){
  const account_id=el("adjustAccount").value;
- const unit=el("adjustUnit").value;
- const amount=Number(el("adjustAmount").value);
+ const unit=selectedAdjustUnit;
+ const raw=Number(el("adjustAmount").value);
+ const amount=raw*window.adjustDirection;
 
- if(!Number.isFinite(amount)||amount===0)return toast("أدخل قيمة صحيحة");
- if(unit==="points"&&!Number.isSafeInteger(amount))return toast("النقاط لازم تكون عددًا صحيحًا");
+ if(!Number.isFinite(raw)||raw<=0)
+  return toast("أدخل قيمة أكبر من صفر");
+
+ if(unit==="points"&&!Number.isSafeInteger(raw))
+  return toast("النقاط لازم تكون عددًا صحيحًا");
+
+ const b=(appData.allBalances||[]).find(x=>x.account_id===account_id)||{};
+ if(unit==="money"&&amount<0&&Math.abs(amount)>Number(b.money))
+  return toast("ما تقدر تخصمين أكثر من الرصيد الموجود");
+
+ if(unit==="points"&&amount<0&&Math.abs(amount)>Number(b.points))
+  return toast("ما تقدر تخصمين نقاط أكثر من الرصيد الموجود");
 
  await runAction("admin_adjust",{
   account_id,
   unit,
   amount,
   reason:el("adjustReason").value
- },"تم تعديل الرصيد");
+ },"تم تحديث الرصيد");
 }
 
-function pageAdminReward(content){
- content.innerHTML=`
- <div class="card">
-  <h2>إرسال مكافأة 🎁</h2>
-
-  <div class="field">
-   <label>إلى الحساب</label>
-   <select id="rewardAccount">
-    ${CHILDREN.map(id=>
-     `<option value="${id}" ${id===adminTarget?"selected":""}>${names[id]}</option>`
-    ).join("")}
-   </select>
-  </div>
-
-  <div class="field">
-   <label>اسم المكافأة</label>
-   <input id="rewardTitle" maxlength="100" placeholder="مكافأة جميلة">
-  </div>
-
-  <div class="field">
-   <label>رسالة</label>
-   <input id="rewardMessage" maxlength="200" placeholder="رسالة المكافأة">
-  </div>
-
-  <div class="field">
-   <label>نوع المكافأة</label>
-   <select id="rewardUnit">
-    <option value="points">نقاط</option>
-    <option value="money">ريالات</option>
-   </select>
-  </div>
-
-  <div class="field">
-   <label>الكمية</label>
-   <input id="rewardAmount" type="number" min="1" step="any">
-  </div>
-
-  <button class="btn full" onclick="sendAdminReward()">إرسال المكافأة</button>
- </div>`;
+function confirmDeleteLedger(id,accountId){
+ askConfirm(
+  "حذف العملية",
+  "هل أنت متأكد من حذف هذه العملية من السجل؟",
+  ()=>runAction("delete_ledger",{
+   id,
+   ...(isAdmin()?{account_id:accountId}:{})
+  },"تم حذف العملية")
+ );
 }
 
-async function sendAdminReward(){
- const account_id=el("rewardAccount").value;
- const unit=el("rewardUnit").value;
- const amount=Number(el("rewardAmount").value);
-
- if(!Number.isFinite(amount)||amount<=0)return toast("أدخل كمية صحيحة");
- if(unit==="points"&&!Number.isSafeInteger(amount))return toast("النقاط لازم تكون عددًا صحيحًا");
-
- await runAction("admin_reward",{
-  account_id,
-  title:el("rewardTitle").value,
-  message:el("rewardMessage").value,
-  unit,
-  amount
- },"تم إرسال المكافأة");
+function confirmClearLedger(accountId){
+ askConfirm(
+  "حذف السجل بالكامل",
+  "هل أنت متأكد؟ سيتم حذف جميع عمليات هذا الحساب من السجل.",
+  ()=>runAction("clear_ledger",{
+   ...(isAdmin()?{account_id:accountId}:{})
+  },"تم حذف السجل")
+ );
 }
 
 async function runAction(action,data,message){
@@ -942,7 +983,12 @@ async function runAction(action,data,message){
   await api(action,data);
   toast(message);
 
-  await loadData(isAdmin()&&currentPage==="account"?adminTarget:null);
+  if(isAdmin()){
+   await loadData(currentPage==="account"||currentPage==="adjust"?adminTarget:null);
+  }else{
+   await loadData();
+  }
+
   renderApp();
  }catch(e){
   toast(e.message);
@@ -951,7 +997,6 @@ async function runAction(action,data,message){
  }
 }
 
-/* تشغيل استعادة الجلسة عند فتح الصفحة */
 restoreSession();
 </script>
 </body>
