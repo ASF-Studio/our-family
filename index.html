@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
@@ -6,12 +7,16 @@
 <meta name="theme-color" content="#183d35">
 <title>عائلتنا الجميلة</title>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-
 <style>
 :root{
-  --main:#183d35;--soft:#e9f1ee;--bg:#f3f6f5;
-  --card:#fff;--text:#20312c;--muted:#77847f;
-  --danger:#b43c3c;--line:#e5ebe8;
+  --main:#183d35;
+  --soft:#e9f1ee;
+  --bg:#f3f6f5;
+  --card:#fff;
+  --text:#20312c;
+  --muted:#77847f;
+  --danger:#b43c3c;
+  --line:#e5ebe8;
   --shadow:0 5px 22px #183d3510;
 }
 *{box-sizing:border-box}
@@ -54,7 +59,8 @@ p{line-height:1.7}
   border:1px solid var(--line);background:white;border-radius:15px;
   min-height:100px;padding:16px 9px;color:var(--text);
   display:flex;flex-direction:column;align-items:center;
-  justify-content:center;gap:10px;font-weight:bold;transition:.18s
+  justify-content:center;gap:10px;font-weight:bold;
+  transition:.18s
 }
 .menu-btn:hover{border-color:var(--main);background:var(--soft)}
 .menu-icon{font-size:26px}
@@ -109,7 +115,7 @@ label{font-size:13px;font-weight:bold;display:block;margin-top:8px}
 .notice-head{display:flex;justify-content:space-between;gap:10px}
 .toast{
   position:fixed;bottom:20px;left:50%;transform:translateX(-50%);
-  z-index:10001;background:#183d35;color:white;padding:13px 20px;
+  z-index:50;background:#183d35;color:white;padding:13px 20px;
   border-radius:12px;box-shadow:0 5px 20px #0003;
   max-width:90%;text-align:center
 }
@@ -133,25 +139,6 @@ hr{border:0;border-top:1px solid var(--line);margin:17px 0}
 .empty{text-align:center;padding:25px;color:var(--muted)}
 .small-info{font-size:12px;color:var(--muted);line-height:1.8}
 footer{text-align:center;color:var(--muted);font-size:11px;padding:15px}
-
-/* شاشة التحميل */
-#busyScreen{
-  position:fixed;inset:0;background:#183d35df;
-  z-index:10000;display:flex;align-items:center;
-  justify-content:center;flex-direction:column;
-  color:white;gap:15px;text-align:center;
-  backdrop-filter:blur(3px);
-}
-#busyScreen.hidden{display:none!important}
-.busy-spinner{
-  width:49px;height:49px;border:5px solid #ffffff55;
-  border-top-color:white;border-radius:50%;
-  animation:busySpin .7s linear infinite;
-}
-#busyText{font-size:17px}
-.busy-subtext{font-size:12px;opacity:.8}
-@keyframes busySpin{to{transform:rotate(360deg)}}
-
 @media(max-width:600px){
   main{padding:16px 12px 40px}
   .menu-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
@@ -162,7 +149,6 @@ footer{text-align:center;color:var(--muted);font-size:11px;padding:15px}
 }
 </style>
 </head>
-
 <body>
 
 <header id="topHeader" class="hidden">
@@ -247,6 +233,7 @@ footer{text-align:center;color:var(--muted);font-size:11px;padding:15px}
     </div>
   </section>
 
+  <!-- تحويل النقاط -->
   <section id="convertPage" class="hidden">
     <button class="btn btn-light back" onclick="goHome()">← رجوع</button>
     <h1>تحويل النقاط</h1>
@@ -269,6 +256,7 @@ footer{text-align:center;color:var(--muted);font-size:11px;padding:15px}
     </div>
   </section>
 
+  <!-- الهدايا -->
   <section id="giftPage" class="hidden">
     <button class="btn btn-light back" onclick="goHome()">← رجوع</button>
     <h1>إرسال هدية</h1>
@@ -297,6 +285,7 @@ footer{text-align:center;color:var(--muted);font-size:11px;padding:15px}
     </div>
   </section>
 
+  <!-- الشراء -->
   <section id="purchasePage" class="hidden">
     <button class="btn btn-light back" onclick="goHome()">← رجوع</button>
     <h1>الشراء</h1>
@@ -328,6 +317,7 @@ footer{text-align:center;color:var(--muted);font-size:11px;padding:15px}
     <div id="purchaseHistory"></div>
   </section>
 
+  <!-- المكافآت -->
   <section id="rewardsPage" class="hidden">
     <button class="btn btn-light back" onclick="goHome()">← رجوع</button>
     <h1>هدايا ومكافآتي 🎁</h1>
@@ -335,12 +325,14 @@ footer{text-align:center;color:var(--muted);font-size:11px;padding:15px}
     <div id="rewardsList"></div>
   </section>
 
+  <!-- سجل العضو -->
   <section id="recordsPage" class="hidden">
     <button class="btn btn-light back" onclick="goHome()">← رجوع</button>
     <h1>سجل العمليات</h1>
     <div id="memberLedger"></div>
   </section>
 
+  <!-- ماما: إدارة الفلوس -->
   <section id="adminMoneyPage" class="hidden">
     <button class="btn btn-light back" onclick="goHome()">← رجوع</button>
     <h1>إدارة الفلوس 💵</h1>
@@ -366,6 +358,7 @@ footer{text-align:center;color:var(--muted);font-size:11px;padding:15px}
     </div>
   </section>
 
+  <!-- ماما: إدارة النقاط -->
   <section id="adminPointsPage" class="hidden">
     <button class="btn btn-light back" onclick="goHome()">← رجوع</button>
     <h1>إدارة النقاط ⭐</h1>
@@ -407,6 +400,7 @@ footer{text-align:center;color:var(--muted);font-size:11px;padding:15px}
     </div>
   </section>
 
+  <!-- مكافأة ماما -->
   <section id="adminRewardPage" class="hidden">
     <button class="btn btn-light back" onclick="goHome()">← رجوع</button>
     <h1>إرسال مكافأة 🎁</h1>
@@ -429,12 +423,14 @@ footer{text-align:center;color:var(--muted);font-size:11px;padding:15px}
     </div>
   </section>
 
+  <!-- الحسابات -->
   <section id="adminAccountsPage" class="hidden">
     <button class="btn btn-light back" onclick="goHome()">← رجوع</button>
     <h1>إدارة الحسابات</h1>
     <div id="accountsList"></div>
   </section>
 
+  <!-- إشعارات ماما -->
   <section id="adminNoticesPage" class="hidden">
     <button class="btn btn-light back" onclick="goHome()">← رجوع</button>
     <h1>إدارة الإشعارات</h1>
@@ -442,6 +438,7 @@ footer{text-align:center;color:var(--muted);font-size:11px;padding:15px}
     <div id="adminNotifications"></div>
   </section>
 
+  <!-- سجلات ماما -->
   <section id="adminRecordsPage" class="hidden">
     <button class="btn btn-light back" onclick="goHome()">← رجوع</button>
     <h1>سجلات العائلة</h1>
@@ -453,6 +450,7 @@ footer{text-align:center;color:var(--muted);font-size:11px;padding:15px}
     <div id="adminLedger"></div>
   </section>
 
+  <!-- الإعدادات -->
   <section id="settingsPage" class="hidden">
     <button class="btn btn-light back" onclick="goHome()">← رجوع</button>
     <h1>الإعدادات ⚙️</h1>
@@ -484,13 +482,6 @@ footer{text-align:center;color:var(--muted);font-size:11px;padding:15px}
 
 <footer id="footer" class="hidden">عائلتنا الجميلة · محفظة عائلية خاصة</footer>
 <div id="toast" class="toast hidden"></div>
-
-<!-- شاشة التحميل -->
-<div id="busyScreen" class="hidden" aria-live="polite">
-  <div class="busy-spinner"></div>
-  <strong id="busyText">جاري تنفيذ العملية...</strong>
-  <span class="busy-subtext">انتظر لحظة</span>
-</div>
 
 <script>
 const SUPABASE_URL = "https://ayfxtomfqrantxmpqgof.supabase.co";
@@ -973,77 +964,6 @@ async function logoutPrompt(){
     showToast("تم تسجيل الخروج");
   }catch(error){showToast(error.message,true)}
 }
-
-/* منع تكرار العمليات وإظهار التحميل */
-let familyBusy = false;
-
-const loadingMessages = {
-  login: "جاري تسجيل الدخول...",
-  requestConversion: "جاري إنشاء بطاقة الاسترداد...",
-  sendGift: "جاري إرسال الهدية...",
-  redeemReward: "جاري استرداد البطاقة وإضافة الرصيد...",
-  makePurchase: "جاري تنفيذ الشراء...",
-  adminAdjust: "جاري تحديث الرصيد...",
-  sendAdminReward: "جاري إرسال المكافأة...",
-  toggleBlock: "جاري تحديث حالة الحساب...",
-  deleteNotice: "جاري حذف الإشعار...",
-  loadAdminRecords: "جاري تحميل السجلات...",
-  saveSettings: "جاري حفظ الإعدادات...",
-  changePin: "جاري تغيير الرقم السري...",
-  logoutPrompt: "جاري تسجيل الخروج..."
-};
-
-function protectAction(functionName){
-  const originalFunction = window[functionName];
-  if(typeof originalFunction !== "function")return;
-
-  window[functionName] = async function(...args){
-    if(familyBusy)return;
-
-    familyBusy = true;
-
-    const allButtons = [...document.querySelectorAll("button")];
-    const previousStates = allButtons.map(button => button.disabled);
-
-    allButtons.forEach(button => {
-      button.disabled = true;
-    });
-
-    $("busyText").textContent =
-      loadingMessages[functionName] || "جاري تنفيذ العملية...";
-
-    $("busyScreen").classList.remove("hidden");
-
-    try{
-      return await originalFunction.apply(this,args);
-    }finally{
-      $("busyScreen").classList.add("hidden");
-
-      allButtons.forEach((button,index) => {
-        button.disabled = previousStates[index];
-      });
-
-      familyBusy = false;
-    }
-  };
-}
-
-/* العمليات التي يظهر معها التحميل */
-[
-  "login",
-  "requestConversion",
-  "sendGift",
-  "redeemReward",
-  "makePurchase",
-  "adminAdjust",
-  "sendAdminReward",
-  "toggleBlock",
-  "deleteNotice",
-  "loadAdminRecords",
-  "saveSettings",
-  "changePin",
-  "logoutPrompt"
-].forEach(protectAction);
 
 $("loginPin").addEventListener("keydown",e=>{
   if(e.key==="Enter")login();
