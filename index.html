@@ -233,6 +233,7 @@ async function apiRequest(payload) {
 }
 
 async function handleSignup() {
+ if (isProcessing) return;
  const targetFamilyId = el("signupFamilyId").value;
  const email = el("signupEmail").value.trim();
  const password = el("signupPassword").value.trim();
@@ -241,13 +242,18 @@ async function handleSignup() {
  if(!email || !password || !inviteCode) return toast("يرجى تعبئة كافة الحقول");
  if(password.length < 4) return toast("كلمة المرور يجب ألا تقل عن 4 رموز");
 
+ isProcessing = true;
  showLoading(true, "جاري إنشاء الحساب...");
  try {
   await apiRequest({ action: "signup", email, password, targetFamilyId, inviteCode });
   toast("تم إنشاء الحساب بنجاح! يمكنك تسجيل الدخول الآن.");
   toggleAuthMode('login');
- } catch(err) {}
- finally { showLoading(false); }
+ } catch(err) {
+  // المعالجة عبر apiRequest
+ } finally {
+  isProcessing = false;
+  showLoading(false);
+ }
 }
 
 async function handleLogin() {
