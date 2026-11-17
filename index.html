@@ -51,14 +51,11 @@ input:focus,select:focus{border-color:var(--main)}
 .plus{color:#258052}.minus{color:var(--red)}
 .notice{background:var(--soft);border-radius:10px;padding:12px;font-size:12px;line-height:1.9;margin:12px 0}
 .empty{text-align:center;padding:25px;color:var(--muted);font-size:13px}
-.actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:13px}
 .profile-chip{background:#ffffff20;border-radius:8px;padding:7px 11px;font-size:12px}
-hr{border:0;border-top:1px solid var(--border);margin:18px 0}
 .toast{position:fixed;bottom:20px;right:50%;transform:translateX(50%);background:#203d34;color:white;padding:12px 18px;border-radius:10px;z-index:20;max-width:90%;font-size:13px}
 .loading{position:fixed;inset:0;background:#ffffffd9;z-index:30;display:grid;place-items:center;color:var(--main);font-weight:bold;text-align:center}
 .spinner{width:32px;height:32px;border:4px solid var(--soft);border-top-color:var(--main);border-radius:50%;animation:spin .8s linear infinite;margin:0 auto 12px}
 @keyframes spin{to{transform:rotate(360deg)}}
-@media(max-width:600px){header{padding:14px}.container{padding:14px 11px 40px}.card{padding:15px}.stat{padding:13px}.stat strong{font-size:19px}.login-wrap{margin:5vh auto}}
 </style>
 </head>
 <body>
@@ -92,7 +89,7 @@ hr{border:0;border-top:1px solid var(--border);margin:18px 0}
   </div>
   <div class="field">
    <label>الرقم السري</label>
-   <input id="loginPin" type="password" inputmode="numeric" placeholder="أدخل الرقم السري">
+   <input id="loginPin" type="password" inputmode="numeric" placeholder="أدخل الرقم السري (الافتراضي 1111)">
   </div>
   <button class="btn full" id="loginButton" onclick="handleLogin()">دخول</button>
  </div>
@@ -139,7 +136,7 @@ let busy = false;
 let toastTimer;
 
 function el(id){return document.getElementById(id)}
-function escapeHTML(value){return String(value??"").replace(/[&<>"']/g,c=>({"&":"&","<":"<",">":">",'"':""","'":"'"}[c]))}
+function escapeHTML(value){return String(value??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]))}
 function money(value){return (Number(value)||0).toLocaleString("ar-SA",{minimumFractionDigits:0,maximumFractionDigits:2})+" ر.س"}
 function points(value){return (Number(value)||0).toLocaleString("ar-SA")}
 
@@ -436,22 +433,28 @@ async function doAdminAdjust() {
 
 function pageSettings(c) {
  c.innerHTML = `<div class="card">
-  <h2>🔐 تغيير الرقم السري</h2>
-  <div class="field"><label>الرقم السري الحالي</label><input id="oldPin" type="password" inputmode="numeric" placeholder="الرقم الحالي"></div>
-  <div class="field"><label>الرقم السري الجديد (4 أرقام فأكثر)</label><input id="newPin" type="password" inputmode="numeric" placeholder="الرقم الجديد"></div>
-  <button class="btn full" onclick="doChangePin()">حفظ الرقم السري</button>
+  <h2>🔐 تغيير رمز الدخول</h2>
+  <div class="field"><label>الرمز الحالي</label><input id="oldPin" type="password" inputmode="numeric" placeholder="أدخل الرمز الحالي"></div>
+  <div class="field"><label>الرمز الجديد</label><input id="newPin" type="password" inputmode="numeric" placeholder="أدخل الرمز الجديد"></div>
+  <div class="field"><label>تأكيد الرمز الجديد</label><input id="confirmPin" type="password" inputmode="numeric" placeholder="أعد إدخال الرمز الجديد"></div>
+  <button class="btn full" onclick="doChangePin()">حفظ الرمز الجديد</button>
  </div>`;
 }
 
 async function doChangePin() {
  const oldPin = el("oldPin").value.trim();
  const newPin = el("newPin").value.trim();
- if (!oldPin || newPin.length < 4) return toast("تأكد من إدخال الرقم الحالي ورقم جديد من 4 خانات على الأقل");
+ const confirmPin = el("confirmPin").value.trim();
+
+ if (!oldPin || !newPin || !confirmPin) return toast("يرجى تعبئة جميع حقول الرموز السريّة");
+ if (newPin.length < 4) return toast("الرمز الجديد يجب ألا يقل عن 4 أرقام");
+ if (newPin !== confirmPin) return toast("الرمز الجديد وتأكيد الرمز غير متطابقين");
 
  await apiRequest({ action: "changePin", userId: currentUser.id, oldPin, newPin });
  el("oldPin").value = "";
  el("newPin").value = "";
- toast("تم تغيير الرقم السري بنجاح!");
+ el("confirmPin").value = "";
+ toast("تم حفظ الرمز الجديد بنجاح وأصبح معتمداً للدخول!");
 }
 
 function logout() {
