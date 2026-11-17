@@ -189,7 +189,7 @@ function toast(message){
   t.textContent = message;
   t.classList.remove("hidden");
   clearTimeout(toastTimer);
-  toastTimer = setTimeout(()=>t.classList.add("hidden"), 3000);
+  toastTimer = setTimeout(()=>t.classList.add("hidden"), 4000);
  }
 }
 
@@ -249,7 +249,7 @@ async function handleSignup() {
   toast("تم إنشاء الحساب بنجاح! يمكنك تسجيل الدخول الآن.");
   toggleAuthMode('login');
  } catch(err) {
-  // المعالجة عبر apiRequest
+  // المعالجة عبر apiRequest وtoast
  } finally {
   isProcessing = false;
   showLoading(false);
@@ -275,6 +275,10 @@ async function handleLogin() {
 
   await refreshData();
   
+  if (!currentUser) {
+   throw new Error("فشل تحميل بيانات الحساب بعد تسجيل الدخول");
+  }
+
   el("loginScreen").classList.add("hidden");
   el("header").classList.remove("hidden");
   el("app").classList.remove("hidden");
@@ -283,7 +287,8 @@ async function handleLogin() {
   renderApp();
   toast("تم تسجيل الدخول بنجاح");
  } catch (err) {
-  toast(err.message);
+  toast(err.message || "فشل تسجيل الدخول");
+  console.error("Login Error:", err);
  } finally {
   isProcessing = false;
   showLoading(false);
@@ -298,7 +303,7 @@ async function refreshData() {
   allRecipients = res.recipients || [];
   allLedger = res.ledger || [];
  } catch(e) {
-  console.error(e);
+  console.error("Refresh Data Error:", e);
  }
 }
 
@@ -411,7 +416,7 @@ function pageConvert(c) {
 async function doConvertPoints() {
  const pts = Number(el("convertAmount").value);
  if (!pts || pts < 25 || pts % 25 !== 0) return toast("يجب ألا تقل النقاط عن 25 وأن تكون من مضاعفاتها");
- if (pts > currentUser.points) return toast("رصيد النقاط غير كافٍ");
+ if (pts > currentUser.points) return toast("رصيد النقاط غير كافٍ الحي");
 
  await apiRequest({ action: "convertPoints", pointsToConvert: pts });
  await refreshData();
