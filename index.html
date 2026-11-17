@@ -7,55 +7,57 @@
 <title>بنك العائلة</title>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <style>
-:root{--main:#173d34;--bg:#f4f6f5;--card:#fff;--text:#24332e;--muted:#7b8983;--border:#e5ebe8;--soft:#edf3f0;--red:#b84b4b;--gold:#9a741e}
+:root{--main:#173d34;--accent:#256d5b;--bg:#f4f6f5;--card:#fff;--text:#24332e;--muted:#7b8983;--border:#e5ebe8;--soft:#edf3f0;--red:#b84b4b;--gold:#9a741e}
 *{box-sizing:border-box}
 body{margin:0;background:var(--bg);color:var(--text);font-family:Tahoma,Arial,sans-serif}
-button,input,select{font:inherit}
+button,input,select,textarea{font:inherit}
 button{cursor:pointer}
 .hidden{display:none!important}
-header{background:var(--main);color:white;padding:17px 5%;display:flex;align-items:center;justify-content:space-between;gap:12px}
+header{background:var(--main);color:white;padding:16px 5%;display:flex;align-items:center;justify-content:space-between;gap:12px;box-shadow:0 2px 8px rgba(0,0,0,0.06)}
 .brand{font-size:18px;font-weight:bold}
-.header-user{font-size:12px;color:#d6e4de;margin-top:5px}
-.container{max-width:960px;margin:auto;padding:22px 16px 55px}
-.card{background:var(--card);border:1px solid var(--border);border-radius:15px;padding:20px;margin-bottom:14px}
-h2{font-size:19px;margin:0 0 15px}
-h3{font-size:15px;margin:0 0 12px}
-.muted{color:var(--muted);font-size:12px;line-height:1.9}
-.login-wrap{max-width:410px;margin:7vh auto;padding:16px}
-.login-title{text-align:center;margin-bottom:22px}
-.login-title h1{font-size:23px;margin:0 0 8px;color:var(--main)}
-.field{margin:14px 0}
-.field label{display:block;font-size:13px;font-weight:bold;margin-bottom:7px}
-input,select{width:100%;padding:12px;border:1px solid var(--border);border-radius:10px;background:white;color:var(--text);outline:none}
-input:focus,select:focus{border-color:var(--main)}
-.btn{border:0;border-radius:10px;padding:13px 16px;background:var(--main);color:white;font-weight:bold;display:block;width:100%;text-align:center;cursor:pointer}
+.header-user{font-size:12px;color:#d6e4de;margin-top:4px}
+.container{max-width:920px;margin:auto;padding:20px 16px 60px}
+.card{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:20px;margin-bottom:14px;box-shadow:0 1px 3px rgba(0,0,0,0.02)}
+h2{font-size:18px;margin:0 0 14px;color:var(--main)}
+h3{font-size:14px;margin:0 0 10px}
+.muted{color:var(--muted);font-size:12px;line-height:1.8}
+.login-wrap{max-width:400px;margin:8vh auto;padding:16px}
+.login-title{text-align:center;margin-bottom:20px}
+.login-title h1{font-size:22px;margin:0 0 6px;color:var(--main)}
+.field{margin:13px 0}
+.field label{display:block;font-size:12px;font-weight:bold;margin-bottom:6px}
+input,select,textarea{width:100%;padding:11px;border:1px solid var(--border);border-radius:9px;background:white;color:var(--text);outline:none}
+input:focus,select:focus,textarea:focus{border-color:var(--accent)}
+.btn{border:0;border-radius:9px;padding:12px 16px;background:var(--main);color:white;font-weight:bold;display:block;width:100%;text-align:center;cursor:pointer;transition:background .2s}
+.btn:hover{background:var(--accent)}
 .btn:disabled{opacity:.6;cursor:not-allowed}
 .btn.light{background:var(--soft);color:var(--main)}
 .btn.red{background:#faeeee;color:var(--red)}
-.btn.small{padding:8px 12px;font-size:12px;width:auto}
-.link-btn{background:none;border:none;color:var(--main);text-decoration:underline;padding:0;font-size:12px;cursor:pointer;margin-top:10px;display:inline-block}
+.btn.small{padding:7px 11px;font-size:11px;width:auto}
+.link-btn{background:none;border:none;color:var(--accent);text-decoration:underline;padding:0;font-size:12px;cursor:pointer;margin-top:8px;display:inline-block}
 .topline{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap}
 .grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
-.stat{background:#f0f4f2;border:1px solid var(--border);border-radius:12px;padding:16px}
-.stat span{display:block;color:var(--muted);font-size:12px;margin-bottom:9px}
-.stat strong{font-size:22px;color:var(--main)}
+.stat{background:#f0f4f2;border:1px solid var(--border);border-radius:11px;padding:15px;position:relative}
+.stat span{display:block;color:var(--muted);font-size:11px;margin-bottom:8px}
+.stat strong{font-size:21px;color:var(--main)}
 .stat.points{background:#f8f5eb}
 .stat.points strong{color:var(--gold)}
-.nav{display:flex;gap:7px;overflow-x:auto;padding:3px 0 14px}
-.nav button{white-space:nowrap;border:1px solid var(--border);background:white;color:var(--main);padding:10px 14px;border-radius:9px;font-size:13px}
+.eye-btn{position:absolute;top:14px;left:14px;background:none;border:none;cursor:pointer;font-size:14px;color:var(--muted)}
+.nav{display:flex;gap:6px;overflow-x:auto;padding:2px 0 14px}
+.nav button{white-space:nowrap;border:1px solid var(--border);background:white;color:var(--main);padding:9px 13px;border-radius:8px;font-size:12px;font-weight:bold}
 .nav button.active{background:var(--main);color:white;border-color:var(--main)}
-.row{display:flex;justify-content:space-between;align-items:center;gap:12px;padding:13px 0;border-bottom:1px solid var(--border)}
+.row{display:flex;justify-content:space-between;align-items:center;gap:12px;padding:12px 0;border-bottom:1px solid var(--border)}
 .row:last-child{border-bottom:0}
 .row-title{font-size:13px;font-weight:bold}
-.row-sub{font-size:11px;color:var(--muted);margin-top:5px;line-height:1.7}
-.amount{font-size:13px;font-weight:bold;white-space:nowrap}
+.row-sub{font-size:11px;color:var(--muted);margin-top:4px;line-height:1.6}
+.amount{font-size:12px;font-weight:bold;white-space:nowrap}
 .plus{color:#258052}.minus{color:var(--red)}
-.notice{background:var(--soft);border-radius:10px;padding:12px;font-size:12px;line-height:1.9;margin:12px 0}
-.empty{text-align:center;padding:25px;color:var(--muted);font-size:13px}
-.profile-chip{background:#ffffff20;border-radius:8px;padding:7px 11px;font-size:12px}
-.toast{position:fixed;bottom:20px;right:50%;transform:translateX(50%);background:#203d34;color:white;padding:12px 18px;border-radius:10px;z-index:99999;max-width:90%;font-size:13px}
+.notice{background:var(--soft);border-radius:9px;padding:11px;font-size:12px;line-height:1.8;margin:10px 0}
+.empty{text-align:center;padding:22px;color:var(--muted);font-size:12px}
+.profile-chip{background:#ffffff20;border-radius:7px;padding:6px 10px;font-size:11px}
+.toast{position:fixed;bottom:20px;right:50%;transform:translateX(50%);background:#173d34;color:white;padding:11px 16px;border-radius:9px;z-index:99999;max-width:90%;font-size:12px;box-shadow:0 4px 12px rgba(0,0,0,0.15)}
 .loading{position:fixed;inset:0;background:rgba(255,255,255,0.85);z-index:99998;display:grid;place-items:center;color:var(--main);font-weight:bold;text-align:center}
-.spinner{width:32px;height:32px;border:4px solid var(--soft);border-top-color:var(--main);border-radius:50%;animation:spin .8s linear infinite;margin:0 auto 12px}
+.spinner{width:30px;height:30px;border:3px solid var(--soft);border-top-color:var(--main);border-radius:50%;animation:spin .8s linear infinite;margin:0 auto 10px}
 @keyframes spin{to{transform:rotate(360deg)}}
 </style>
 </head>
@@ -73,7 +75,7 @@ input:focus,select:focus{border-color:var(--main)}
  <button class="btn light small" onclick="logout()">خروج</button>
 </header>
 
-<!-- شاشة تسجيل الدخول -->
+<!-- شاشة تسجيل الدخول وإنشاء الحساب -->
 <section id="loginScreen" class="login-wrap">
  <div class="login-title">
   <h1>بنك العائلة</h1>
@@ -81,21 +83,14 @@ input:focus,select:focus{border-color:var(--main)}
  </div>
  <div class="card" id="loginCard">
   <h2>تسجيل الدخول</h2>
-  <div class="field">
-   <label>البريد الإلكتروني</label>
-   <input id="loginEmail" type="email" placeholder="example@domain.com">
-  </div>
-  <div class="field">
-   <label>كلمة المرور</label>
-   <input id="loginPassword" type="password" placeholder="أدخل كلمة المرور">
-  </div>
+  <div class="field"><label>البريد الإلكتروني</label><input id="loginEmail" type="email" placeholder="example@domain.com"></div>
+  <div class="field"><label>كلمة المرور</label><input id="loginPassword" type="password" placeholder="أدخل كلمة المرور"></div>
   <button type="button" class="btn" onclick="handleLogin()">دخول</button>
-  <div style="text-align:center; margin-top:14px;">
+  <div style="text-align:center; margin-top:12px;">
    <button type="button" class="link-btn" onclick="toggleAuthMode('signup')">ليس لديك حساب؟ إنشاء حساب جديد</button>
   </div>
  </div>
 
- <!-- شاشة إنشاء حساب -->
  <div class="card hidden" id="signupCard">
   <h2>إنشاء حساب جديد</h2>
   <div class="field">
@@ -106,43 +101,42 @@ input:focus,select:focus{border-color:var(--main)}
     <option value="mama">ماما (الإدارة)</option>
    </select>
   </div>
-  <div class="field">
-   <label>البريد الإلكتروني</label>
-   <input id="signupEmail" type="email" placeholder="بريدك الإلكتروني">
-  </div>
-  <div class="field">
-   <label>كلمة المرور</label>
-   <input id="signupPassword" type="password" placeholder="كلمة المرور">
-  </div>
-  <div class="field">
-   <label>رمز الدعوة</label>
-   <input id="signupInviteCode" type="text" placeholder="رمز الدعوة الخاص">
-  </div>
+  <div class="field"><label>البريد الإلكتروني</label><input id="signupEmail" type="email" placeholder="بريدك الإلكتروني"></div>
+  <div class="field"><label>كلمة المرور</label><input id="signupPassword" type="password" placeholder="كلمة المرور"></div>
+  <div class="field"><label>رمز الدعوة</label><input id="signupInviteCode" type="text" placeholder="رمز الدعوة الخاص"></div>
   <button type="button" class="btn" onclick="handleSignup()">إتمام التسجيل</button>
-  <div style="text-align:center; margin-top:14px;">
+  <div style="text-align:center; margin-top:12px;">
    <button type="button" class="link-btn" onclick="toggleAuthMode('login')">لديك حساب؟ تسجيل الدخول</button>
   </div>
  </div>
 </section>
 
-<!-- لوحة التطبيق -->
+<!-- لوحة التطبيق الأساسية -->
 <main id="app" class="container hidden">
  <div class="card">
   <div class="topline">
    <div>
     <div class="muted">مرحبًا بك</div>
-    <h2 id="welcomeTitle" style="margin:5px 0 0">أهلًا</h2>
+    <h2 id="welcomeTitle" style="margin:4px 0 0">أهلاً</h2>
    </div>
    <span class="profile-chip" id="roleLabel"></span>
   </div>
  </div>
 
- <div class="grid" id="statsGrid" style="margin-bottom:16px;">
-  <div class="stat"><span>الرصيد المالي</span><strong id="myBalance">0 ر.س</strong></div>
-  <div class="stat points"><span>رصيد النقاط</span><strong id="myPoints">0</strong></div>
+ <div class="grid" id="statsGrid" style="margin-bottom:14px;">
+  <div class="stat">
+   <span>الرصيد المالي</span>
+   <strong id="myBalance">0 ر.س</strong>
+   <button class="eye-btn" onclick="toggleHide('balance')">👁️</button>
+  </div>
+  <div class="stat points">
+   <span>رصيد النقاط</span>
+   <strong id="myPoints">0</strong>
+   <button class="eye-btn" onclick="toggleHide('points')">👁️</button>
+  </div>
  </div>
 
- <div class="card" id="familySummaryCard">
+ <div class="card" id="familySummaryCard" style="display:none;">
   <h3>أرصدة أفراد العائلة</h3>
   <div id="familySummary"></div>
  </div>
@@ -156,8 +150,9 @@ input:focus,select:focus{border-color:var(--main)}
 <script>
 "use strict";
 
-const SUPABASE_URL = "https://ayfxtomfqrantxmpqgof.supabase.co";
-const SUPABASE_ANON_KEY = "sb_publishable_2d8TzhMCRIuc6daKrObBGA_7i0jUIxe";
+/* إعدادات الاتصال بـ Supabase (معلومات مشروعك الجديد) */
+const SUPABASE_URL = "https://cursiwpgzaisednzpjsi.supabase.co";
+const SUPABASE_ANON_KEY = "sb_publishable_hZ653h1LL_jnaHMLRw1-ng_vsSyQs57";
 const EDGE_FUNCTION_URL = `${SUPABASE_URL}/functions/v1/family-api`;
 
 const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
@@ -166,14 +161,19 @@ let currentUser = null;
 let allAccounts = [];
 let allRecipients = [];
 let allLedger = [];
+let allTopUps = [];
+let allGifts = [];
+let allNotifications = [];
 let currentPage = "home";
 let isProcessing = false;
 let toastTimer;
+let hideBalance = false;
+let hidePoints = false;
 
 function el(id){return document.getElementById(id)}
 function escapeHTML(value){return String(value??"").replace(/[&<>"']/g,c=>({"&":"&","<":"<",">":">",'"':""","'":"'"}[c]))}
-function money(value){return (Number(value)||0).toLocaleString("ar-SA",{minimumFractionDigits:0,maximumFractionDigits:2})+" ر.س"}
-function points(value){return (Number(value)||0).toLocaleString("ar-SA")}
+function money(value){return hideBalance ? "••••••" : (Number(value)||0).toLocaleString("ar-SA",{minimumFractionDigits:0,maximumFractionDigits:2})+" ر.س"}
+function points(value){return hidePoints ? "••••" : (Number(value)||0).toLocaleString("ar-SA")}
 
 function showLoading(show, text="جاري التحميل..."){
  const loader = el("loading");
@@ -201,6 +201,12 @@ function toggleAuthMode(mode) {
   el("signupCard").classList.add("hidden");
   el("loginCard").classList.remove("hidden");
  }
+}
+
+function toggleHide(type) {
+ if(type === 'balance') hideBalance = !hideBalance;
+ if(type === 'points') hidePoints = !hidePoints;
+ renderApp();
 }
 
 async function apiRequest(payload) {
@@ -248,9 +254,8 @@ async function handleSignup() {
   await apiRequest({ action: "signup", email, password, targetFamilyId, inviteCode });
   toast("تم إنشاء الحساب بنجاح! يمكنك تسجيل الدخول الآن.");
   toggleAuthMode('login');
- } catch(err) {
-  // المعالجة عبر apiRequest وtoast
- } finally {
+ } catch(err) {}
+ finally {
   isProcessing = false;
   showLoading(false);
  }
@@ -275,8 +280,9 @@ async function handleLogin() {
 
   await refreshData();
   
-  if (!currentUser) {
-   throw new Error("فشل تحميل بيانات الحساب بعد تسجيل الدخول");
+  if (currentUser && currentUser.blocked) {
+   await supabaseClient.auth.signOut();
+   throw new Error("تم تبنيد حسابك من قِبل ماما");
   }
 
   el("loginScreen").classList.add("hidden");
@@ -288,7 +294,6 @@ async function handleLogin() {
   toast("تم تسجيل الدخول بنجاح");
  } catch (err) {
   toast(err.message || "فشل تسجيل الدخول");
-  console.error("Login Error:", err);
  } finally {
   isProcessing = false;
   showLoading(false);
@@ -302,8 +307,11 @@ async function refreshData() {
   allAccounts = res.accounts || [];
   allRecipients = res.recipients || [];
   allLedger = res.ledger || [];
+  allTopUps = res.topUps || [];
+  allGifts = res.gifts || [];
+  allNotifications = res.notifications || [];
  } catch(e) {
-  console.error("Refresh Data Error:", e);
+  console.error(e);
  }
 }
 
@@ -312,6 +320,10 @@ async function restoreSession() {
  if (session) {
   await refreshData();
   if (currentUser) {
+   if (currentUser.blocked) {
+    await logout();
+    return alert("تم تبنيد حسابك من قِبل ماما");
+   }
    el("loginScreen").classList.add("hidden");
    el("header").classList.remove("hidden");
    el("app").classList.remove("hidden");
@@ -350,7 +362,10 @@ function renderFamilySummary() {
  if(!currentUser.is_admin) return;
  container.innerHTML = allAccounts.map(acc => `
   <div class="row">
-   <div><strong>${escapeHTML(acc.name)}</strong></div>
+   <div>
+    <strong>${escapeHTML(acc.name)}</strong>
+    <div class="row-sub">الحالة: ${acc.blocked ? '<span style="color:var(--red)">موقوف</span>' : 'نشط'}</div>
+   </div>
    <div>
     <span class="amount plus" style="margin-left:8px">${money(acc.balance)}</span>
     <span class="amount" style="color:var(--gold)">${points(acc.points)} نقطة</span>
@@ -361,8 +376,8 @@ function renderFamilySummary() {
 
 function renderNav() {
  const items = currentUser.is_admin
-  ? [["home","الرئيسية"],["admin","لوحة الإدارة"],["ledger","السجل"],["settings","الإعدادات"]]
-  : [["home","الرئيسية"],["convert","تحويل النقاط"],["gift","إرسال نقاط"],["purchase","المشتريات"],["ledger","السجل"],["settings","الإعدادات"]];
+  ? [["home","الرئيسية"],["admin","لوحة الإدارة"],["ledger","السجل"],["notifications",`الإشعارات (${allNotifications.filter(n=>!n.read).length})`]]
+  : [["home","الرئيسية"],["convert","النقاط"],["topup","الشحن"],["gifts","الهدايا"],["purchase","المشتريات"],["ledger","السجل"],["notifications",`الإشعارات (${allNotifications.filter(n=>!n.read).length})`]];
  
  const navEl = el("navigation");
  if(navEl) {
@@ -379,11 +394,12 @@ function renderPage() {
  const pages = {
   home: pageHome,
   convert: pageConvert,
-  gift: pageGift,
+  topup: pageTopUp,
+  gifts: pageGifts,
   purchase: pagePurchase,
   ledger: pageLedger,
-  admin: pageAdmin,
-  settings: pageSettings
+  notifications: pageNotifications,
+  admin: pageAdmin
  };
  const container = el("pageContent");
  if(container && pages[currentPage]) {
@@ -394,29 +410,29 @@ function renderPage() {
 function pageHome(c) {
  c.innerHTML = `<div class="card">
   <h2>الرئيسية</h2>
-  <p class="muted">${currentUser.is_admin ? "أهلاً بك يا ماما، يمكنك إدارة أرصدة وحسابات أفراد العائلة." : "كل 1000 نقطة تساوي 5 ريالات."}</p>
-  ${currentUser.is_admin ? '<button class="btn" onclick="go(\'admin\')">انتقل إلى لوحة الإدارة</button>' : '<button class="btn" onclick="go(\'convert\')">تحويل النقاط إلى أموال</button>'}
+  <p class="muted">${currentUser.is_admin ? "أهلاً بك يا ماما، يمكنك إدارة أرصدة وحسابات أفراد العائلة بكفاءة." : "كل 1000 نقطة تساوي 5 ريالات سعودية."}</p>
+  ${currentUser.is_admin ? '<button class="btn" onclick="go(\'admin\')">انتقل إلى لوحة الإدارة</button>' : '<button class="btn" onclick="go(\'convert\')">إدارة وتحويل النقاط</button>'}
  </div>
  <div class="card">
   <h3>آخر العمليات</h3>
-  ${ledgerHTML((allLedger || []).slice(0, 5), false)}
+  ${ledgerHTML((allLedger || []).slice(0, 5))}
  </div>`;
 }
 
 function pageConvert(c) {
  c.innerHTML = `<div class="card">
-  <h2>🔄 تحويل النقاط إلى أموال</h2>
+  <h2>🔄 قسم النقاط والتحويل</h2>
   <p class="muted">كل 1000 نقطة = 5 ريالات (الحد الأدنى 25 نقطة ومضاعفاتها)</p>
-  <div class="notice">رصيدك الحالي: <b>${points(currentUser.points)} نقطة</b></div>
-  <div class="field"><label>عدد النقاط</label><input id="convertAmount" type="number" step="25" min="25" placeholder="مثال: 1000"></div>
-  <button class="btn" onclick="doConvertPoints()">تحويل الآن</button>
+  <div class="notice">رصيد النقاط الحالي: <b>${points(currentUser.points)} نقطة</b></div>
+  <div class="field"><label>عدد النقاط للتحويل</label><input id="convertPoints" type="number" step="25" min="25" placeholder="مثال: 250"></div>
+  <button class="btn" onclick="doConvert()">تحويل إلى أموال</button>
  </div>`;
 }
 
-async function doConvertPoints() {
- const pts = Number(el("convertAmount").value);
+async function doConvert() {
+ const pts = Number(el("convertPoints").value);
  if (!pts || pts < 25 || pts % 25 !== 0) return toast("يجب ألا تقل النقاط عن 25 وأن تكون من مضاعفاتها");
- if (pts > currentUser.points) return toast("رصيد النقاط غير كافٍ الحي");
+ if (pts > currentUser.points) return toast("رصيد النقاط غير كافٍ");
 
  await apiRequest({ action: "convertPoints", pointsToConvert: pts });
  await refreshData();
@@ -424,49 +440,114 @@ async function doConvertPoints() {
  toast("تم تحويل النقاط إلى أموال بنجاح!");
 }
 
-function pageGift(c) {
+function pageTopUp(c) {
  c.innerHTML = `<div class="card">
-  <h2>🎁 إرسال نقاط</h2>
-  <div class="field"><label>المستلم</label><select id="giftTo">${allRecipients.map(a=>`<option value="${a.id}">${escapeHTML(a.name)}</option>`).join("")}</select></div>
-  <div class="field"><label>عدد النقاط (مضاعفات 25)</label><input id="giftPoints" type="number" step="25" min="25" placeholder="عدد النقاط"></div>
-  <button class="btn" onclick="doSendPoints()">إرسال النقاط</button>
+  <h2>💵 طلب شحن الرصيد</h2>
+  <p class="muted">أدخل المبلغ المطلوب شحنه ليتم مراجعته واعتماده من قِبل ماما.</p>
+  <div class="field"><label>المبلغ (ريال)</label><input id="topUpAmount" type="number" step="5" min="5" placeholder="مثال: 50"></div>
+  <div class="field"><label>ملاحظة اختيارية</label><input id="topUpNote" placeholder="سبب الشحن..."></div>
+  <button class="btn" onclick="doRequestTopUp()">إرسال طلب الشحن</button>
+ </div>
+ <div class="card">
+  <h3>طلبات الشحن السابقة</h3>
+  ${topUpHTML(allTopUps)}
  </div>`;
 }
 
-async function doSendPoints() {
- const toId = el("giftTo").value;
- const pointsVal = Number(el("giftPoints").value);
- if (!pointsVal || pointsVal < 25 || pointsVal % 25 !== 0) return toast("يجب ألا تقل النقاط عن 25 وأن تكون من مضاعفاتها");
- if (pointsVal > currentUser.points) return toast("نقاطك لا تكفي");
+async function doRequestTopUp() {
+ const amount = Number(el("topUpAmount").value);
+ const note = el("topUpNote").value.trim();
+ if(!amount || amount <= 0) return toast("أدخل مبلغاً صحيحاً للشحن");
 
- await apiRequest({ action: "sendPoints", toId, points: pointsVal });
+ await apiRequest({ action: "requestTopUp", amount, note });
  await refreshData();
  renderApp();
- toast("تم إرسال النقاط بنجاح!");
+ toast("تم إرسال طلب الشحن بنجاح بنجاح");
+}
+
+function topUpHTML(list) {
+ if (!list.length) return `<div class="empty">لا توجد طلبات شحن سابقة</div>`;
+ return list.map(item => {
+  const statusMap = { pending: 'قيد الانتظار', approved: 'مقبول', rejected: 'مرفوض' };
+  const colorMap = { pending: 'var(--gold)', approved: 'var(--plus)', rejected: 'var(--red)' };
+  return `<div class="row">
+   <div>
+    <div class="row-title">طلب شحن بمبلغ ${money(item.amount)}</div>
+    <div class="row-sub">ملاحظة: ${escapeHTML(item.note || 'بدون')} | القرار: <span style="color:${colorMap[item.status]}">${statusMap[item.status]}</span></div>
+   </div>
+   <div class="amount">${new Date(item.created_at).toLocaleDateString('ar-SA')}</div>
+  </div>`;
+ }).join("");
+}
+
+function pageGifts(c) {
+ c.innerHTML = `<div class="card">
+  <h2>🎁 إرسال الهدايا (بالنقاط)</h2>
+  <div class="field"><label>المستلم</label><select id="giftTo">${allRecipients.map(a=>`<option value="${a.id}">${escapeHTML(a.name)}</option>`).join("")}</select></div>
+  <div class="field"><label>عدد النقاط</label><input id="giftPoints" type="number" step="25" min="25" placeholder="عدد النقاط"></div>
+  <div class="field"><label>رسالة الهدية</label><input id="giftMessage" placeholder="رسالة لطيفة..."></div>
+  <button class="btn" onclick="doSendGift()">إرسال الهدية الآن</button>
+ </div>
+ <div class="card">
+  <h3>سجل الهدايا</h3>
+  ${giftsHTML(allGifts)}
+ </div>`;
+}
+
+async function doSendGift() {
+ const toId = el("giftTo").value;
+ const points = Number(el("giftPoints").value);
+ const message = el("giftMessage").value.trim();
+
+ if(!points || points <= 0) return toast("أدخل عدد نقاط صحيح");
+ if(points > currentUser.points) return toast("رصيد النقاط غير كافٍ");
+
+ await apiRequest({ action: "sendGift", toId, points, message });
+ await refreshData();
+ renderApp();
+ toast("تم إرسال الهدية بنجاح!");
+}
+
+function giftsHTML(list) {
+ if (!list.length) return `<div class="empty">لا توجد هدايا مسجلة</div>`;
+ return list.map(item => `
+  <div class="row">
+   <div>
+    <div class="row-title">من ${escapeHTML(item.sender_name)} إلى ${escapeHTML(item.receiver_name)}</div>
+    <div class="row-sub">الرسالة: ${escapeHTML(item.message)}</div>
+   </div>
+   <div class="amount" style="color:var(--gold)">${points(item.points)} نقطة</div>
+  </div>
+ `).join("");
 }
 
 function pagePurchase(c) {
  c.innerHTML = `<div class="card">
-  <h2>🛒 تسجيل مشتريات (خصم أموال)</h2>
-  <div class="field"><label>اسم الغرض</label><input id="purchaseItem" placeholder="مثال: كتاب، لعبة..."></div>
-  <div class="field"><label>المبلغ (ريال)</label><input id="purchaseCost" type="number" step="0.5" min="1" placeholder="المبلغ"></div>
-  <button class="btn red" onclick="doPurchase()">شراء وخصم المبلغ</button>
+  <h2>🛒 تسجيل مشتريات جديدة</h2>
+  <div class="field"><label>اسم المنتج أو الغرض</label><input id="purItem" placeholder="مثال: كتاب، لعبة..."></div>
+  <div class="field"><label>مكان الشراء / المتجر</label><input id="purStore" placeholder="مثال: متجر إلكتروني، سوبرماركت..."></div>
+  <div class="field"><label>السعر (ريال)</label><input id="purCost" type="number" step="0.5" min="1" placeholder="السعر"></div>
+  <div class="field"><label>ملاحظات إضافية</label><input id="purNotes" placeholder="اختياري..."></div>
+  <button class="btn red" onclick="doPurchase()">تسجيل الشراء وخصم المبلغ</button>
  </div>`;
 }
 
 async function doPurchase() {
- const item = el("purchaseItem").value.trim();
- const cost = Number(el("purchaseCost").value);
- if (!item || !cost || cost <= 0) return toast("يرجى إدخال اسم الغرض والمبلغ بشكل صحيح");
- if (cost > currentUser.balance) return toast("الرصيد المالي غير كافٍ");
+ const item = el("purItem").value.trim();
+ const store = el("purStore").value.trim();
+ const cost = Number(el("purCost").value);
+ const notes = el("purNotes").value.trim();
 
- await apiRequest({ action: "purchase", item, cost });
+ if(!item || !store || !cost || cost <= 0) return toast("يرجى تعبئة اسم المنتج، مكان الشراء، والسعر بشكل صحيح");
+ if(cost > currentUser.balance) return toast("الرصيد المالي غير كافٍ");
+
+ await apiRequest({ action: "purchase", item, cost, store, notes });
  await refreshData();
  renderApp();
  toast("تم تسجيل الشراء وخصم المبلغ بنجاح!");
 }
 
-function ledgerHTML(list, allowDelete = false) {
+function ledgerHTML(list) {
  if (!list.length) return `<div class="empty">لا توجد عمليات مسجلة بعد</div>`;
  return list.map(item => {
   const date = new Date(item.created_at).toLocaleString('ar-SA', { dateStyle: 'short', timeStyle: 'short' });
@@ -482,12 +563,10 @@ function ledgerHTML(list, allowDelete = false) {
    cls = p > 0 ? "plus" : "minus";
   }
 
-  const delBtn = allowDelete && currentUser.is_admin ? `<button class="btn red small" onclick="deleteSingleRecord('${item.id}')">حذف</button>` : "";
   return `<div class="row">
    <div>
     <div class="row-title">${escapeHTML(item.user_name)}: ${escapeHTML(item.description)}</div>
     <div class="row-sub">${date}</div>
-    ${delBtn}
    </div>
    <div class="amount ${cls}">${changeStr}</div>
   </div>`;
@@ -496,97 +575,105 @@ function ledgerHTML(list, allowDelete = false) {
 
 function pageLedger(c) {
  c.innerHTML = `<div class="card">
-  <div class="topline" style="margin-bottom:12px;">
-   <h2>📜 سجل العمليات</h2>
-   ${currentUser.is_admin ? '<button class="btn red small" onclick="clearLedger()">حذف السجل بالكامل</button>' : ''}
-  </div>
-  ${ledgerHTML(allLedger, currentUser.is_admin)}
+  <h2>📜 سجل العمليات الكامل</h2>
+  ${ledgerHTML(allLedger)}
  </div>`;
 }
 
-async function deleteSingleRecord(recordId) {
- if (!confirm("هل تريد حذف هذه العملية من السجل؟")) return;
- await apiRequest({ action: "clearLedger", recordId });
- await refreshData();
- renderApp();
- toast("تم الحذف بنجاح");
-}
-
-async function clearLedger() {
- if (!confirm("تحذير: سيتم حذف جميع سجلات العمليات، هل أنت متأكد؟")) return;
- await apiRequest({ action: "clearLedger" });
- await refreshData();
- renderApp();
- toast("تم تفريغ السجل بنجاح");
+function pageNotifications(c) {
+ c.innerHTML = `<div class="card">
+  <h2>🔔 الإشعارات والتنبيهات</h2>
+  ${allNotifications.length ? allNotifications.map(n => `
+   <div class="row">
+    <div>
+     <div class="row-title">${escapeHTML(n.title)}</div>
+     <div class="row-sub">${escapeHTML(n.body)}</div>
+    </div>
+    <div class="amount">${new Date(n.created_at).toLocaleDateString('ar-SA')}</div>
+   </div>
+  `).join("") : '<div class="empty">لا توجد إشعارات جديدة</div>'}
+ </div>`;
 }
 
 function pageAdmin(c) {
  c.innerHTML = `<div class="card">
-  <h2>👑 لوحة التحكم والإدارة</h2>
-  <div class="field"><label>اختر الحساب المستهدف</label><select id="adminTargetUser">${allAccounts.map(a=>`<option value="${a.id}">${escapeHTML(a.name)}</option>`).join("")}</select></div>
-  <div class="field"><label>نوع العملية</label><select id="adminActionType"><option value="moneyPlus">زيادة أموال</option><option value="moneyMinus">خصم أموال</option><option value="pointsPlus">زيادة نقاط</option><option value="pointsMinus">خصم نقاط</option></select></div>
-  <div class="field"><label>القيمة (المبلغ أو النقاط)</label><input id="adminValue" type="number" min="1" placeholder="القيمة"></div>
-  <div class="field"><label>السبب / الملاحظة</label><input id="adminReason" placeholder="مكافأة تفوق"></div>
+  <h2>👑 لوحة تحكم ماما</h2>
+  <div class="field"><label>اختر العضو المستهدف</label><select id="admTarget">${allAccounts.map(a=>`<option value="${a.id}">${escapeHTML(a.name)} (${a.blocked ? 'موقوف' : 'نشط'})</option>`).join("")}</select></div>
+  <div class="field"><label>نوع العملية الإدارية</label><select id="admType"><option value="moneyPlus">إضافة أموال</option><option value="moneyMinus">خصم أموال</option><option value="pointsPlus">إضافة نقاط</option><option value="pointsMinus">خصم نقاط</option><option value="reward">منح مكافأة (نقاط وأموال)</option></select></div>
+  <div class="field"><label>القيمة (المبلغ أو النقاط)</label><input id="admVal" type="number" min="1" placeholder="القيمة"></div>
+  <div class="field"><label>السبب / الملاحظة</label><input id="admReason" placeholder="مكافأة إنجاز..."></div>
   <button class="btn" onclick="doAdminAdjust()">تنفيذ التعديل</button>
+ </div>
+
+ <div class="card">
+  <h2>💵 طلبات الشحن المعلقة</h2>
+  ${allTopUps.filter(t=>t.status==='pending').length ? allTopUps.filter(t=>t.status==='pending').map(t=>`
+   <div class="row">
+    <div>
+     <div class="row-title">${escapeHTML(t.user_name)} يطلب شحن ${money(t.amount)}</div>
+     <div class="row-sub">ملاحظة: ${escapeHTML(t.note || 'بدون')}</div>
+    </div>
+    <div>
+     <button class="btn small" onclick="handleTopUp('${t.id}', 'approved')">قبول</button>
+     <button class="btn red small" style="margin-top:4px" onclick="handleTopUp('${t.id}', 'rejected')">رفض</button>
+    </div>
+   </div>
+  `).join("") : '<div class="empty">لا توجد طلبات شحن معلقة</div>'}
+ </div>
+
+ <div class="card">
+  <h2>🚫 إيقاف أو تفعيل الحسابات (التبنيد)</h2>
+  <div class="field"><label>اختر العضو</label><select id="blockTarget">${allAccounts.map(a=>`<option value="${a.id}">${escapeHTML(a.name)} - ${a.blocked ? 'حالياً موقوف' : 'نشط'}</option>`).join("")}</select></div>
+  <div class="field"><label>الإجراء</label><select id="blockStatus"><option value="true">إيقاف الحساب (تبنيد)</option><option value="false">إعادة تفعيل الحساب</option></select></div>
+  <button class="btn red" onclick="doToggleBlock()">تطبيق حالة الحساب</button>
  </div>`;
 }
 
 async function doAdminAdjust() {
- const targetId = el("adminTargetUser").value;
- const type = el("adminActionType").value;
- const val = Number(el("adminValue").value);
- const reason = el("adminReason").value.trim();
+ const targetId = el("admTarget").value;
+ const type = el("admType").value;
+ const val = Number(el("admVal").value);
+ const reason = el("admReason").value.trim();
 
- if (!val || val <= 0) return alert("أدخل قيمة صحيحة");
+ if(!val || val <= 0) return toast("أدخل قيمة صحيحة");
 
  let moneyDelta = 0;
  let pointsDelta = 0;
+ let isReward = false;
 
- if (type === 'moneyPlus') moneyDelta = val;
- if (type === 'moneyMinus') moneyDelta = -val;
- if (type === 'pointsPlus') pointsDelta = val;
- if (type === 'pointsMinus') pointsDelta = -val;
+ if(type === 'moneyPlus') moneyDelta = val;
+ if(type === 'moneyMinus') moneyDelta = -val;
+ if(type === 'pointsPlus') pointsDelta = val;
+ if(type === 'pointsMinus') pointsDelta = -val;
+ if(type === 'reward') { pointsDelta = val; isReward = true; }
 
- await apiRequest({ action: "adminAdjust", targetId, moneyDelta, pointsDelta, reason });
+ await apiRequest({ action: "adminAdjust", targetId, moneyDelta, pointsDelta, reason, isReward });
  await refreshData();
  renderApp();
- toast("تم تنفيذ التعديل الإداري بنجاح!");
+ toast("تم تنفيذ الإجراء الإداري بنجاح!");
 }
 
-function pageSettings(c) {
- c.innerHTML = `<div class="card">
-  <h2>🔐 تغيير كلمة المرور</h2>
-  <div class="field"><label>كلمة المرور الجديدة</label><input id="newPassword" type="password" placeholder="أدخل كلمة المرور الجديدة"></div>
-  <div class="field"><label>تأكيد كلمة المرور الجديدة</label><input id="confirmPassword" type="password" placeholder="أعد إدخال كلمة المرور الجديدة"></div>
-  <button class="btn" onclick="doChangePassword()">حفظ كلمة المرور</button>
- </div>`;
+async function handleTopUp(requestId, status) {
+ const adminReason = status === 'rejected' ? prompt("سبب الرفض (اختياري):") || '' : '';
+ await apiRequest({ action: "handleTopUp", requestId, status, adminReason });
+ await refreshData();
+ renderApp();
+ toast("تم تحديث طلب الشحن بنجاح");
 }
 
-async function doChangePassword() {
- const newPass = el("newPassword").value.trim();
- const confirmPass = el("confirmPassword").value.trim();
+async function doToggleBlock() {
+ const targetId = el("blockTarget").value;
+ const blocked = el("blockStatus").value === 'true';
 
- if (!newPass || !confirmPass) return toast("يرجى تعبئة كافة الحقول");
- if (newPass.length < 4) return toast("كلمة المرور يجب ألا تقل عن 4 رموز");
- if (newPass !== confirmPass) return toast("كلمة المرور وتأكيدها غير متطابقين");
-
- showLoading(true, "جاري تحديث كلمة المرور...");
- const { error } = await supabaseClient.auth.updateUser({ password: newPass });
- showLoading(false);
-
- if (error) return toast("تعذر تحديث كلمة المرور: " + error.message);
-
- el("newPassword").value = "";
- el("confirmPassword").value = "";
- toast("تم تحديث وحفظ كلمة المرور بنجاح!");
+ await apiRequest({ action: "toggleBlock", targetId, blocked });
+ await refreshData();
+ renderApp();
+ toast("تم تحديث حالة العضو بنجاح");
 }
 
 async function logout() {
  await supabaseClient.auth.signOut();
  currentUser = null;
- allAccounts = [];
- allRecipients = [];
- allLedger = [];
  el("app").classList.add("hidden");
  el("header").classList.add("hidden");
  el("loginScreen").classList.remove("hidden");
