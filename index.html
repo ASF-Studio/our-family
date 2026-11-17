@@ -88,9 +88,9 @@ input:focus,select:focus{border-color:var(--main)}
   </div>
   <div class="field">
    <label>الرقم السري</label>
-   <input id="loginPin" type="password" inputmode="numeric" placeholder="أدخل الرقم السري (الافتراضي 1111)">
+   <input id="loginPin" type="password" inputmode="numeric" placeholder="أدخل الرقم السري">
   </div>
-  <button type="button" class="btn" id="loginButton">دخول</button>
+  <button type="button" class="btn" id="loginButton" onclick="handleLogin()">دخول</button>
  </div>
 </section>
 
@@ -226,19 +226,19 @@ async function handleLogin() {
  }
 }
 
-// ربط الزر برمجياً بشكل مباشر لضمان استجابته التامة على الكمبيوتر والجوال
+// ربط مباشر وقوي للزر لضمان الاستجابة الكاملة باللمس والنقر
 document.addEventListener("DOMContentLoaded", () => {
  const loginBtn = el("loginButton");
  if (loginBtn) {
-  loginBtn.addEventListener("click", (e) => {
+  loginBtn.onclick = (e) => {
    e.preventDefault();
    handleLogin();
-  });
+  };
   loginBtn.addEventListener("touchend", (e) => {
    e.preventDefault();
    handleLogin();
   });
- }
+ });
 });
 
 async function refreshData() {
