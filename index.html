@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <meta name="theme-color" content="#0d2b22">
-<title>بنك العائلة | الخدمات المصرفية الرقمية</title>
+<title>بنك العائلة</title>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <style>
 :root{--primary:#0d2b22;--primary-light:#154536;--gold:#c5a059;--gold-light:#e6c584;--bg:#f4f7f6;--card:#fff;--text:#1a2e26;--muted:#6b7c75;--border:#e2e8e5;--red:#a93226;--green:#1e8449;--shadow:0 10px 25px -5px rgba(13,43,34,0.08)}
@@ -17,17 +17,17 @@ button{cursor:pointer}
 header{background:linear-gradient(135deg,var(--primary) 0%,var(--primary-light) 100%);color:white;padding:16px 6%;display:flex;align-items:center;justify-content:space-between;box-shadow:0 4px 20px rgba(0,0,0,0.12)}
 .bank-brand{display:flex;align-items:center;gap:12px}
 .bank-logo{width:42px;height:42px;background:var(--gold);border-radius:10px;display:grid;place-items:center;font-weight:bold;font-size:18px;color:var(--primary);box-shadow:0 4px 10px rgba(197,160,89,0.3)}
-.bank-title{font-size:16px;font-weight:bold}
+.bank-title{font-size:17px;font-weight:bold}
 .bank-subtitle{font-size:11px;color:var(--gold-light)}
 
 .container{max-width:1000px;margin:auto;padding:24px 16px 60px}
 
-/* شاشة تسجيل الدخول بتصميم بنكي فاخر */
-.auth-container{max-width:420px;margin:7vh auto;padding:16px}
+/* شاشة تسجيل الدخول */
+.auth-container{max-width:420px;margin:8vh auto;padding:16px}
 .auth-card{background:var(--card);border-radius:20px;padding:32px;box-shadow:var(--shadow);border:1.5px solid var(--border)}
 .auth-logo-area{text-align:center;margin-bottom:24px}
 .auth-logo-area .big-logo{width:64px;height:64px;background:var(--primary);color:var(--gold);border-radius:16px;display:inline-grid;place-items:center;font-size:28px;font-weight:bold;margin-bottom:12px;box-shadow:0 6px 15px rgba(13,43,34,0.2)}
-.auth-logo-area h1{font-size:20px;margin:0 0 6px;color:var(--primary)}
+.auth-logo-area h1{font-size:22px;margin:0 0 6px;color:var(--primary)}
 .auth-logo-area p{font-size:12px;color:var(--muted);margin:0}
 
 .field{margin:16px 0}
@@ -43,7 +43,7 @@ input:focus,select:focus,textarea:focus{border-color:var(--primary);outline:none
 .btn.small{padding:8px 14px;font-size:11px;width:auto}
 .btn.outline{background:transparent;border:1.5px solid rgba(255,255,255,0.3);color:white}
 
-/* البطاقة المصرفية المتميزة */
+/* البطاقة المصرفية */
 .bank-card-hero{background:linear-gradient(135deg,#0d2b22 0%,#1f4d3e 100%);color:white;border-radius:18px;padding:24px;position:relative;overflow:hidden;box-shadow:0 15px 30px rgba(13,43,34,0.18);margin-bottom:20px}
 .bank-card-top{display:flex;justify-content:space-between;align-items:center;margin-bottom:22px}
 .bank-card-chip{width:36px;height:28px;background:linear-gradient(135deg,#e6c584 0%,#c5a059 100%);border-radius:5px}
@@ -88,8 +88,8 @@ input:focus,select:focus,textarea:focus{border-color:var(--primary);outline:none
  <div class="bank-brand">
   <div class="bank-logo">ف</div>
   <div>
-   <div class="bank-title">بنك العائلة الرقمي</div>
-   <div class="bank-subtitle" id="headerRoleLabel">الخدمات المصرفية للأفراد</div>
+   <div class="bank-title">بنك العائلة</div>
+   <div class="bank-subtitle" id="headerRoleLabel">الحساب الفردي</div>
   </div>
  </div>
  <div style="display:flex;align-items:center;gap:10px">
@@ -98,17 +98,17 @@ input:focus,select:focus,textarea:focus{border-color:var(--primary);outline:none
  </div>
 </header>
 
-<!-- شاشة تسجيل الدخول المباشرة باختيار الحساب والرمز السري -->
+<!-- شاشة تسجيل الدخول باختيار الحساب والرمز السري -->
 <section id="loginScreen" class="auth-container">
  <div class="auth-card">
   <div class="auth-logo-area">
    <div class="big-logo">ف</div>
    <h1>بنك العائلة</h1>
-   <p>الخدمات المصرفية الآمنة للأفراد</p>
+   <p>تسجيل الدخول الآمن</p>
   </div>
 
   <div class="field">
-   <label>اختر الحساب المصرفي</label>
+   <label>اختر الحساب</label>
    <select id="loginFamilyId">
     <option value="azoz">عزوز</option>
     <option value="sahab">سحاب</option>
@@ -116,14 +116,14 @@ input:focus,select:focus,textarea:focus{border-color:var(--primary);outline:none
    </select>
   </div>
   <div class="field">
-   <label>الرمز السري (PIN)</label>
-   <input id="loginPin" type="password" maxlength="6" placeholder="أدخل الرمز (الافتراضي 1111)">
+   <label>الرمز السري</label>
+   <input id="loginPin" type="password" maxlength="6" placeholder="أدخل الرمز السري">
   </div>
-  <button type="button" class="btn gold" onclick="handleLogin()" style="margin-top:18px">تسجيل الدخول الآمن</button>
+  <button type="button" class="btn gold" onclick="handleLogin()" style="margin-top:18px">تسجيل الدخول</button>
  </div>
 </section>
 
-<!-- لوحة التحكم والخدمات المصرفية -->
+<!-- لوحة التطبيق -->
 <main id="app" class="container hidden">
  
  <div class="bank-card-hero" id="bankHeroCard">
@@ -161,8 +161,6 @@ const SUPABASE_URL = "https://cursiwpgzaisednzpjsi.supabase.co";
 const SUPABASE_ANON_KEY = "sb_publishable_hZ653h1LL_jnaHMLRw1-ng_vsSyQs57";
 const EDGE_FUNCTION_URL = `${SUPABASE_URL}/functions/v1/family-api`;
 
-const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
-
 let currentUser = null;
 let allAccounts = [];
 let allRecipients = [];
@@ -181,7 +179,7 @@ function escapeHTML(value){return String(value??"").replace(/[&<>"']/g,c=>({"&":
 function money(value){return hideBalance ? "••••••" : (Number(value)||0).toLocaleString("ar-SA",{minimumFractionDigits:2,maximumFractionDigits:2})+" ر.س"}
 function points(value){return hidePoints ? "••••" : (Number(value)||0).toLocaleString("ar-SA")+" نقطة"}
 
-function showLoading(show, text="جاري المعالجة المصرفية..."){
+function showLoading(show, text="جاري المعالجة..."){
  const loader = el("loading");
  if(loader) {
   el("loadingText").textContent = text;
@@ -221,7 +219,7 @@ async function apiRequest(payload) {
 
   const data = await response.json().catch(() => ({}));
   if (!response.ok || !data.success) {
-   throw new Error(data.error || "عذراً، تعذر تنفيذ الطلب المصرفي في الخادم");
+   throw new Error(data.error || "عذراً، تعذر تنفيذ الطلب في الخادم");
   }
   return data;
  } catch (err) {
@@ -240,7 +238,7 @@ async function handleLogin() {
  if(!pin) return toast("يرجى إدخال الرمز السري");
 
  isProcessing = true;
- showLoading(true, "جاري التحقق وتسجيل الدخول الآمن...");
+ showLoading(true, "جاري تسجيل الدخول...");
 
  try {
   const response = await fetch(EDGE_FUNCTION_URL, {
@@ -268,11 +266,11 @@ async function handleLogin() {
   await refreshData();
   currentPage = "home";
   renderApp();
-  toast("مرحباً بك في الخدمات المصرفية لبنك العائلة");
+  toast("تم تسجيل الدخول بنجاح");
 
   if (currentUser.mustChangePin) {
    setTimeout(() => {
-    alert("تنبيه أمني: هذا حساب جديد برمز افتراضي (1111). يرجى الانتقال إلى الإعدادات وتغيير الرمز السري لحماية حسابك.");
+    alert("تنبيه أمني: يرجى الانتقال إلى الإعدادات وتغيير الرمز السري لحسابك.");
    }, 500);
   }
  } catch (err) {
@@ -323,7 +321,7 @@ function renderApp() {
  if (!currentUser) return;
  el("headerName").textContent = currentUser.name || "";
  el("cardHolderName").textContent = currentUser.name.toUpperCase() + " / FAMILY BANK";
- el("headerRoleLabel").textContent = currentUser.is_admin ? "لوحة الإدارة المصرفية" : "الحساب المصرفي الفردي";
+ el("headerRoleLabel").textContent = currentUser.is_admin ? "لوحة الإدارة" : "الحساب الفردي";
 
  const familyCard = el("familySummaryCard");
  const heroCard = el("bankHeroCard");
@@ -363,8 +361,8 @@ function renderFamilySummary() {
 
 function renderNav() {
  const items = currentUser.is_admin
-  ? [["home","الرئيسية"],["admin","الإدارة والعمليات"],["ledger","السجل المصرفي"],["notifications",`التنبيهات (${allNotifications.filter(n=>!n.read).length})`],["settings","الإعدادات"]]
-  : [["home","الرئيسية"],["convert","تحويل النقاط"],["topup","شحن الرصيد"],["gifts","الهدايا"],["purchase","المشتريات"],["ledger","سجل الحساب"],["notifications",`التنبيهات (${allNotifications.filter(n=>!n.read).length})`],["settings","الإعدادات"]];
+  ? [["home","الرئيسية"],["admin","الإدارة والعمليات"],["ledger","السجل"],["notifications",`التنبيهات (${allNotifications.filter(n=>!n.read).length})`],["settings","الإعدادات"]]
+  : [["home","الرئيسية"],["convert","تحويل النقاط"],["topup","شحن الرصيد"],["gifts","الهدايا"],["purchase","المشتريات"],["ledger","السجل"],["notifications",`التنبيهات (${allNotifications.filter(n=>!n.read).length})`],["settings","الإعدادات"]];
  
  const navEl = el("navigation");
  if(navEl) {
@@ -399,7 +397,7 @@ function renderPage() {
 function pageHome(c) {
  c.innerHTML = `
  <div class="card" style="border-right: 4px solid var(--gold);">
-  <div class="card-header"><span class="card-title">🌟 قسم النقاط والمكافآت (الرئيسي)</span></div>
+  <div class="card-header"><span class="card-title">🌟 قسم النقاط والمكافآت</span></div>
   <p class="muted">${currentUser.is_admin ? "أهلاً بك يا ماما. من هنا يمكنك مراقبة وتعديل نقاط أفراد العائلة." : "رصيد نقاطك الحالي يعكس إنجازاتك ومكافآتك العائلية. كل 1000 نقطة تعادل 5 ريالات."}</p>
   <div style="display:flex;gap:10px;margin-top:14px;flex-wrap:wrap">
    ${!currentUser.is_admin ? '<button class="btn gold" onclick="go(\'convert\')">تحويل النقاط إلى رصيد نقدي</button>' : ''}
@@ -409,13 +407,13 @@ function pageHome(c) {
  </div>
 
  <div class="card">
-  <div class="card-header"><span class="card-title">${currentUser.is_admin ? "لوحة الإدارة والتحكم المصرفي" : "الخدمات السريعة وملخص الحساب"}</span></div>
+  <div class="card-header"><span class="card-title">${currentUser.is_admin ? "لوحة الإدارة والتحكم" : "الخدمات السريعة وملخص الحساب"}</span></div>
   <p class="muted">${currentUser.is_admin ? "أهلاً بك يا ماما. يمكنك اعتماد طلبات الشحن، ومراقبة حركة أرصدة العائلة بكل مرونة." : "معدل تحويل النقاط المعتمد: كل 1000 نقطة تعادل 5.00 ريال سعودي."}</p>
-  ${currentUser.is_admin ? '<button class="btn" onclick="go(\'admin\')" style="margin-top:12px">فتح لوحة الإدارة المصرفية</button>' : ''}
+  ${currentUser.is_admin ? '<button class="btn" onclick="go(\'admin\')" style="margin-top:12px">فتح لوحة الإدارة</button>' : ''}
  </div>
 
  <div class="card">
-  <div class="card-header"><span class="card-title">آخر العمليات المصرفية</span></div>
+  <div class="card-header"><span class="card-title">آخر العمليات</span></div>
   ${ledgerHTML((allLedger || []).slice(0, 5))}
  </div>`;
 }
@@ -553,7 +551,7 @@ async function doPurchase() {
 }
 
 function ledgerHTML(list) {
- if (!list.length) return `<div class="empty-state">لا توجد معاملات مسجلة في السجل المصرفي</div>`;
+ if (!list.length) return `<div class="empty-state">لا توجد معاملات مسجلة في السجل</div>`;
  return list.map(item => {
   const date = new Date(item.created_at).toLocaleString('ar-SA', { dateStyle: 'short', timeStyle: 'short' });
   const m = Number(item.amount_change || 0);
@@ -581,7 +579,7 @@ function ledgerHTML(list) {
 function pageLedger(c) {
  c.innerHTML = `
  <div class="card">
-  <div class="card-header"><span class="card-title">السجل المصرفي والمعاملات المالية</span></div>
+  <div class="card-header"><span class="card-title">السجل والمعاملات المالية</span></div>
   ${ledgerHTML(allLedger)}
  </div>`;
 }
@@ -589,7 +587,7 @@ function pageLedger(c) {
 function pageNotifications(c) {
  c.innerHTML = `
  <div class="card">
-  <div class="card-header"><span class="card-title">التنبيهات والإشعارات المصرفية</span></div>
+  <div class="card-header"><span class="card-title">التنبيهات والإشعارات</span></div>
   ${allNotifications.length ? allNotifications.map(n => `
    <div class="transaction-row">
     <div class="tx-info">
@@ -650,7 +648,7 @@ function pageAdmin(c) {
  <div class="card">
   <div class="card-header"><span class="card-title">إدارة الأمان والتبنيد (إيقاف أو تفعيل الحسابات)</span></div>
   <div class="field"><label>اختر العضو</label><select id="blockTarget">${allAccounts.map(a=>`<option value="${a.id}">${escapeHTML(a.name)} - ${a.blocked ? 'موقوف حالياً' : 'نشط'}</option>`).join("")}</select></div>
-  <div class="field"><label>الإجراء المصرفي</label><select id="blockStatus"><option value="true">إيقاف الحساب (تبنيد)</option><option value="false">إعادة تفعيل الحساب</option></select></div>
+  <div class="field"><label>الإجراء</label><select id="blockStatus"><option value="true">إيقاف الحساب (تبنيد)</option><option value="false">إعادة تفعيل الحساب</option></select></div>
   <button class="btn red" onclick="doToggleBlock()">تطبيق حالة الحساب الأمنية</button>
  </div>`;
 }
