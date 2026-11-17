@@ -3,145 +3,177 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<meta name="theme-color" content="#173d34">
-<title>بنك العائلة</title>
+<meta name="theme-color" content="#0d2b22">
+<title>بنك العائلة | الخدمات المصرفية الرقمية</title>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <style>
-:root{--main:#173d34;--accent:#256d5b;--bg:#f4f6f5;--card:#fff;--text:#24332e;--muted:#7b8983;--border:#e5ebe8;--soft:#edf3f0;--red:#b84b4b;--gold:#9a741e}
+:root{--primary:#0d2b22;--primary-light:#154536;--gold:#c5a059;--gold-light:#e6c584;--bg:#f8faf9;--card:#fff;--text:#1a2e26;--muted:#6b7c75;--border:#e2e8e5;--red:#a93226;--green:#1e8449;--shadow:0 10px 25px -5px rgba(13,43,34,0.08),0 8px 10px -6px rgba(13,43,34,0.05)}
 *{box-sizing:border-box}
-body{margin:0;background:var(--bg);color:var(--text);font-family:Tahoma,Arial,sans-serif}
+body{margin:0;background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;-webkit-font-smoothing:antialiased}
 button,input,select,textarea{font:inherit}
 button{cursor:pointer}
 .hidden{display:none!important}
-header{background:var(--main);color:white;padding:16px 5%;display:flex;align-items:center;justify-content:space-between;gap:12px;box-shadow:0 2px 8px rgba(0,0,0,0.06)}
-.brand{font-size:18px;font-weight:bold}
-.header-user{font-size:12px;color:#d6e4de;margin-top:4px}
-.container{max-width:920px;margin:auto;padding:20px 16px 60px}
-.card{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:20px;margin-bottom:14px;box-shadow:0 1px 3px rgba(0,0,0,0.02)}
-h2{font-size:18px;margin:0 0 14px;color:var(--main)}
-h3{font-size:14px;margin:0 0 10px}
-.muted{color:var(--muted);font-size:12px;line-height:1.8}
-.login-wrap{max-width:400px;margin:8vh auto;padding:16px}
-.login-title{text-align:center;margin-bottom:20px}
-.login-title h1{font-size:22px;margin:0 0 6px;color:var(--main)}
-.field{margin:13px 0}
-.field label{display:block;font-size:12px;font-weight:bold;margin-bottom:6px}
-input,select,textarea{width:100%;padding:11px;border:1px solid var(--border);border-radius:9px;background:white;color:var(--text);outline:none}
-input:focus,select:focus,textarea:focus{border-color:var(--accent)}
-.btn{border:0;border-radius:9px;padding:12px 16px;background:var(--main);color:white;font-weight:bold;display:block;width:100%;text-align:center;cursor:pointer;transition:background .2s}
-.btn:hover{background:var(--accent)}
-.btn:disabled{opacity:.6;cursor:not-allowed}
-.btn.light{background:var(--soft);color:var(--main)}
-.btn.red{background:#faeeee;color:var(--red)}
-.btn.small{padding:7px 11px;font-size:11px;width:auto}
-.link-btn{background:none;border:none;color:var(--accent);text-decoration:underline;padding:0;font-size:12px;cursor:pointer;margin-top:8px;display:inline-block}
-.topline{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap}
-.grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
-.stat{background:#f0f4f2;border:1px solid var(--border);border-radius:11px;padding:15px;position:relative}
-.stat span{display:block;color:var(--muted);font-size:11px;margin-bottom:8px}
-.stat strong{font-size:21px;color:var(--main)}
-.stat.points{background:#f8f5eb}
-.stat.points strong{color:var(--gold)}
-.eye-btn{position:absolute;top:14px;left:14px;background:none;border:none;cursor:pointer;font-size:14px;color:var(--muted)}
-.nav{display:flex;gap:6px;overflow-x:auto;padding:2px 0 14px}
-.nav button{white-space:nowrap;border:1px solid var(--border);background:white;color:var(--main);padding:9px 13px;border-radius:8px;font-size:12px;font-weight:bold}
-.nav button.active{background:var(--main);color:white;border-color:var(--main)}
-.row{display:flex;justify-content:space-between;align-items:center;gap:12px;padding:12px 0;border-bottom:1px solid var(--border)}
-.row:last-child{border-bottom:0}
-.row-title{font-size:13px;font-weight:bold}
-.row-sub{font-size:11px;color:var(--muted);margin-top:4px;line-height:1.6}
-.amount{font-size:12px;font-weight:bold;white-space:nowrap}
-.plus{color:#258052}.minus{color:var(--red)}
-.notice{background:var(--soft);border-radius:9px;padding:11px;font-size:12px;line-height:1.8;margin:10px 0}
-.empty{text-align:center;padding:22px;color:var(--muted);font-size:12px}
-.profile-chip{background:#ffffff20;border-radius:7px;padding:6px 10px;font-size:11px}
-.toast{position:fixed;bottom:20px;right:50%;transform:translateX(50%);background:#173d34;color:white;padding:11px 16px;border-radius:9px;z-index:99999;max-width:90%;font-size:12px;box-shadow:0 4px 12px rgba(0,0,0,0.15)}
-.loading{position:fixed;inset:0;background:rgba(255,255,255,0.85);z-index:99998;display:grid;place-items:center;color:var(--main);font-weight:bold;text-align:center}
-.spinner{width:30px;height:30px;border:3px solid var(--soft);border-top-color:var(--main);border-radius:50%;animation:spin .8s linear infinite;margin:0 auto 10px}
+
+/* الهيدر البنكي الرسمي */
+header{background:linear-gradient(135deg,var(--primary) 0%,var(--primary-light) 100%);color:white;padding:18px 6%;display:flex;align-items:center;justify-content:space-between;box-shadow:0 4px 20px rgba(0,0,0,0.12)}
+.bank-brand{display:flex;align-items:center;gap:12px}
+.bank-logo{width:42px;height:42px;background:var(--gold);border-radius:10px;display:grid;place-items:center;font-weight:bold;font-size:20px;color:var(--primary);box-shadow:0 4px 10px rgba(197,160,89,0.3)}
+.bank-title{font-size:17px;font-weight:bold;letter-spacing:-0.3px}
+.bank-subtitle{font-size:11px;color:var(--gold-light);margin-top:2px}
+.header-actions{display:flex;align-items:center;gap:12px}
+
+.container{max-width:1050px;margin:auto;padding:28px 16px 70px}
+
+/* بطاقة تسجيل الدخول */
+.auth-container{max-width:420px;margin:6vh auto;padding:16px}
+.auth-card{background:var(--card);border-radius:20px;padding:32px;box-shadow:var(--shadow);border:1px solid var(--border)}
+.auth-logo-area{text-align:center;margin-bottom:24px}
+.auth-logo-area .big-logo{width:64px;height:64px;background:var(--primary);color:var(--gold);border-radius:16px;display:inline-grid;place-items:center;font-size:28px;font-weight:bold;margin-bottom:12px;box-shadow:0 8px 20px rgba(13,43,34,0.2)}
+.auth-logo-area h1{font-size:20px;margin:0 0 6px;color:var(--primary)}
+.auth-logo-area p{font-size:12px;color:var(--muted);margin:0}
+
+.field{margin:16px 0}
+.field label{display:block;font-size:12px;font-weight:600;margin-bottom:8px;color:var(--text)}
+input,select,textarea{width:100%;padding:13px 16px;border:1.5px solid var(--border);border-radius:12px;background:#fff;color:var(--text);font-size:14px;transition:all .2s ease}
+input:focus,select:focus,textarea:focus{border-color:var(--primary);outline:none;box-shadow:0 0 0 3px rgba(13,43,34,0.08)}
+
+.btn{border:0;border-radius:12px;padding:14px 20px;background:var(--primary);color:white;font-weight:600;font-size:14px;display:block;width:100%;text-align:center;cursor:pointer;transition:all .2s;box-shadow:0 4px 12px rgba(13,43,34,0.15)}
+.btn:hover{background:var(--primary-light);transform:translateY(-1px)}
+.btn.gold{background:var(--gold);color:var(--primary);box-shadow:0 4px 12px rgba(197,160,89,0.25)}
+.btn.gold:hover{background:var(--gold-light)}
+.btn.red{background:var(--red);box-shadow:0 4px 12px rgba(169,50,38,0.2)}
+.btn.small{padding:8px 14px;font-size:12px;width:auto}
+.btn.outline{background:transparent;border:1.5px solid var(--border);color:var(--text);box-shadow:none}
+.btn.outline:hover{background:var(--bg)}
+.link-btn{background:none;border:none;color:var(--accent, #154536);text-decoration:underline;padding:0;font-size:12px;cursor:pointer;margin-top:12px;display:inline-block}
+
+/* البطاقة المصرفية الراقية */
+.bank-card-hero{background:linear-gradient(135deg,#0d2b22 0%,#1f4d3e 100%);color:white;border-radius:20px;padding:26px;position:relative;overflow:hidden;box-shadow:0 15px 35px rgba(13,43,34,0.2);margin-bottom:24px}
+.bank-card-hero::before{content:'';position:absolute;top:-50px;left:-50px;width:180px;height:180px;background:rgba(197,160,89,0.08);border-radius:50%}
+.bank-card-top{display:flex;justify-content:space-between;align-items:center;margin-bottom:24px}
+.bank-card-chip{width:36px;height:28px;background:linear-gradient(135deg,#e6c584 0%,#c5a059 100%);border-radius:5px}
+.bank-card-balances{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.balance-item span{display:block;font-size:11px;color:#a3b8b1;margin-bottom:6px;text-transform:uppercase;letter-spacing:0.5px}
+.balance-item strong{font-size:24px;font-weight:700;letter-spacing:-0.5px}
+.eye-icon{background:rgba(255,255,255,0.1);border:none;color:white;width:30px;height:30px;border-radius:50%;cursor:pointer;display:inline-grid;place-items:center;font-size:13px;margin-right:8px;transition:background .2s}
+.eye-icon:hover{background:rgba(255,255,255,0.2)}
+
+/* قائمة التنقل المصرفية (Tabs) */
+.nav-tabs{display:flex;gap:8px;overflow-x:auto;padding:4px 0 20px;scrollbar-width:none}
+.nav-tabs::-webkit-scrollbar{display:none}
+.nav-tab{white-space:nowrap;border:1.5px solid var(--border);background:white;color:var(--text);padding:10px 18px;border-radius:12px;font-size:13px;font-weight:600;transition:all .2s;box-shadow:0 2px 5px rgba(0,0,0,0.02)}
+.nav-tab.active{background:var(--primary);color:white;border-color:var(--primary);box-shadow:0 4px 12px rgba(13,43,34,0.15)}
+
+/* الكروت والأقسام الداخلية */
+.dashboard-grid{display:grid;grid-template-columns:1fr 320px;gap:20px}
+@media(max-width:850px){.dashboard-grid{grid-template-columns:1fr}}
+
+.card{background:var(--card);border:1.5px solid var(--border);border-radius:16px;padding:22px;margin-bottom:18px;box-shadow:var(--shadow)}
+.card-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;padding-bottom:10px;border-bottom:1px solid var(--border)}
+.card-title{font-size:16px;font-weight:700;color:var(--primary)}
+
+.transaction-row{display:flex;justify-content:space-between;align-items:center;padding:14px 0;border-bottom:1px solid #f0f4f2}
+.transaction-row:last-child{border-bottom:0}
+.tx-info h4{margin:0 0 4px;font-size:13px;font-weight:600}
+.tx-info span{font-size:11px;color:var(--muted)}
+.tx-amount{font-size:13px;font-weight:700}
+.tx-amount.plus{color:var(--green)}
+.tx-amount.minus{color:var(--red)}
+
+.notice{background:#f0f4f2;border-radius:12px;padding:14px;font-size:12px;line-height:1.7;margin:12px 0;border-right:4px solid var(--primary)}
+.empty-state{text-align:center;padding:32px;color:var(--muted);font-size:13px}
+
+.toast{position:fixed;bottom:24px;right:50%;transform:translateX(50%);background:#0d2b22;color:white;padding:12px 22px;border-radius:12px;z-index:99999;max-width:90%;font-size:13px;font-weight:500;box-shadow:0 10px 25px rgba(0,0,0,0.2)}
+.loading-overlay{position:fixed;inset:0;background:rgba(255,255,255,0.85);z-index:99998;display:grid;place-items:center;color:var(--primary);font-weight:bold}
+.spinner{width:36px;height:36px;border:3px solid var(--border);border-top-color:var(--primary);border-radius:50%;animation:spin .8s linear infinite;margin:0 auto 12px}
 @keyframes spin{to{transform:rotate(360deg)}}
 </style>
 </head>
 <body>
 
-<div id="loading" class="loading hidden">
- <div><div class="spinner"></div><div id="loadingText">جاري التحميل...</div></div>
+<div id="loading" class="loading-overlay hidden">
+ <div><div class="spinner"></div><div id="loadingText">جاري تنفيذ العملية المصرفية...</div></div>
 </div>
 
 <header id="header" class="hidden">
- <div>
-  <div class="brand">بنك العائلة</div>
-  <div class="header-user" id="headerName"></div>
+ <div class="bank-brand">
+  <div class="bank-logo">ف</div>
+  <div>
+   <div class="bank-title">بنك العائلة الرقمي</div>
+   <div class="bank-subtitle" id="headerRoleLabel">الخدمات المصرفية للأفراد</div>
+  </div>
  </div>
- <button class="btn light small" onclick="logout()">خروج</button>
+ <div class="header-actions">
+  <span id="headerName" style="font-size:13px;font-weight:600"></span>
+  <button class="btn outline small" style="color:white;border-color:rgba(255,255,255,0.3)" onclick="logout()">تسجيل الخروج</button>
+ </div>
 </header>
 
-<!-- شاشة تسجيل الدخول وإنشاء الحساب -->
-<section id="loginScreen" class="login-wrap">
- <div class="login-title">
-  <h1>بنك العائلة</h1>
-  <p class="muted">المحفظة العائلية الآمنة</p>
- </div>
- <div class="card" id="loginCard">
-  <h2>تسجيل الدخول</h2>
-  <div class="field"><label>البريد الإلكتروني</label><input id="loginEmail" type="email" placeholder="example@domain.com"></div>
-  <div class="field"><label>كلمة المرور</label><input id="loginPassword" type="password" placeholder="أدخل كلمة المرور"></div>
-  <button type="button" class="btn" onclick="handleLogin()">دخول</button>
-  <div style="text-align:center; margin-top:12px;">
-   <button type="button" class="link-btn" onclick="toggleAuthMode('signup')">ليس لديك حساب؟ إنشاء حساب جديد</button>
+<!-- شاشة المصادقة والدخول -->
+<section id="loginScreen" class="auth-container">
+ <div class="auth-card">
+  <div class="auth-logo-area">
+   <div class="big-logo">ف</div>
+   <h1>بنك العائلة</h1>
+   <p>بوابة المعاملات المالية والمصرفية الآمنة</p>
   </div>
- </div>
 
- <div class="card hidden" id="signupCard">
-  <h2>إنشاء حساب جديد</h2>
-  <div class="field">
-   <label>اختر الحساب</label>
-   <select id="signupFamilyId">
-    <option value="azoz">عزوز</option>
-    <option value="sahab">سحاب</option>
-    <option value="mama">ماما (الإدارة)</option>
-   </select>
+  <div id="loginCard">
+   <div class="field"><label>البريد الإلكتروني المصرفي</label><input id="loginEmail" type="email" placeholder="name@family.bank"></div>
+   <div class="field"><label>كلمة المرور السرية</label><input id="loginPassword" type="password" placeholder="••••••••"></div>
+   <button type="button" class="btn gold" onclick="handleLogin()" style="margin-top:20px">تسجيل الدخول الآمن</button>
+   <div style="text-align:center">
+    <button type="button" class="link-btn" onclick="toggleAuthMode('signup')">فتح حساب عائلي جديد؟</button>
+   </div>
   </div>
-  <div class="field"><label>البريد الإلكتروني</label><input id="signupEmail" type="email" placeholder="بريدك الإلكتروني"></div>
-  <div class="field"><label>كلمة المرور</label><input id="signupPassword" type="password" placeholder="كلمة المرور"></div>
-  <div class="field"><label>رمز الدعوة</label><input id="signupInviteCode" type="text" placeholder="رمز الدعوة الخاص"></div>
-  <button type="button" class="btn" onclick="handleSignup()">إتمام التسجيل</button>
-  <div style="text-align:center; margin-top:12px;">
-   <button type="button" class="link-btn" onclick="toggleAuthMode('login')">لديك حساب؟ تسجيل الدخول</button>
+
+  <div class="card hidden" id="signupCard" style="border:0;box-shadow:none;padding:0;margin:0">
+   <div class="field"><label>تحديد نوع الحساب</label>
+    <select id="signupFamilyId">
+     <option value="azoz">عزوز (فردي)</option>
+     <option value="sahab">سحاب (فردي)</option>
+     <option value="mama">ماما (إدارة النظام)</option>
+    </select>
+   </div>
+   <div class="field"><label>البريد الإلكتروني</label><input id="signupEmail" type="email" placeholder="name@family.bank"></div>
+   <div class="field"><label>كلمة المرور</label><input id="signupPassword" type="password" placeholder="••••••••"></div>
+   <div class="field"><label>رمز الدعوة المصرفي</label><input id="signupInviteCode" type="text" placeholder="رمز الدعوة العائلي"></div>
+   <button type="button" class="btn gold" onclick="handleSignup()" style="margin-top:20px">تأكيد فتح الحساب</button>
+   <div style="text-align:center">
+   <button type="button" class="link-btn" onclick="toggleAuthMode('login')">لديك حساب بالفعل؟ تسجيل الدخول</button>
+   </div>
   </div>
  </div>
 </section>
 
-<!-- لوحة التطبيق الأساسية -->
+<!-- لوحة التحكم والعمليات المصرفية -->
 <main id="app" class="container hidden">
- <div class="card">
-  <div class="topline">
-   <div>
-    <div class="muted">مرحبًا بك</div>
-    <h2 id="welcomeTitle" style="margin:4px 0 0">أهلاً</h2>
+ 
+ <!-- البطاقة البنكية الرئيسية -->
+ <div class="bank-card-hero">
+  <div class="bank-card-top">
+   <div class="bank-card-chip"></div>
+   <span id="cardHolderName" style="font-size:13px;letter-spacing:1px;color:#e2e8e5">FAMILY BANK</span>
+  </div>
+  <div class="bank-card-balances" id="balancesDisplayContainer">
+   <div class="balance-item">
+    <span>الرصيد المتوفر <button class="eye-icon" onclick="toggleHide('balance')">👁</button></span>
+    <strong id="myBalance">0.00 ر.س</strong>
    </div>
-   <span class="profile-chip" id="roleLabel"></span>
+   <div class="balance-item">
+    <span>رصيد النقاط والمكافآت <button class="eye-icon" onclick="toggleHide('points')">👁</button></span>
+    <strong id="myPoints" style="color:var(--gold-light)">0 نقطة</strong>
+   </div>
   </div>
  </div>
 
- <div class="grid" id="statsGrid" style="margin-bottom:14px;">
-  <div class="stat">
-   <span>الرصيد المالي</span>
-   <strong id="myBalance">0 ر.س</strong>
-   <button class="eye-btn" onclick="toggleHide('balance')">👁️</button>
-  </div>
-  <div class="stat points">
-   <span>رصيد النقاط</span>
-   <strong id="myPoints">0</strong>
-   <button class="eye-btn" onclick="toggleHide('points')">👁️</button>
-  </div>
- </div>
-
- <div class="card" id="familySummaryCard" style="display:none;">
-  <h3>أرصدة أفراد العائلة</h3>
+ <!-- ملخص العائلة (خاص بماما) -->
+ <div class="card" id="familySummaryCard" style="display:none">
+  <div class="card-header"><span class="card-title">نظرة عامة على حسابات الأفراد</span></div>
   <div id="familySummary"></div>
  </div>
 
- <div class="nav" id="navigation"></div>
+ <div class="nav-tabs" id="navigation"></div>
  <section id="pageContent"></section>
 </main>
 
@@ -150,7 +182,6 @@ input:focus,select:focus,textarea:focus{border-color:var(--accent)}
 <script>
 "use strict";
 
-/* إعدادات الاتصال بـ Supabase (معلومات مشروعك الجديد) */
 const SUPABASE_URL = "https://cursiwpgzaisednzpjsi.supabase.co";
 const SUPABASE_ANON_KEY = "sb_publishable_hZ653h1LL_jnaHMLRw1-ng_vsSyQs57";
 const EDGE_FUNCTION_URL = `${SUPABASE_URL}/functions/v1/family-api`;
@@ -172,10 +203,10 @@ let hidePoints = false;
 
 function el(id){return document.getElementById(id)}
 function escapeHTML(value){return String(value??"").replace(/[&<>"']/g,c=>({"&":"&","<":"<",">":">",'"':""","'":"'"}[c]))}
-function money(value){return hideBalance ? "••••••" : (Number(value)||0).toLocaleString("ar-SA",{minimumFractionDigits:0,maximumFractionDigits:2})+" ر.س"}
-function points(value){return hidePoints ? "••••" : (Number(value)||0).toLocaleString("ar-SA")}
+function money(value){return hideBalance ? "••••••" : (Number(value)||0).toLocaleString("ar-SA",{minimumFractionDigits:2,maximumFractionDigits:2})+" ر.س"}
+function points(value){return hidePoints ? "••••" : (Number(value)||0).toLocaleString("ar-SA")+" نقطة"}
 
-function showLoading(show, text="جاري التحميل..."){
+function showLoading(show, text="جاري تنفيذ العملية المصرفية..."){
  const loader = el("loading");
  if(loader) {
   el("loadingText").textContent = text;
@@ -227,7 +258,7 @@ async function apiRequest(payload) {
 
   const data = await response.json().catch(() => ({}));
   if (!response.ok || !data.success) {
-   throw new Error(data.error || "تعذر تنفيذ الطلب في الخادم");
+   throw new Error(data.error || "عذراً، تعذر تنفيذ الطلب المصرفي");
   }
   return data;
  } catch (err) {
@@ -245,14 +276,14 @@ async function handleSignup() {
  const password = el("signupPassword").value.trim();
  const inviteCode = el("signupInviteCode").value.trim();
 
- if(!email || !password || !inviteCode) return toast("يرجى تعبئة كافة الحقول");
- if(password.length < 4) return toast("كلمة المرور يجب ألا تقل عن 4 رموز");
+ if(!email || !password || !inviteCode) return toast("يرجى تعبئة كافة حقول فتح الحساب");
+ if(password.length < 4) return toast("كلمة المرور قصيرة جداً");
 
  isProcessing = true;
- showLoading(true, "جاري إنشاء الحساب...");
+ showLoading(true, "جاري فتح الحساب المصرفي...");
  try {
   await apiRequest({ action: "signup", email, password, targetFamilyId, inviteCode });
-  toast("تم إنشاء الحساب بنجاح! يمكنك تسجيل الدخول الآن.");
+  toast("تم فتح الحساب بنجاح! يمكنك تسجيل الدخول الآن.");
   toggleAuthMode('login');
  } catch(err) {}
  finally {
@@ -269,7 +300,7 @@ async function handleLogin() {
  if(!email || !password) return toast("يرجى إدخال البريد الإلكتروني وكلمة المرور");
 
  isProcessing = true;
- showLoading(true, "جاري تسجيل الدخول...");
+ showLoading(true, "جاري تسجيل الدخول الآمن...");
 
  try {
   const { data, error } = await supabaseClient.auth.signInWithPassword({ email, password });
@@ -282,7 +313,7 @@ async function handleLogin() {
   
   if (currentUser && currentUser.blocked) {
    await supabaseClient.auth.signOut();
-   throw new Error("تم تبنيد حسابك من قِبل ماما");
+   throw new Error("عذراً، حسابك موقوف (محظور) من قِبل إدارة البنك");
   }
 
   el("loginScreen").classList.add("hidden");
@@ -291,7 +322,7 @@ async function handleLogin() {
 
   currentPage = "home";
   renderApp();
-  toast("تم تسجيل الدخول بنجاح");
+  toast("مرحباً بك في الخدمات المصرفية لبنك العائلة");
  } catch (err) {
   toast(err.message || "فشل تسجيل الدخول");
  } finally {
@@ -322,7 +353,7 @@ async function restoreSession() {
   if (currentUser) {
    if (currentUser.blocked) {
     await logout();
-    return alert("تم تبنيد حسابك من قِبل ماما");
+    return alert("عذراً، حسابك موقوف من قِبل الإدارة");
    }
    el("loginScreen").classList.add("hidden");
    el("header").classList.remove("hidden");
@@ -335,17 +366,17 @@ async function restoreSession() {
 function renderApp() {
  if (!currentUser) return;
  el("headerName").textContent = currentUser.name || "";
- el("welcomeTitle").textContent = `أهلاً، ${currentUser.name}`;
- el("roleLabel").textContent = currentUser.is_admin ? "مديرة النظام (ماما)" : "عضو في بنك العائلة";
+ el("cardHolderName").textContent = currentUser.name.toUpperCase() + " / FAMILY BANK";
+ el("headerRoleLabel").textContent = currentUser.is_admin ? "لوحة الإدارة المصرفية" : "الحساب المصرفي الفردي";
 
- const statsGrid = el("statsGrid");
+ const balancesContainer = el("balancesDisplayContainer");
  const familyCard = el("familySummaryCard");
 
  if (currentUser.is_admin) {
-  if(statsGrid) statsGrid.classList.add("hidden");
+  if(balancesContainer) balancesContainer.style.display = "none";
   if(familyCard) familyCard.style.display = "block";
  } else {
-  if(statsGrid) statsGrid.classList.remove("hidden");
+  if(balancesContainer) balancesContainer.style.display = "grid";
   if(familyCard) familyCard.style.display = "none";
   el("myBalance").textContent = money(currentUser.balance);
   el("myPoints").textContent = points(currentUser.points);
@@ -361,14 +392,14 @@ function renderFamilySummary() {
  if(!container) return;
  if(!currentUser.is_admin) return;
  container.innerHTML = allAccounts.map(acc => `
-  <div class="row">
+  <div class="transaction-row">
    <div>
-    <strong>${escapeHTML(acc.name)}</strong>
-    <div class="row-sub">الحالة: ${acc.blocked ? '<span style="color:var(--red)">موقوف</span>' : 'نشط'}</div>
+    <h4>${escapeHTML(acc.name)}</h4>
+    <span>حالة الحساب: ${acc.blocked ? '<span style="color:var(--red);font-weight:bold">موقوف</span>' : '<span style="color:var(--green)">نشط</span>'}</span>
    </div>
-   <div>
-    <span class="amount plus" style="margin-left:8px">${money(acc.balance)}</span>
-    <span class="amount" style="color:var(--gold)">${points(acc.points)} نقطة</span>
+   <div style="text-align:left">
+    <div style="font-weight:700;color:var(--primary)">${money(acc.balance)}</div>
+    <div style="font-size:11px;color:var(--gold)">${points(acc.points)}</div>
    </div>
   </div>
  `).join("");
@@ -376,12 +407,12 @@ function renderFamilySummary() {
 
 function renderNav() {
  const items = currentUser.is_admin
-  ? [["home","الرئيسية"],["admin","لوحة الإدارة"],["ledger","السجل"],["notifications",`الإشعارات (${allNotifications.filter(n=>!n.read).length})`]]
-  : [["home","الرئيسية"],["convert","النقاط"],["topup","الشحن"],["gifts","الهدايا"],["purchase","المشتريات"],["ledger","السجل"],["notifications",`الإشعارات (${allNotifications.filter(n=>!n.read).length})`]];
+  ? [["home","الرئيسية"],["admin","الإدارة والعمليات"],["ledger","السجل المصرفي"],["notifications",`التنبيهات (${allNotifications.filter(n=>!n.read).length})`]]
+  : [["home","الرئيسية"],["convert","تحويل النقاط"],["topup","شحن الرصيد"],["gifts","الهدايا"],["purchase","المشتريات"],["ledger","سجل الحساب"],["notifications",`التنبيهات (${allNotifications.filter(n=>!n.read).length})`]];
  
  const navEl = el("navigation");
  if(navEl) {
-  navEl.innerHTML = items.map(([id,label])=>`<button class="${currentPage===id?"active":""}" onclick="go('${id}')">${label}</button>`).join("");
+  navEl.innerHTML = items.map(([id,label])=>`<button class="nav-tab ${currentPage===id?"active":""}" onclick="go('${id}')">${label}</button>`).join("");
  }
 }
 
@@ -408,48 +439,51 @@ function renderPage() {
 }
 
 function pageHome(c) {
- c.innerHTML = `<div class="card">
-  <h2>الرئيسية</h2>
-  <p class="muted">${currentUser.is_admin ? "أهلاً بك يا ماما، يمكنك إدارة أرصدة وحسابات أفراد العائلة بكفاءة." : "كل 1000 نقطة تساوي 5 ريالات سعودية."}</p>
-  ${currentUser.is_admin ? '<button class="btn" onclick="go(\'admin\')">انتقل إلى لوحة الإدارة</button>' : '<button class="btn" onclick="go(\'convert\')">إدارة وتحويل النقاط</button>'}
+ c.innerHTML = `
+ <div class="card">
+  <div class="card-header"><span class="card-title">${currentUser.is_admin ? "لوحة الإدارة والتحكم المصرفي" : "الخدمات السريعة وملخص الحساب"}</span></div>
+  <p class="muted">${currentUser.is_admin ? "أهلاً بك يا ماما. يمكنك اعتماد طلبات الشحن، منح المكافآت، ومراقبة حركة أرصدة العائلة بكل مرونة." : "معدل تحويل النقاط المعتمد: كل 1000 نقطة تعادل 5.00 ريال سعودي."}</p>
+  ${currentUser.is_admin ? '<button class="btn gold" onclick="go(\'admin\')" style="margin-top:12px">فتح لوحة الإدارة المصرفية</button>' : '<button class="btn gold" onclick="go(\'convert\')" style="margin-top:12px">تحويل النقاط إلى رصيد نقدي</button>'}
  </div>
  <div class="card">
-  <h3>آخر العمليات</h3>
+  <div class="card-header"><span class="card-title">آخر العمليات المصرفية</span></div>
   ${ledgerHTML((allLedger || []).slice(0, 5))}
  </div>`;
 }
 
 function pageConvert(c) {
- c.innerHTML = `<div class="card">
-  <h2>🔄 قسم النقاط والتحويل</h2>
-  <p class="muted">كل 1000 نقطة = 5 ريالات (الحد الأدنى 25 نقطة ومضاعفاتها)</p>
-  <div class="notice">رصيد النقاط الحالي: <b>${points(currentUser.points)} نقطة</b></div>
-  <div class="field"><label>عدد النقاط للتحويل</label><input id="convertPoints" type="number" step="25" min="25" placeholder="مثال: 250"></div>
-  <button class="btn" onclick="doConvert()">تحويل إلى أموال</button>
+ c.innerHTML = `
+ <div class="card">
+  <div class="card-header"><span class="card-title">تحويل النقاط إلى رصيد نقدي</span></div>
+  <p class="muted">قيمة التحويل: 1000 نقطة = 5 ريالات. (الحد الأدنى 25 نقطة ومضاعفاتها).</p>
+  <div class="notice">رصيد نقاطك الحالي: <b>${points(currentUser.points)}</b></div>
+  <div class="field"><label>عدد النقاط المراد تحويلها</label><input id="convertPoints" type="number" step="25" min="25" placeholder="مثال: 250"></div>
+  <button class="btn gold" onclick="doConvert()">تنفيذ التحويل الفوري</button>
  </div>`;
 }
 
 async function doConvert() {
  const pts = Number(el("convertPoints").value);
- if (!pts || pts < 25 || pts % 25 !== 0) return toast("يجب ألا تقل النقاط عن 25 وأن تكون من مضاعفاتها");
- if (pts > currentUser.points) return toast("رصيد النقاط غير كافٍ");
+ if (!pts || pts < 25 || pts % 25 !== 0) return toast("الحد الأدنى للتحويل 25 نقطة ويجب أن يكون من مضاعفاتها");
+ if (pts > currentUser.points) return toast("رصيد النقاط غير كافٍ لإتمام العملية");
 
  await apiRequest({ action: "convertPoints", pointsToConvert: pts });
  await refreshData();
  renderApp();
- toast("تم تحويل النقاط إلى أموال بنجاح!");
+ toast("تم تحويل النقاط وإضافة المبلغ لمحفظتك بنجاح!");
 }
 
 function pageTopUp(c) {
- c.innerHTML = `<div class="card">
-  <h2>💵 طلب شحن الرصيد</h2>
-  <p class="muted">أدخل المبلغ المطلوب شحنه ليتم مراجعته واعتماده من قِبل ماما.</p>
-  <div class="field"><label>المبلغ (ريال)</label><input id="topUpAmount" type="number" step="5" min="5" placeholder="مثال: 50"></div>
-  <div class="field"><label>ملاحظة اختيارية</label><input id="topUpNote" placeholder="سبب الشحن..."></div>
-  <button class="btn" onclick="doRequestTopUp()">إرسال طلب الشحن</button>
+ c.innerHTML = `
+ <div class="card">
+  <div class="card-header"><span class="card-title">طلب شحن الرصيد النقدي</span></div>
+  <p class="muted">أدخل المبلغ المطلوب شحنه ليتم مراجعته واعتماده رسمياً من قِبل إدارة البنك (ماما).</p>
+  <div class="field"><label>المبلغ (ريال سعودي)</label><input id="topUpAmount" type="number" step="5" min="5" placeholder="مثال: 100"></div>
+  <div class="field"><label>ملاحظة للإدارة</label><input id="topUpNote" placeholder="سبب أو تفاصيل الشحن..."></div>
+  <button class="btn gold" onclick="doRequestTopUp()">إرسال طلب الشحن</button>
  </div>
  <div class="card">
-  <h3>طلبات الشحن السابقة</h3>
+  <div class="card-header"><span class="card-title">سجل طلبات الشحن</span></div>
   ${topUpHTML(allTopUps)}
  </div>`;
 }
@@ -457,39 +491,39 @@ function pageTopUp(c) {
 async function doRequestTopUp() {
  const amount = Number(el("topUpAmount").value);
  const note = el("topUpNote").value.trim();
- if(!amount || amount <= 0) return toast("أدخل مبلغاً صحيحاً للشحن");
+ if(!amount || amount <= 0) return toast("يرجى إدخال مبلغ صالح للشحن");
 
  await apiRequest({ action: "requestTopUp", amount, note });
  await refreshData();
  renderApp();
- toast("تم إرسال طلب الشحن بنجاح بنجاح");
+ toast("تم إرسال طلب الشحن بنجاح وهو قيد المراجعة");
 }
 
 function topUpHTML(list) {
- if (!list.length) return `<div class="empty">لا توجد طلبات شحن سابقة</div>`;
+ if (!list.length) return `<div class="empty-state">لا توجد طلبات شحن سابقة</div>`;
  return list.map(item => {
-  const statusMap = { pending: 'قيد الانتظار', approved: 'مقبول', rejected: 'مرفوض' };
-  const colorMap = { pending: 'var(--gold)', approved: 'var(--plus)', rejected: 'var(--red)' };
-  return `<div class="row">
-   <div>
-    <div class="row-title">طلب شحن بمبلغ ${money(item.amount)}</div>
-    <div class="row-sub">ملاحظة: ${escapeHTML(item.note || 'بدون')} | القرار: <span style="color:${colorMap[item.status]}">${statusMap[item.status]}</span></div>
+  const statusMap = { pending: 'قيد المراجعة', approved: 'معتمد', مرفوض: 'مرفوض' };
+  return `<div class="transaction-row">
+   <div class="tx-info">
+    <h4>شحن رصيد بقيمة ${money(item.amount)}</h4>
+    <span>ملاحظة: ${escapeHTML(item.note || 'بدون ملاحظات')} | الحالة: <b>${statusMap[item.status] || item.status}</b></span>
    </div>
-   <div class="amount">${new Date(item.created_at).toLocaleDateString('ar-SA')}</div>
+   <div class="tx-amount">${new Date(item.created_at).toLocaleDateString('ar-SA')}</div>
   </div>`;
  }).join("");
 }
 
 function pageGifts(c) {
- c.innerHTML = `<div class="card">
-  <h2>🎁 إرسال الهدايا (بالنقاط)</h2>
+ c.innerHTML = `
+ <div class="card">
+  <div class="card-header"><span class="card-title">إرسال الهدايا والمكافآت (بالنقاط)</span></div>
   <div class="field"><label>المستلم</label><select id="giftTo">${allRecipients.map(a=>`<option value="${a.id}">${escapeHTML(a.name)}</option>`).join("")}</select></div>
   <div class="field"><label>عدد النقاط</label><input id="giftPoints" type="number" step="25" min="25" placeholder="عدد النقاط"></div>
-  <div class="field"><label>رسالة الهدية</label><input id="giftMessage" placeholder="رسالة لطيفة..."></div>
-  <button class="btn" onclick="doSendGift()">إرسال الهدية الآن</button>
+  <div class="field"><label>رسالة إهداء</label><input id="giftMessage" placeholder="رسالة تهنئة أو تقدير..."></div>
+  <button class="btn gold" onclick="doSendGift()">إرسال الهدية فوراً</button>
  </div>
  <div class="card">
-  <h3>سجل الهدايا</h3>
+  <div class="card-header"><span class="card-title">سجل الهدايا المرسلة والمستلمة</span></div>
   ${giftsHTML(allGifts)}
  </div>`;
 }
@@ -499,36 +533,38 @@ async function doSendGift() {
  const points = Number(el("giftPoints").value);
  const message = el("giftMessage").value.trim();
 
- if(!points || points <= 0) return toast("أدخل عدد نقاط صحيح");
- if(points > currentUser.points) return toast("رصيد النقاط غير كافٍ");
+ if(!points || points <= 0) return toast("يرجى إدخال عدد نقاط صالح");
+ if(points > currentUser.points) return toast("رصيد النقاط غير كافٍ لإرسال الهدية");
 
  await apiRequest({ action: "sendGift", toId, points, message });
  await refreshData();
  renderApp();
- toast("تم إرسال الهدية بنجاح!");
+ toast("تم إرسال الهدية بنجاح تام!");
 }
 
 function giftsHTML(list) {
- if (!list.length) return `<div class="empty">لا توجد هدايا مسجلة</div>`;
+ if (!list.length) return `<div class="empty-state">لا توجد حركات هدايا مسجلة</div>`;
  return list.map(item => `
-  <div class="row">
-   <div>
-    <div class="row-title">من ${escapeHTML(item.sender_name)} إلى ${escapeHTML(item.receiver_name)}</div>
-    <div class="row-sub">الرسالة: ${escapeHTML(item.message)}</div>
+  <div class="transaction-row">
+   <div class="tx-info">
+    <h4>من ${escapeHTML(item.sender_name)} إلى ${escapeHTML(item.receiver_name)}</h4>
+    <span>الرسالة: ${escapeHTML(item.message)}</span>
    </div>
-   <div class="amount" style="color:var(--gold)">${points(item.points)} نقطة</div>
+   <div class="tx-amount" style="color:var(--gold)">${points(item.points)}</div>
   </div>
  `).join("");
 }
 
 function pagePurchase(c) {
- c.innerHTML = `<div class="card">
-  <h2>🛒 تسجيل مشتريات جديدة</h2>
-  <div class="field"><label>اسم المنتج أو الغرض</label><input id="purItem" placeholder="مثال: كتاب، لعبة..."></div>
-  <div class="field"><label>مكان الشراء / المتجر</label><input id="purStore" placeholder="مثال: متجر إلكتروني، سوبرماركت..."></div>
-  <div class="field"><label>السعر (ريال)</label><input id="purCost" type="number" step="0.5" min="1" placeholder="السعر"></div>
+ c.innerHTML = `
+ <div class="card">
+  <div class="card-header"><span class="card-title">تسجيل عملية شراء جديدة</span></div>
+  <p class="muted">قم بتسجيل مشترياتك وخصم قيمتها مباشرة من رصيدك النقدي المتوفر.</p>
+  <div class="field"><label>اسم المنتج أو الغرض</label><input id="purItem" placeholder="مثال: كتاب دراسي، جهاز..."></div>
+  <div class="field"><label>مكان الشراء / اسم المتجر</label><input id="purStore" placeholder="مثال: مكتبة جرير، متجر إلكتروني..."></div>
+  <div class="field"><label>السعر (ريال سعودي)</label><input id="purCost" type="number" step="0.5" min="1" placeholder="المبلغ"></div>
   <div class="field"><label>ملاحظات إضافية</label><input id="purNotes" placeholder="اختياري..."></div>
-  <button class="btn red" onclick="doPurchase()">تسجيل الشراء وخصم المبلغ</button>
+  <button class="btn red" onclick="doPurchase()">خصم وإتمام الشراء</button>
  </div>`;
 }
 
@@ -538,17 +574,17 @@ async function doPurchase() {
  const cost = Number(el("purCost").value);
  const notes = el("purNotes").value.trim();
 
- if(!item || !store || !cost || cost <= 0) return toast("يرجى تعبئة اسم المنتج، مكان الشراء، والسعر بشكل صحيح");
- if(cost > currentUser.balance) return toast("الرصيد المالي غير كافٍ");
+ if(!item || !store || !cost || cost <= 0) return toast("يرجى إدخال المنتج، مكان الشراء، والمبلغ بشكل صحيح");
+ if(cost > currentUser.balance) return toast("رصيدك النقدي غير كافٍ لإتمام عملية الشراء");
 
  await apiRequest({ action: "purchase", item, cost, store, notes });
  await refreshData();
  renderApp();
- toast("تم تسجيل الشراء وخصم المبلغ بنجاح!");
+ toast("تم تسجيل الشراء وخصم المبلغ من محفظتك بنجاح");
 }
 
 function ledgerHTML(list) {
- if (!list.length) return `<div class="empty">لا توجد عمليات مسجلة بعد</div>`;
+ if (!list.length) return `<div class="empty-state">لا توجد معاملات مسجلة في السجل المصرفي</div>`;
  return list.map(item => {
   const date = new Date(item.created_at).toLocaleString('ar-SA', { dateStyle: 'short', timeStyle: 'short' });
   const m = Number(item.amount_change || 0);
@@ -559,73 +595,76 @@ function ledgerHTML(list) {
    changeStr = `${m > 0 ? "+" : ""}${money(m)}`;
    cls = m > 0 ? "plus" : "minus";
   } else if (p !== 0) {
-   changeStr = `${p > 0 ? "+" : ""}${points(p)} نقطة`;
+   changeStr = `${p > 0 ? "+" : ""}${points(p)}`;
    cls = p > 0 ? "plus" : "minus";
   }
 
-  return `<div class="row">
-   <div>
-    <div class="row-title">${escapeHTML(item.user_name)}: ${escapeHTML(item.description)}</div>
-    <div class="row-sub">${date}</div>
+  return `<div class="transaction-row">
+   <div class="tx-info">
+    <h4>${escapeHTML(item.user_name)}: ${escapeHTML(item.description)}</h4>
+    <span>${date}</span>
    </div>
-   <div class="amount ${cls}">${changeStr}</div>
+   <div class="tx-amount ${cls}">${changeStr}</div>
   </div>`;
  }).join("");
 }
 
 function pageLedger(c) {
- c.innerHTML = `<div class="card">
-  <h2>📜 سجل العمليات الكامل</h2>
+ c.innerHTML = `
+ <div class="card">
+  <div class="card-header"><span class="card-title">السجل المصرفي والمعاملات المالية</span></div>
   ${ledgerHTML(allLedger)}
  </div>`;
 }
 
 function pageNotifications(c) {
- c.innerHTML = `<div class="card">
-  <h2>🔔 الإشعارات والتنبيهات</h2>
+ c.innerHTML = `
+ <div class="card">
+  <div class="card-header"><span class="card-title">التنبيهات والإشعارات المصرفية</span></div>
   ${allNotifications.length ? allNotifications.map(n => `
-   <div class="row">
-    <div>
-     <div class="row-title">${escapeHTML(n.title)}</div>
-     <div class="row-sub">${escapeHTML(n.body)}</div>
+   <div class="transaction-row">
+    <div class="tx-info">
+     <h4>${escapeHTML(n.title)}</h4>
+     <span>${escapeHTML(n.body)}</span>
     </div>
-    <div class="amount">${new Date(n.created_at).toLocaleDateString('ar-SA')}</div>
+    <div class="tx-amount" style="font-size:11px">${new Date(n.created_at).toLocaleDateString('ar-SA')}</div>
    </div>
-  `).join("") : '<div class="empty">لا توجد إشعارات جديدة</div>'}
+  `).join("") : '<div class="empty-state">لا توجد تنبيهات جديدة</div>'}
  </div>`;
 }
 
 function pageAdmin(c) {
- c.innerHTML = `<div class="card">
-  <h2>👑 لوحة تحكم ماما</h2>
-  <div class="field"><label>اختر العضو المستهدف</label><select id="admTarget">${allAccounts.map(a=>`<option value="${a.id}">${escapeHTML(a.name)} (${a.blocked ? 'موقوف' : 'نشط'})</option>`).join("")}</select></div>
-  <div class="field"><label>نوع العملية الإدارية</label><select id="admType"><option value="moneyPlus">إضافة أموال</option><option value="moneyMinus">خصم أموال</option><option value="pointsPlus">إضافة نقاط</option><option value="pointsMinus">خصم نقاط</option><option value="reward">منح مكافأة (نقاط وأموال)</option></select></div>
-  <div class="field"><label>القيمة (المبلغ أو النقاط)</label><input id="admVal" type="number" min="1" placeholder="القيمة"></div>
-  <div class="field"><label>السبب / الملاحظة</label><input id="admReason" placeholder="مكافأة إنجاز..."></div>
-  <button class="btn" onclick="doAdminAdjust()">تنفيذ التعديل</button>
+ c.innerHTML = `
+ <div class="card">
+  <div class="card-header"><span class="card-title">إدارة حسابات وأرصدة العائلة</span></div>
+  <div class="field"><label>العضو المستهدف</label><select id="admTarget">${allAccounts.map(a=>`<option value="${a.id}">${escapeHTML(a.name)} (${a.blocked ? 'موقوف' : 'نشط'})</option>`).join("")}</select></div>
+  <div class="field"><label>نوع العملية الإدارية</label><select id="admType"><option value="moneyPlus">إضافة رصيد نقدي</option><option value="moneyMinus">خصم رصيد نقدي</option><option value="pointsPlus">إضافة نقاط</option><option value="pointsMinus">خصم نقاط</option><option value="reward">منح مكافأة (نقاط وأموال)</option></select></div>
+  <div class="field"><label>القيمة</label><input id="admVal" type="number" min="1" placeholder="المبلغ أو النقاط"></div>
+  <div class="field"><label>السبب / ملاحظة الإدارة</label><input id="admReason" placeholder="مكافأة تفوق دراسي..."></div>
+  <button class="btn gold" onclick="doAdminAdjust()">اعتماد التنفيذ المالي</button>
  </div>
 
  <div class="card">
-  <h2>💵 طلبات الشحن المعلقة</h2>
+  <div class="card-header"><span class="card-title">طلبات الشحن المعلقة (${allTopUps.filter(t=>t.status==='pending').length})</span></div>
   ${allTopUps.filter(t=>t.status==='pending').length ? allTopUps.filter(t=>t.status==='pending').map(t=>`
-   <div class="row">
-    <div>
-     <div class="row-title">${escapeHTML(t.user_name)} يطلب شحن ${money(t.amount)}</div>
-     <div class="row-sub">ملاحظة: ${escapeHTML(t.note || 'بدون')}</div>
+   <div class="transaction-row">
+    <div class="tx-info">
+     <h4>${escapeHTML(t.user_name)} يطلب شحن ${money(t.amount)}</h4>
+     <span>ملاحظة: ${escapeHTML(t.note || 'بدون')}</span>
     </div>
-    <div>
+    <div style="display:flex;gap:6px">
      <button class="btn small" onclick="handleTopUp('${t.id}', 'approved')">قبول</button>
-     <button class="btn red small" style="margin-top:4px" onclick="handleTopUp('${t.id}', 'rejected')">رفض</button>
+     <button class="btn red small" onclick="handleTopUp('${t.id}', 'rejected')">رفض</button>
     </div>
    </div>
-  `).join("") : '<div class="empty">لا توجد طلبات شحن معلقة</div>'}
+  `).join("") : '<div class="empty-state">لا توجد طلبات شحن معلقة حالياً</div>'}
  </div>
 
  <div class="card">
-  <h2>🚫 إيقاف أو تفعيل الحسابات (التبنيد)</h2>
-  <div class="field"><label>اختر العضو</label><select id="blockTarget">${allAccounts.map(a=>`<option value="${a.id}">${escapeHTML(a.name)} - ${a.blocked ? 'حالياً موقوف' : 'نشط'}</option>`).join("")}</select></div>
-  <div class="field"><label>الإجراء</label><select id="blockStatus"><option value="true">إيقاف الحساب (تبنيد)</option><option value="false">إعادة تفعيل الحساب</option></select></div>
-  <button class="btn red" onclick="doToggleBlock()">تطبيق حالة الحساب</button>
+  <div class="card-header"><span class="card-title">إدارة الأمان والتبنيد (إيقاف أو تفعيل الحسابات)</span></div>
+  <div class="field"><label>اختر العضو</label><select id="blockTarget">${allAccounts.map(a=>`<option value="${a.id}">${escapeHTML(a.name)} - ${a.blocked ? 'موقوف حالياً' : 'نشط'}</option>`).join("")}</select></div>
+  <div class="field"><label>الإجراء المصرفي</label><select id="blockStatus"><option value="true">إيقاف الحساب (تبنيد)</option><option value="false">إعادة تفعيل الحساب</option></select></div>
+  <button class="btn red" onclick="doToggleBlock()">تطبيق حالة الحساب الأمنية</button>
  </div>`;
 }
 
@@ -635,7 +674,7 @@ async function doAdminAdjust() {
  const val = Number(el("admVal").value);
  const reason = el("admReason").value.trim();
 
- if(!val || val <= 0) return toast("أدخل قيمة صحيحة");
+ if(!val || val <= 0) return toast("يرجى إدخال قيمة صحيحة");
 
  let moneyDelta = 0;
  let pointsDelta = 0;
@@ -650,7 +689,7 @@ async function doAdminAdjust() {
  await apiRequest({ action: "adminAdjust", targetId, moneyDelta, pointsDelta, reason, isReward });
  await refreshData();
  renderApp();
- toast("تم تنفيذ الإجراء الإداري بنجاح!");
+ toast("تم تنفيذ الإجراء الإداري وتحديث الأرصدة بنجاح");
 }
 
 async function handleTopUp(requestId, status) {
@@ -658,7 +697,7 @@ async function handleTopUp(requestId, status) {
  await apiRequest({ action: "handleTopUp", requestId, status, adminReason });
  await refreshData();
  renderApp();
- toast("تم تحديث طلب الشحن بنجاح");
+ toast("تم تحديث حالة طلب الشحن بنجاح");
 }
 
 async function doToggleBlock() {
@@ -668,7 +707,7 @@ async function doToggleBlock() {
  await apiRequest({ action: "toggleBlock", targetId, blocked });
  await refreshData();
  renderApp();
- toast("تم تحديث حالة العضو بنجاح");
+ toast("تم تحديث حالة الحساب الأمنية بنجاح");
 }
 
 async function logout() {
