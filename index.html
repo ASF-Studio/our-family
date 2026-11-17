@@ -83,7 +83,6 @@ input:focus,select:focus{border-color:var(--main)}
 
   <div class="card" id="loginCard">
     <h2>تسجيل الدخول</h2>
-
     <div class="field">
       <label>اختر حسابك</label>
       <select id="loginFamilyId">
@@ -92,19 +91,15 @@ input:focus,select:focus{border-color:var(--main)}
         <option value="mama">ماما</option>
       </select>
     </div>
-
     <div class="field">
       <label>البريد الإلكتروني</label>
       <input id="loginEmail" type="email" autocomplete="username" placeholder="example@domain.com">
     </div>
-
     <div class="field">
       <label>كلمة المرور</label>
       <input id="loginPassword" type="password" autocomplete="current-password" placeholder="أدخل كلمة المرور">
     </div>
-
     <button type="button" class="btn" onclick="handleLogin()">دخول</button>
-
     <div style="text-align:center;margin-top:14px">
       <button type="button" class="link-btn" onclick="toggleAuthMode('signup')">ليس لديك حساب؟ إنشاء حساب جديد</button>
     </div>
@@ -112,7 +107,6 @@ input:focus,select:focus{border-color:var(--main)}
 
   <div class="card hidden" id="signupCard">
     <h2>إنشاء حساب جديد</h2>
-
     <div class="field">
       <label>اختر الحساب</label>
       <select id="signupFamilyId">
@@ -121,24 +115,19 @@ input:focus,select:focus{border-color:var(--main)}
         <option value="mama">ماما (الإدارة)</option>
       </select>
     </div>
-
     <div class="field">
       <label>البريد الإلكتروني</label>
       <input id="signupEmail" type="email" autocomplete="email" placeholder="بريدك الإلكتروني">
     </div>
-
     <div class="field">
       <label>كلمة المرور</label>
       <input id="signupPassword" type="password" autocomplete="new-password" placeholder="8 أحرف على الأقل">
     </div>
-
     <div class="field">
       <label>رمز الدعوة</label>
       <input id="signupInviteCode" type="password" placeholder="أدخل رمز الدعوة">
     </div>
-
     <button type="button" class="btn" onclick="handleSignup()">إتمام التسجيل</button>
-
     <div style="text-align:center;margin-top:14px">
       <button type="button" class="link-btn" onclick="toggleAuthMode('login')">لديك حساب بالفعل؟ تسجيل الدخول</button>
     </div>
@@ -179,11 +168,7 @@ const SUPABASE_URL = "https://ayfxtomfqrantxmpqgof.supabase.co";
 const SUPABASE_ANON_KEY = "sb_publishable_2d8TzhMCRIuc6daKrObBGA_7i0jUIxe";
 const EDGE_FUNCTION_URL = SUPABASE_URL + "/functions/v1/family-api";
 
-const supabaseClient = window.supabase.createClient(
-  SUPABASE_URL,
-  SUPABASE_ANON_KEY
-);
-
+let supabaseClient = null;
 let currentUser = null;
 let allAccounts = [];
 let allLedger = [];
@@ -226,7 +211,7 @@ function toast(message) {
   t.textContent = message;
   t.classList.remove("hidden");
   clearTimeout(toastTimer);
-  toastTimer = setTimeout(() => t.classList.add("hidden"), 3500);
+  toastTimer = setTimeout(() => t.classList.add("hidden"), 4500);
 }
 
 function toggleAuthMode(mode) {
@@ -235,11 +220,27 @@ function toggleAuthMode(mode) {
   el("signupCard").classList.toggle("hidden", !signup);
 }
 
+function initSupabase() {
+  if (!window.supabase || !window.supabase.createClient) {
+    throw new Error("تعذر تحميل مكتبة Supabase. حدّث الصفحة وتأكد من اتصال الإنترنت.");
+  }
+  supabaseClient = window.supabase.createClient(
+    SUPABASE_URL,
+    SUPABASE_ANON_KEY
+  );
+}
+
 async function apiRequest(payload) {
-  showLoading(true);
+  if (!supabaseClient) throw new Error("اتصال Supabase غير جاهز");
+
+  showLoading(true, "جاري تنفيذ الطلب...");
 
   try {
-    const { data: sessionData } = await supabaseClient.auth.getSession();
+    const { data: sessionData, error: sessionError } =
+      await supabaseClient.auth.getSession();
+
+    if (sessionError) throw sessionError;
+
     const accessToken = sessionData.session?.access_token;
 
     if (payload.action !== "signup" && !accessToken) {
@@ -260,22 +261,33 @@ async function apiRequest(payload) {
       body: JSON.stringify(payload)
     });
 
-    const data = await response.json().catch(() => ({}));
+    const raw = await response.text();
+    let data;
+
+    try {
+      data = JSON.parse(raw);
+    } catch {
+      throw new Error("رد السيرفر غير مفهوم. تأكد من نشر Edge Function باسم family-api.");
+    }
 
     if (!response.ok || !data.success) {
-      throw new Error(data.error || "تعذر تنفيذ الطلب في الخادم");
+      throw new Error(data.error || data.message || "تعذر تنفيذ الطلب في الخادم. رمز الخطأ: " + response.status);
     }
 
     return data;
   } catch (err) {
-    toast(err.message || "حدث خطأ غير متوقع");
+    console.error("API error:", err);
+    if (err instanceof TypeError) {
+      toast("تعذر الاتصال بالسيرفر. تحقق من نشر الدالة وإعدادات الاتصال.");
+    } else {
+      toast(err.message || "حدث خطأ غير متوقع");
+    }
     throw err;
   } finally {
     showLoading(false);
   }
 }
 
-// إنشاء حساب
 async function handleSignup() {
   if (isProcessing) return;
 
@@ -292,10 +304,14 @@ async function handleSignup() {
     return toast("كلمة المرور يجب أن تكون 8 أحرف على الأقل");
   }
 
+  if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+    return toast("اكتب بريدًا إلكترونيًا صحيحًا");
+  }
+
   isProcessing = true;
 
   try {
-    await apiRequest({
+    const result = await apiRequest({
       action: "signup",
       email,
       password,
@@ -310,39 +326,38 @@ async function handleSignup() {
     el("signupInviteCode").value = "";
 
     toggleAuthMode("login");
-    toast("تم إنشاء الحساب! سجل دخولك الآن.");
+    toast(result.message || "تم إنشاء الحساب! سجل دخولك الآن.");
   } catch (err) {
-    console.error(err);
+    console.error("Signup failed:", err);
   } finally {
     isProcessing = false;
   }
 }
 
-// تحميل بيانات المستخدم من السيرفر
 async function refreshData() {
   const res = await apiRequest({ action: "getData" });
 
-  allAccounts = res.accounts || [];
-  allLedger = res.ledger || [];
-
   if (!res.currentUser || !res.currentUser.id) {
-    throw new Error("السيرفر لم يرجع هوية الحساب المرتبط");
+    throw new Error("السيرفر لا يرجع currentUser. حدّث دالة family-api لتعيد هوية الحساب الحالي.");
   }
 
-  currentUser = allAccounts.find(a => String(a.id) === String(res.currentUser.id));
+  allAccounts = Array.isArray(res.accounts) ? res.accounts : [];
+  allLedger = Array.isArray(res.ledger) ? res.ledger : [];
+
+  currentUser = allAccounts.find(
+    a => String(a.id) === String(res.currentUser.id)
+  );
 
   if (!currentUser) {
     throw new Error("لم يتم العثور على حسابك في قائمة الحسابات");
   }
 
-  // نعتمد صلاحية المستخدم التي أكدها السيرفر
   currentUser.is_admin = !!res.currentUser.is_admin;
   currentUser.name = res.currentUser.name || currentUser.name;
 
   return res;
 }
 
-// تسجيل الدخول
 async function handleLogin() {
   if (isProcessing) return;
 
@@ -364,13 +379,11 @@ async function handleLogin() {
       password
     });
 
-    if (error || !data.user) {
-      throw new Error(error?.message || "بيانات الدخول غير صحيحة");
-    }
+    if (error) throw error;
+    if (!data.user) throw new Error("تعذر التحقق من بيانات الدخول");
 
     await refreshData();
 
-    // اختيار الحساب هنا للتأكد فقط؛ الربط الحقيقي يحدده السيرفر
     if (String(currentUser.id) !== selectedFamilyId) {
       await supabaseClient.auth.signOut();
       currentUser = null;
@@ -390,8 +403,8 @@ async function handleLogin() {
     renderApp();
     toast("تم تسجيل الدخول بنجاح");
   } catch (err) {
+    console.error("Login failed:", err);
     toast(err.message || "تعذر تسجيل الدخول");
-    console.error(err);
   } finally {
     isProcessing = false;
     showLoading(false);
@@ -424,7 +437,7 @@ function renderFamilySummary() {
         <span class="amount" style="color:var(--gold)">${points(acc.points)} نقطة</span>
       </div>
     </div>
-  `).join("");
+  `).join("") || '<div class="empty">لا توجد حسابات لعرضها</div>';
 }
 
 function renderNav() {
@@ -453,20 +466,21 @@ function renderPage() {
     settings: pageSettings
   };
 
-  const fn = pages[currentPage] || pageHome;
-  fn(el("pageContent"));
+  (pages[currentPage] || pageHome)(el("pageContent"));
 }
 
 function pageHome(c) {
   c.innerHTML = `
     <div class="card">
       <h2>الرئيسية</h2>
-      <p class="muted">${currentUser.is_admin
-        ? "أهلاً بك يا ماما، يمكنك إدارة أرصدة أفراد العائلة."
-        : "كل 1000 نقطة تساوي 5 ريالات."}</p>
+      <p class="muted">
+        ${currentUser.is_admin
+          ? "أهلاً بك يا ماما، يمكنك إدارة أرصدة أفراد العائلة."
+          : "كل 1000 نقطة تساوي 5 ريالات."}
+      </p>
       ${currentUser.is_admin
-        ? '<button class="btn" onclick="go(\\'admin\\')">انتقل إلى لوحة الإدارة</button>'
-        : '<button class="btn" onclick="go(\\'convert\\')">تحويل النقاط إلى أموال</button>'}
+        ? `<button class="btn" onclick="go('admin')">انتقل إلى لوحة الإدارة</button>`
+        : `<button class="btn" onclick="go('convert')">تحويل النقاط إلى أموال</button>`}
     </div>
     <div class="card">
       <h3>آخر العمليات</h3>
@@ -497,7 +511,7 @@ async function doConvertPoints() {
     return toast("يجب أن تكون النقاط من مضاعفات 1000");
   }
 
-  if (pts > currentUser.points) return toast("رصيد النقاط غير كافٍ");
+  if (pts > Number(currentUser.points)) return toast("رصيد النقاط غير كافٍ");
 
   try {
     await apiRequest({ action: "convertPoints", pointsToConvert: pts });
@@ -534,7 +548,7 @@ async function doSendPoints() {
 
   if (!toId) return toast("اختر المستلم");
   if (!Number.isSafeInteger(pointsVal) || pointsVal <= 0) return toast("أدخل عدد نقاط صحيح");
-  if (pointsVal > currentUser.points) return toast("نقاطك لا تكفي");
+  if (pointsVal > Number(currentUser.points)) return toast("نقاطك لا تكفي");
 
   try {
     await apiRequest({ action: "sendPoints", toId, points: pointsVal });
@@ -569,7 +583,7 @@ async function doPurchase() {
     return toast("أدخل اسم الغرض والمبلغ بشكل صحيح");
   }
 
-  if (cost > currentUser.balance) return toast("الرصيد المالي غير كافٍ");
+  if (cost > Number(currentUser.balance)) return toast("الرصيد المالي غير كافٍ");
 
   try {
     await apiRequest({ action: "purchase", item, cost });
@@ -761,6 +775,8 @@ async function logout() {
 
   try {
     await supabaseClient.auth.signOut();
+  } catch (err) {
+    console.error(err);
   } finally {
     currentUser = null;
     allAccounts = [];
@@ -777,13 +793,12 @@ async function logout() {
   }
 }
 
-// استعادة الجلسة إذا كان المستخدم مسجل الدخول مسبقاً
 async function restoreSession() {
-  const { data } = await supabaseClient.auth.getSession();
-
-  if (!data.session) return;
-
   try {
+    const { data, error } = await supabaseClient.auth.getSession();
+    if (error) throw error;
+    if (!data.session) return;
+
     showLoading(true, "جاري استعادة جلستك...");
     await refreshData();
 
@@ -794,6 +809,7 @@ async function restoreSession() {
     currentPage = "home";
     renderApp();
   } catch (err) {
+    console.error("Restore session error:", err);
     await supabaseClient.auth.signOut();
     currentUser = null;
     toast(err.message || "تعذر استعادة الحساب، سجل دخولك من جديد");
@@ -802,7 +818,25 @@ async function restoreSession() {
   }
 }
 
-restoreSession();
+window.addEventListener("error", function(event) {
+  console.error("JavaScript error:", event.error || event.message);
+});
+
+window.addEventListener("unhandledrejection", function(event) {
+  console.error("Unhandled error:", event.reason);
+});
+
+async function startApp() {
+  try {
+    initSupabase();
+    await restoreSession();
+  } catch (err) {
+    console.error(err);
+    toast(err.message || "تعذر تشغيل التطبيق");
+  }
+}
+
+startApp();
 </script>
 </body>
 </html>
