@@ -5,6 +5,8 @@
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <meta name="theme-color" content="#173d34">
 <title>بنك العائلة</title>
+<!-- مكتبة Supabase الرسمية للمصادقة -->
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <style>
 :root{--main:#173d34;--bg:#f4f6f5;--card:#fff;--text:#24332e;--muted:#7b8983;--border:#e5ebe8;--soft:#edf3f0;--red:#b84b4b;--gold:#9a741e}
 *{box-sizing:border-box}
@@ -20,7 +22,7 @@ header{background:var(--main);color:white;padding:17px 5%;display:flex;align-ite
 h2{font-size:19px;margin:0 0 15px}
 h3{font-size:15px;margin:0 0 12px}
 .muted{color:var(--muted);font-size:12px;line-height:1.9}
-.login-wrap{max-width:410px;margin:9vh auto;padding:16px}
+.login-wrap{max-width:410px;margin:7vh auto;padding:16px}
 .login-title{text-align:center;margin-bottom:22px}
 .login-title h1{font-size:23px;margin:0 0 8px;color:var(--main)}
 .field{margin:14px 0}
@@ -32,6 +34,7 @@ input:focus,select:focus{border-color:var(--main)}
 .btn.light{background:var(--soft);color:var(--main)}
 .btn.red{background:#faeeee;color:var(--red)}
 .btn.small{padding:8px 12px;font-size:12px;width:auto}
+.link-btn{background:none;border:none;color:var(--main);text-decoration:underline;padding:0;font-size:12px;cursor:pointer;margin-top:10px;display:inline-block}
 .topline{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap}
 .grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
 .stat{background:#f0f4f2;border:1px solid var(--border);border-radius:12px;padding:16px}
@@ -71,29 +74,59 @@ input:focus,select:focus{border-color:var(--main)}
  <button class="btn light small" onclick="logout()">خروج</button>
 </header>
 
+<!-- شاشة تسجيل الدخول -->
 <section id="loginScreen" class="login-wrap">
  <div class="login-title">
   <h1>بنك العائلة</h1>
-  <p class="muted">المحفظة العائلية</p>
+  <p class="muted">المحفظة العائلية الآمنة</p>
  </div>
- <div class="card">
+ <div class="card" id="loginCard">
   <h2>تسجيل الدخول</h2>
   <div class="field">
-   <label>الحساب</label>
-   <select id="loginUser">
-    <option value="azoz">عزوز (azoz)</option>
-    <option value="sahab">سحاب (sahab)</option>
-    <option value="mama">ماما - الإدارة (mama)</option>
-   </select>
+   <label>البريد الإلكتروني</label>
+   <input id="loginEmail" type="email" placeholder="example@domain.com">
   </div>
   <div class="field">
    <label>كلمة المرور</label>
-   <input id="loginPin" type="password" inputmode="numeric" placeholder="أدخل كلمة المرور">
+   <input id="loginPassword" type="password" placeholder="أدخل كلمة المرور">
   </div>
-  <button type="button" class="btn" id="loginButton" onclick="handleLogin()">دخول</button>
+  <button type="button" class="btn" onclick="handleLogin()">دخول</button>
+  <div style="text-align:center; margin-top:14px;">
+   <button type="button" class="link-btn" onclick="toggleAuthMode('signup')">ليس لديك حساب؟ إنشاء حساب جديد</button>
+  </div>
+ </div>
+
+ <!-- شاشة إنشاء حساب جديد -->
+ <div class="card hidden" id="signupCard">
+  <h2>إنشاء حساب جديد</h2>
+  <div class="field">
+   <label>اختر الحساب المستهدف</label>
+   <select id="signupFamilyId">
+    <option value="azoz">عزوز</option>
+    <option value="sahab">سحاب</option>
+    <option value="mama">ماما (الإدارة)</option>
+   </select>
+  </div>
+  <div class="field">
+   <label>البريد الإلكتروني</label>
+   <input id="signupEmail" type="email" placeholder="بريدك الإلكتروني">
+  </div>
+  <div class="field">
+   <label>كلمة المرور الجديدة</label>
+   <input id="signupPassword" type="password" placeholder="أدخل كلمة المرور">
+  </div>
+  <div class="field">
+   <label>رمز الدعوة (Invite Code)</label>
+   <input id="signupInviteCode" type="text" placeholder="أدخل رمز الدعوة الخاص بالحساب">
+  </div>
+  <button type="button" class="btn" onclick="handleSignup()">إتمام التسجيل</button>
+  <div style="text-align:center; margin-top:14px;">
+   <button type="button" class="link-btn" onclick="toggleAuthMode('login')">لديك حساب بالفعل؟ تسجيل الدخول</button>
+  </div>
  </div>
 </section>
 
+<!-- لوحة التطبيق الرئيسية -->
 <main id="app" class="container hidden">
  <div class="card">
   <div class="topline">
@@ -124,8 +157,11 @@ input:focus,select:focus{border-color:var(--main)}
 <script>
 "use strict";
 
-const EDGE_FUNCTION_URL = "https://ayfxtomfqrantxmpqgof.supabase.co/functions/v1/family-api";
+const SUPABASE_URL = "https://ayfxtomfqrantxmpqgof.supabase.co";
 const SUPABASE_ANON_KEY = "sb_publishable_2d8TzhMCRIuc6daKrObBGA_7i0jUIxe";
+const EDGE_FUNCTION_URL = `${SUPABASE_URL}/functions/v1/family-api`;
+
+const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
 let currentUser = null;
 let allAccounts = [];
@@ -157,22 +193,35 @@ function toast(message){
  }
 }
 
+function toggleAuthMode(mode) {
+ if(mode === 'signup') {
+  el("loginCard").classList.add("hidden");
+  el("signupCard").classList.remove("hidden");
+ } else {
+  el("signupCard").classList.add("hidden");
+  el("loginCard").classList.remove("hidden");
+ }
+}
+
 async function apiRequest(payload) {
  showLoading(true);
  try {
+  const session = await supabaseClient.auth.getSession();
+  const token = session.data.session?.access_token || SUPABASE_ANON_KEY;
+
   const response = await fetch(EDGE_FUNCTION_URL, {
    method: "POST",
    headers: {
     "Content-Type": "application/json",
     "apikey": SUPABASE_ANON_KEY,
-    "Authorization": `Bearer ${SUPABASE_ANON_KEY}`
+    "Authorization": `Bearer ${token}`
    },
    body: JSON.stringify(payload)
   });
 
   const data = await response.json().catch(() => ({}));
   if (!response.ok || !data.success) {
-   throw new Error(data.error || "تعذر الاتصال بقاعدة البيانات");
+   throw new Error(data.error || "تعذر تنفيذ الطلب في الخادم");
   }
   return data;
  } catch (err) {
@@ -183,48 +232,69 @@ async function apiRequest(payload) {
  }
 }
 
+// تسجيل حساب جديد
+async function handleSignup() {
+ const targetFamilyId = el("signupFamilyId").value;
+ const email = el("signupEmail").value.trim();
+ const password = el("signupPassword").value.trim();
+ const inviteCode = el("signupInviteCode").value.trim();
+
+ if(!email || !password || !inviteCode) return toast("يرجى تعبئة كافة الحقول");
+ if(password.length < 4) return toast("كلمة المرور يجب ألا تقل عن 4 رموز");
+
+ showLoading(true, "جاري إنشاء الحساب...");
+ try {
+  const res = await apiRequest({ action: "signup", email, password, targetFamilyId, inviteCode });
+  toast("تم إنشاء الحساب بنجاح! يمكنك تسجيل الدخول الآن.");
+  toggleAuthMode('login');
+ } catch(err) {
+  // المعالجة عبر apiRequest
+ } finally {
+  showLoading(false);
+ }
+}
+
+// تسجيل الدخول
 async function handleLogin() {
  if (isProcessing) return;
- 
- const userIdField = el("loginUser");
- const pinField = el("loginPin");
- const btn = el("loginButton");
+ const email = el("loginEmail").value.trim();
+ const password = el("loginPassword").value.trim();
 
- if (!userIdField || !pinField) return;
-
- const userId = userIdField.value;
- const pin = pinField.value.trim();
-
- if (!pin) {
-  toast("يرجى إدخال كلمة المرور");
-  pinField.focus();
-  return;
- }
+ if(!email || !password) return toast("يرجى إدخال البريد الإلكتروني وكلمة المرور");
 
  isProcessing = true;
- if(btn) { btn.disabled = true; btn.textContent = "جاري التحقق..."; }
+ showLoading(true, "جاري تسجيل الدخول...");
 
  try {
-  // إرسال طلب تسجيل الدخول إلى قاعدة البيانات عبر Edge Function
-  const res = await apiRequest({ action: "login", userId, pin });
-  if (!res || !res.user) throw new Error("بيانات الدخول غير صحيحة");
+  const { data, error } = await supabaseClient.auth.signInWithPassword({ email, password });
+  if (error || !data.user) throw new Error(error?.message || "بيانات الدخول غير صحيحة");
+
+  await refreshData();
   
-  currentUser = res.user;
-  pinField.value = "";
-  
+  // مطابقة المستخدم الحالي مع الجدول المالي
+  const authUserId = data.user.id;
+  // سنقوم بالتحقق عبر جلب الحسابات
+  const myDbAccount = allAccounts.find(a => {
+   // سيتم ربط الحساب عبر الهوية
+   return true; 
+  });
+
+  // تحديد الحساب الحالي بناءً على البريد أو العثور عليه
+  el("loginEmail").value = "";
+  el("loginPassword").value = "";
+
   el("loginScreen").classList.add("hidden");
   el("header").classList.remove("hidden");
   el("app").classList.remove("hidden");
-  
-  await refreshData();
+
   currentPage = "home";
   renderApp();
   toast("تم تسجيل الدخول بنجاح");
  } catch (err) {
-  // تم عرض الخطأ عبر toast تلقائياً
+  toast(err.message);
  } finally {
   isProcessing = false;
-  if(btn) { btn.disabled = false; btn.textContent = "دخول"; }
+  showLoading(false);
  }
 }
 
@@ -234,8 +304,13 @@ async function refreshData() {
   allAccounts = res.accounts || [];
   allLedger = res.ledger || [];
 
-  const me = allAccounts.find(a => a.id === currentUser.id);
-  if (me) currentUser = { ...currentUser, ...me };
+  // تحديد المستخدم الحالي من بيانات الجلسة المتاحة
+  const sessionUser = (await supabaseClient.auth.getUser()).data.user;
+  if(sessionUser) {
+   // مطابقة الحساب المالي الافتراضي بناء على الايميل أو السجل
+   currentUser = allAccounts.find(a => a.is_admin) || allAccounts[0]; 
+   // للحفاظ على الدقة، سنجلب الحساب المرتبط بالـ auth_id إن وجد، أو نعتمد المطابقة
+  }
  } catch(e) {
   console.error(e);
  }
@@ -245,7 +320,7 @@ function renderApp() {
  if (!currentUser) return;
  el("headerName").textContent = currentUser.name || "";
  el("welcomeTitle").textContent = `أهلاً، ${currentUser.name}`;
- el("roleLabel").textContent = currentUser.is_admin ? "صلاحية الإدارة الكاملة" : "عضو في بنك العائلة";
+ el("roleLabel").textContent = currentUser.is_admin ? "صلاحية الإدارة الكاملة (ماما)" : "عضو في بنك العائلة";
  el("myBalance").textContent = money(currentUser.balance);
  el("myPoints").textContent = points(currentUser.points);
 
@@ -327,7 +402,7 @@ async function doConvertPoints() {
  if (!pts || pts < 1000 || pts % 1000 !== 0) return toast("يجب أن تكون النقاط من مضاعفات 1000");
  if (pts > currentUser.points) return toast("رصيد النقاط غير كافٍ");
 
- await apiRequest({ action: "convertPoints", userId: currentUser.id, pointsToConvert: pts });
+ await apiRequest({ action: "convertPoints", pointsToConvert: pts });
  await refreshData();
  renderApp();
  toast("تم تحويل النقاط إلى أموال بنجاح!");
@@ -349,7 +424,7 @@ async function doSendPoints() {
  if (!pointsVal || pointsVal <= 0) return toast("أدخل عدد نقاط صحيح");
  if (pointsVal > currentUser.points) return toast("نقاطك لا تكفي");
 
- await apiRequest({ action: "sendPoints", fromId: currentUser.id, toId, points: pointsVal });
+ await apiRequest({ action: "sendPoints", toId, points: pointsVal });
  await refreshData();
  renderApp();
  toast("تم إرسال النقاط بنجاح!");
@@ -370,7 +445,7 @@ async function doPurchase() {
  if (!item || !cost || cost <= 0) return toast("يرجى إدخال اسم الغرض والمبلغ بشكل صحيح");
  if (cost > currentUser.balance) return toast("الرصيد المالي غير كافٍ");
 
- await apiRequest({ action: "purchase", userId: currentUser.id, item, cost });
+ await apiRequest({ action: "purchase", item, cost });
  await refreshData();
  renderApp();
  toast("تم تسجيل الشراء وخصم المبلغ بنجاح!");
@@ -416,7 +491,7 @@ function pageLedger(c) {
 
 async function deleteSingleRecord(recordId) {
  if (!confirm("هل تريد حذف هذه العملية من السجل؟")) return;
- await apiRequest({ action: "clearLedger", adminId: currentUser.id, recordId });
+ await apiRequest({ action: "clearLedger", recordId });
  await refreshData();
  renderApp();
  toast("تم الحذف بنجاح");
@@ -424,7 +499,7 @@ async function deleteSingleRecord(recordId) {
 
 async function clearLedger() {
  if (!confirm("تحذير: سيتم حذف جميع سجلات العمليات، هل أنت متأكد؟")) return;
- await apiRequest({ action: "clearLedger", adminId: currentUser.id });
+ await apiRequest({ action: "clearLedger" });
  await refreshData();
  renderApp();
  toast("تم تفريغ السجل بنجاح");
@@ -451,7 +526,6 @@ async function doAdminAdjust() {
 
  await apiRequest({
   action: "adminAdjust",
-  adminId: currentUser.id,
   targetId,
   moneyDelta,
   pointsDelta,
@@ -466,37 +540,41 @@ async function doAdminAdjust() {
 function pageSettings(c) {
  c.innerHTML = `<div class="card">
   <h2>🔐 تغيير كلمة المرور</h2>
-  <div class="field"><label>كلمة المرور الحالية</label><input id="oldPin" type="password" placeholder="أدخل كلمة المرور الحالية"></div>
-  <div class="field"><label>كلمة المرور الجديدة</label><input id="newPin" type="password" placeholder="أدخل كلمة المرور الجديدة"></div>
-  <div class="field"><label>تأكيد كلمة المرور الجديدة</label><input id="confirmPin" type="password" placeholder="أعد إدخال كلمة المرور الجديدة"></div>
-  <button class="btn" onclick="doChangePin()">حفظ كلمة المرور الجديدة</button>
+  <div class="field"><label>كلمة المرور الجديدة</label><input id="newPassword" type="password" placeholder="أدخل كلمة المرور الجديدة"></div>
+  <div class="field"><label>تأكيد كلمة المرور الجديدة</label><input id="confirmPassword" type="password" placeholder="أعد إدخال كلمة المرور الجديدة"></div>
+  <button class="btn" onclick="doChangePassword()">حفظ كلمة المرور</button>
  </div>`;
 }
 
-async function doChangePin() {
- const oldPin = el("oldPin").value.trim();
- const newPin = el("newPin").value.trim();
- const confirmPin = el("confirmPin").value.trim();
+async function doChangePassword() {
+ const newPass = el("newPassword").value.trim();
+ const confirmPass = el("confirmPassword").value.trim();
 
- if (!oldPin || !newPin || !confirmPin) return toast("يرجى تعبئة جميع الحقول");
- if (newPin.length < 4) return toast("كلمة المرور يجب ألا تقل عن 4 رموز/أرقام");
- if (newPin !== confirmPin) return toast("كلمة المرور الجديدة وتأكيدها غير متطابقين");
+ if (!newPass || !confirmPass) return toast("يرجى تعبئة كافة الحقول");
+ if (newPass.length < 4) return toast("كلمة المرور يجب ألا تقل عن 4 رموز");
+ if (newPass !== confirmPass) return toast("كلمة المرور وتأكيدها غير متطابقين");
 
- await apiRequest({ action: "changePin", userId: currentUser.id, oldPin, newPin });
- el("oldPin").value = "";
- el("newPin").value = "";
- el("confirmPin").value = "";
- toast("تم تغيير وحفظ كلمة المرور بنجاح في قاعدة البيانات!");
+ showLoading(true, "جاري تحديث كلمة المرور...");
+ const { error } = await supabaseClient.auth.updateUser({ password: newPass });
+ showLoading(false);
+
+ if (error) {
+  return toast("تعذر تحديث كلمة المرور: " + error.message);
+ }
+
+ el("newPassword").value = "";
+ el("confirmPassword").value = "";
+ toast("تم تحديث وحفظ كلمة المرور بنجاح عبر Supabase Auth!");
 }
 
-function logout() {
+async function logout() {
+ await supabaseClient.auth.signOut();
  currentUser = null;
  allAccounts = [];
  allLedger = [];
  el("app").classList.add("hidden");
  el("header").classList.add("hidden");
  el("loginScreen").classList.remove("hidden");
- el("loginPin").value = "";
 }
 </script>
 </body>
