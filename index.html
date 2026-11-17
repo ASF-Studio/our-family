@@ -70,7 +70,7 @@ input:focus,select:focus,textarea:focus{border-color:var(--primary);outline:none
 .notice{background:#f0f4f2;border-radius:12px;padding:14px;font-size:14px;line-height:1.7;margin:12px 0;border-right:4px solid var(--primary)}
 .empty-state{text-align:center;padding:32px;color:var(--muted);font-size:14px}
 
-/* الفوتر */
+/* الفوتر المطلوب بدقة */
 footer{background:#0d2b22;color:#a3b8b1;text-align:center;padding:18px;font-size:12px;margin-top:auto;border-top:1px solid rgba(255,255,255,0.1);letter-spacing:0.5px}
 
 .toast{position:fixed;bottom:24px;right:50%;transform:translateX(50%);background:#0d2b22;color:white;padding:13px 22px;border-radius:12px;z-index:99999;max-width:90%;font-size:14px;font-weight:500;box-shadow:0 8px 20px rgba(0,0,0,0.2)}
@@ -98,6 +98,7 @@ footer{background:#0d2b22;color:#a3b8b1;text-align:center;padding:18px;font-size
  </div>
 </header>
 
+<!-- شاشة تسجيل الدخول -->
 <section id="loginScreen" class="auth-container">
  <div class="auth-card">
   <div class="auth-logo-area">
@@ -123,6 +124,7 @@ footer{background:#0d2b22;color:#a3b8b1;text-align:center;padding:18px;font-size
  </div>
 </section>
 
+<!-- لوحة التطبيق -->
 <main id="app" class="container hidden">
  <div class="bank-card-hero" id="bankHeroCard">
   <div class="bank-card-top">
@@ -233,7 +235,7 @@ async function apiRequest(payload) {
  }
 }
 
-// الدالة النهائية المحسنة للتحقق والتنقل الفوري بدون بقاء في صفحة الدخول
+// معالج تسجيل الدخول الحاسم الذي يضمن الانتقال الفوري بدون بقاء في نفس الصفحة
 async function handleLoginSubmit(event) {
  event.preventDefault();
  if (isProcessing) return;
@@ -268,18 +270,18 @@ async function handleLoginSubmit(event) {
    throw new Error(data.error || "فشل تسجيل الدخول: الرمز السري غير صحيح");
   }
 
-  // 1. تعيين البيانات فوراً وحفظها في التخزين المحلي قبل جلب باقي التفاصيل
+  // 1. تثبيت المستخدم فوراً وحفظه محلياً
   currentUser = data.currentUser;
   localStorage.setItem("family_bank_user_id", currentUser.id);
 
   el("loginPin").value = "";
 
-  // 2. إخفاء شاشة تسجيل الدخول وإظهار واجهة العضو مباشرة
+  // 2. إخفاء شاشة الدخول وإظهار التطبيق والترويسة فوراً ودون تأخير
   el("loginScreen").classList.add("hidden");
   el("header").classList.remove("hidden");
   el("app").classList.remove("hidden");
 
-  // 3. جلب بقية السجلات والطلبات الخاصة بالحساب وتحديث العرض
+  // 3. جلب بيانات الحساب وتحديث الواجهة
   await refreshData();
   currentPage = "home";
   renderApp();
