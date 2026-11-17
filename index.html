@@ -98,7 +98,7 @@ footer{background:#0d2b22;color:#a3b8b1;text-align:center;padding:18px;font-size
  </div>
 </header>
 
-<!-- شاشة تسجيل الدخول بدون أي شعارات -->
+<!-- شاشة تسجيل الدخول -->
 <section id="loginScreen" class="auth-container">
  <div class="auth-card">
   <div class="auth-logo-area">
@@ -228,6 +228,7 @@ async function apiRequest(payload) {
   }
   return data;
  } catch (err) {
+  console.error("API Request Error:", err);
   toast(err.message || "خطأ في الاتصال بالخادم");
   throw err;
  } finally {
@@ -235,7 +236,7 @@ async function apiRequest(payload) {
  }
 }
 
-// دالة تسجيل الدخول المؤكدة والمصححة للانتقال السليم
+// دالة تسجيل الدخول المضمونة للتنقل الفوري وتجاوز شاشة الدخول بلا تأخير
 async function handleLoginSubmit(event) {
  event.preventDefault();
  if (isProcessing) return;
@@ -252,7 +253,7 @@ async function handleLoginSubmit(event) {
  isProcessing = true;
  if(btn) {
   btn.disabled = true;
-  btn.textContent = "جاري التحقق وتسجيل الدخول...";
+  btn.textContent = "جاري التحقق والانتقال...";
  }
 
  try {
@@ -267,28 +268,33 @@ async function handleLoginSubmit(event) {
 
   const data = await response.json().catch(() => ({}));
   if (!response.ok || !data.success) {
-   throw new Error(data.error || "فشل تسجيل الدخول");
+   throw new Error(data.error || "فشل تسجيل الدخول: تحقق من الرمز السري");
   }
 
+  // حفظ الجلسة والمستخدم فوراً
   currentUser = data.currentUser;
   localStorage.setItem("family_bank_user_id", currentUser.id);
 
   el("loginPin").value = "";
+
+  // الانتقال الحتمي فورا وإخفاء شاشة الدخول وإظهار التطبيق
   el("loginScreen").classList.add("hidden");
   el("header").classList.remove("hidden");
   el("app").classList.remove("hidden");
 
+  // جلب البيانات الإضافية وتحديث واجهة الحساب الخاص بالمستخدم
   await refreshData();
   currentPage = "home";
   renderApp();
-  toast("مرحباً بك، تم تسجيل الدخول بنجاح");
+  toast(`أهلاً بك يا ${currentUser.name}, تم تسجيل الدخول بنجاح`);
 
   if (currentUser.mustChangePin) {
    setTimeout(() => {
-    alert("تنبيه أمني: يرجى الانتقال إلى الإعدادات وتغيير الرمز السري الخاص بحسابك.");
+    alert("تنبيه أمني: يرجى الانتقال إلى الإعدادات وتغيير الرمز السري الخاص بحسابك لحمايته.");
    }, 500);
   }
  } catch (err) {
+  console.error("Login Error:", err);
   toast(err.message || "فشل تسجيل الدخول");
  } finally {
   isProcessing = false;
@@ -312,7 +318,7 @@ async function refreshData() {
   allGifts = res.gifts || [];
   allNotifications = res.notifications || [];
  } catch(e) {
-  console.error(e);
+  console.error("Refresh Data Error:", e);
  }
 }
 
@@ -320,19 +326,31 @@ async function restoreSession() {
  const savedId = localStorage.getItem("family_bank_user_id");
  if (savedId) {
   try {
-   await refreshData();
-   if (currentUser) {
+   showLoading(true, "جاري استعادة الجلسة...");
+   const res = await apiRequest({ action: "getData" });
+   if (res && res.currentUser) {
+    currentUser = res.currentUser;
     if (currentUser.blocked) {
      logout();
      return alert("عذراً، حسابك موقوف من قِبل الإدارة");
     }
+    allAccounts = res.accounts || [];
+    allRecipients = res.recipients || [];
+    allLedger = res.ledger || [];
+    allTopUps = res.topUps || [];
+    allGifts = res.gifts || [];
+    allNotifications = res.notifications || [];
+
     el("loginScreen").classList.add("hidden");
     el("header").classList.remove("hidden");
     el("app").classList.remove("hidden");
     renderApp();
    }
   } catch(e) {
+   console.error("Restore Session Error:", e);
    logout();
+  } finally {
+   showLoading(false);
   }
  }
 }
