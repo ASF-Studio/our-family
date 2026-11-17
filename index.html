@@ -121,11 +121,7 @@ input:focus,select:focus{border-color:var(--main)}
     </div>
     <div class="field">
       <label>كلمة المرور</label>
-      <input id="signupPassword" type="password" autocomplete="new-password" placeholder="8 أحرف على الأقل">
-    </div>
-    <div class="field">
-      <label>رمز الدعوة</label>
-      <input id="signupInviteCode" type="password" placeholder="أدخل رمز الدعوة">
+      <input id="signupPassword" type="password" autocomplete="new-password" minlength="2" placeholder="حرفان على الأقل">
     </div>
     <button type="button" class="btn" onclick="handleSignup()">إتمام التسجيل</button>
     <div style="text-align:center;margin-top:14px">
@@ -224,6 +220,7 @@ function initSupabase() {
   if (!window.supabase || !window.supabase.createClient) {
     throw new Error("تعذر تحميل مكتبة Supabase. حدّث الصفحة وتأكد من اتصال الإنترنت.");
   }
+
   supabaseClient = window.supabase.createClient(
     SUPABASE_URL,
     SUPABASE_ANON_KEY
@@ -271,37 +268,39 @@ async function apiRequest(payload) {
     }
 
     if (!response.ok || !data.success) {
-      throw new Error(data.error || data.message || "تعذر تنفيذ الطلب في الخادم. رمز الخطأ: " + response.status);
+      throw new Error(data.error || data.message || "تعذر تنفيذ الطلب. رمز الخطأ: " + response.status);
     }
 
     return data;
   } catch (err) {
     console.error("API error:", err);
+
     if (err instanceof TypeError) {
       toast("تعذر الاتصال بالسيرفر. تحقق من نشر الدالة وإعدادات الاتصال.");
     } else {
       toast(err.message || "حدث خطأ غير متوقع");
     }
+
     throw err;
   } finally {
     showLoading(false);
   }
 }
 
+// إنشاء حساب بدون رمز دعوة
 async function handleSignup() {
   if (isProcessing) return;
 
   const targetFamilyId = el("signupFamilyId").value;
   const email = el("signupEmail").value.trim();
   const password = el("signupPassword").value;
-  const inviteCode = el("signupInviteCode").value.trim();
 
-  if (!email || !password || !inviteCode) {
+  if (!email || !password) {
     return toast("يرجى تعبئة جميع الحقول");
   }
 
-  if (password.length < 8) {
-    return toast("كلمة المرور يجب أن تكون 8 أحرف على الأقل");
+  if (password.length < 2) {
+    return toast("كلمة المرور يجب أن تكون حرفين على الأقل");
   }
 
   if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
@@ -315,15 +314,13 @@ async function handleSignup() {
       action: "signup",
       email,
       password,
-      targetFamilyId,
-      inviteCode
+      targetFamilyId
     });
 
     el("loginEmail").value = email;
     el("loginPassword").value = "";
     el("loginFamilyId").value = targetFamilyId;
     el("signupPassword").value = "";
-    el("signupInviteCode").value = "";
 
     toggleAuthMode("login");
     toast(result.message || "تم إنشاء الحساب! سجل دخولك الآن.");
@@ -338,7 +335,7 @@ async function refreshData() {
   const res = await apiRequest({ action: "getData" });
 
   if (!res.currentUser || !res.currentUser.id) {
-    throw new Error("السيرفر لا يرجع currentUser. حدّث دالة family-api لتعيد هوية الحساب الحالي.");
+    throw new Error("السيرفر لا يرجع currentUser. تأكد من تحديث family-api.");
   }
 
   allAccounts = Array.isArray(res.accounts) ? res.accounts : [];
@@ -735,7 +732,7 @@ function pageSettings(c) {
       <h2>🔐 تغيير كلمة المرور</h2>
       <div class="field">
         <label>كلمة المرور الجديدة</label>
-        <input id="newPassword" type="password" autocomplete="new-password" placeholder="8 أحرف على الأقل">
+        <input id="newPassword" type="password" autocomplete="new-password" minlength="2" placeholder="حرفان على الأقل">
       </div>
       <div class="field">
         <label>تأكيد كلمة المرور</label>
@@ -751,7 +748,7 @@ async function doChangePassword() {
   const confirmPass = el("confirmPassword").value;
 
   if (!newPass || !confirmPass) return toast("يرجى تعبئة الحقول");
-  if (newPass.length < 8) return toast("كلمة المرور يجب أن تكون 8 أحرف على الأقل");
+  if (newPass.length < 2) return toast("كلمة المرور يجب أن تكون حرفين على الأقل");
   if (newPass !== confirmPass) return toast("كلمتا المرور غير متطابقتين");
 
   showLoading(true, "جاري تحديث كلمة المرور...");
