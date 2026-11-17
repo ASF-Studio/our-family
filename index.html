@@ -7,77 +7,75 @@
 <title>بنك العائلة</title>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <style>
-:root{--primary:#0d2b22;--primary-light:#154536;--gold:#c5a059;--gold-light:#e6c584;--bg:#f4f7f6;--card:#fff;--text:#1a2e26;--muted:#6b7c75;--border:#e2e8e5;--red:#a93226;--green:#1e8449;--shadow:0 10px 25px -5px rgba(13,43,34,0.08)}
+:root{--primary:#0d2b22;--primary-light:#154536;--gold:#c5a059;--gold-light:#e6c584;--bg:#f4f7f6;--card:#fff;--text:#1a2e26;--muted:#5a6e67;--border:#e2e8e5;--red:#a93226;--green:#1e8449;--shadow:0 10px 25px -5px rgba(13,43,34,0.08)}
 *{box-sizing:border-box}
-body{margin:0;background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;-webkit-font-smoothing:antialiased;display:flex;flex-direction:column;min-height:100vh}
+body{margin:0;background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;-webkit-font-smoothing:antialiased;display:flex;flex-direction:column;min-height:100vh;font-size:16px}
 button,input,select,textarea{font:inherit}
 button{cursor:pointer}
 .hidden{display:none!important}
 
-header{background:linear-gradient(135deg,var(--primary) 0%,var(--primary-light) 100%);color:white;padding:16px 6%;display:flex;align-items:center;justify-content:space-between;box-shadow:0 4px 20px rgba(0,0,0,0.12)}
+header{background:linear-gradient(135deg,var(--primary) 0%,var(--primary-light) 100%);color:white;padding:18px 6%;display:flex;align-items:center;justify-content:space-between;box-shadow:0 4px 20px rgba(0,0,0,0.12)}
 .bank-brand{display:flex;align-items:center;gap:12px}
-.bank-logo{width:42px;height:42px;background:var(--gold);border-radius:10px;display:grid;place-items:center;font-weight:bold;font-size:18px;color:var(--primary);box-shadow:0 4px 10px rgba(197,160,89,0.3)}
-.bank-title{font-size:17px;font-weight:bold}
-.bank-subtitle{font-size:11px;color:var(--gold-light)}
+.bank-title{font-size:20px;font-weight:bold;letter-spacing:0.5px}
+.bank-subtitle{font-size:13px;color:var(--gold-light)}
 
-.container{max-width:1000px;margin:auto;padding:24px 16px 60px;flex:1}
+.container{max-width:1050px;margin:auto;padding:28px 16px 60px;flex:1}
 
 /* شاشة تسجيل الدخول */
-.auth-container{max-width:420px;margin:8vh auto;padding:16px}
-.auth-card{background:var(--card);border-radius:20px;padding:32px;box-shadow:var(--shadow);border:1.5px solid var(--border)}
-.auth-logo-area{text-align:center;margin-bottom:24px}
-.auth-logo-area .big-logo{width:64px;height:64px;background:var(--primary);color:var(--gold);border-radius:16px;display:inline-grid;place-items:center;font-size:28px;font-weight:bold;margin-bottom:12px;box-shadow:0 6px 15px rgba(13,43,34,0.2)}
-.auth-logo-area h1{font-size:22px;margin:0 0 6px;color:var(--primary)}
-.auth-logo-area p{font-size:12px;color:var(--muted);margin:0}
+.auth-container{max-width:440px;margin:9vh auto;padding:16px}
+.auth-card{background:var(--card);border-radius:20px;padding:36px;box-shadow:var(--shadow);border:1.5px solid var(--border)}
+.auth-logo-area{text-align:center;margin-bottom:28px}
+.auth-logo-area h1{font-size:26px;margin:0 0 8px;color:var(--primary);font-weight:700}
+.auth-logo-area p{font-size:14px;color:var(--muted);margin:0}
 
-.field{margin:16px 0}
-.field label{display:block;font-size:12px;font-weight:600;margin-bottom:8px;color:var(--text)}
-input,select,textarea{width:100%;padding:13px 16px;border:1.5px solid var(--border);border-radius:12px;background:#fff;color:var(--text);font-size:14px;transition:all .2s}
+.field{margin:18px 0}
+.field label{display:block;font-size:14px;font-weight:600;margin-bottom:8px;color:var(--text)}
+input,select,textarea{width:100%;padding:14px 16px;border:1.5px solid var(--border);border-radius:12px;background:#fff;color:var(--text);font-size:15px;transition:all .2s}
 input:focus,select:focus,textarea:focus{border-color:var(--primary);outline:none;box-shadow:0 0 0 3px rgba(13,43,34,0.08)}
 
-.btn{border:0;border-radius:12px;padding:14px 20px;background:var(--primary);color:white;font-weight:600;font-size:14px;display:block;width:100%;text-align:center;cursor:pointer;transition:all .2s;box-shadow:0 4px 12px rgba(13,43,34,0.15)}
+.btn{border:0;border-radius:12px;padding:15px 20px;background:var(--primary);color:white;font-weight:600;font-size:15px;display:block;width:100%;text-align:center;cursor:pointer;transition:all .2s;box-shadow:0 4px 12px rgba(13,43,34,0.15)}
 .btn:hover{background:var(--primary-light)}
 .btn.gold{background:var(--gold);color:var(--primary);box-shadow:0 4px 12px rgba(197,160,89,0.25)}
 .btn.gold:hover{background:var(--gold-light)}
 .btn.red{background:var(--red)}
-.btn.small{padding:8px 14px;font-size:11px;width:auto}
-.btn.outline{background:transparent;border:1.5px solid rgba(255,255,255,0.3);color:white}
+.btn.small{padding:9px 14px;font-size:13px;width:auto}
+.btn.outline{background:transparent;border:1.5px solid rgba(255,255,255,0.4);color:white}
 
 /* البطاقة المصرفية */
-.bank-card-hero{background:linear-gradient(135deg,#0d2b22 0%,#1f4d3e 100%);color:white;border-radius:18px;padding:24px;position:relative;overflow:hidden;box-shadow:0 15px 30px rgba(13,43,34,0.18);margin-bottom:20px}
-.bank-card-top{display:flex;justify-content:space-between;align-items:center;margin-bottom:22px}
-.bank-card-chip{width:36px;height:28px;background:linear-gradient(135deg,#e6c584 0%,#c5a059 100%);border-radius:5px}
-.bank-card-balances{display:grid;grid-template-columns:1fr 1fr;gap:14px}
-.balance-item span{display:block;font-size:11px;color:#a3b8b1;margin-bottom:5px;text-transform:uppercase}
-.balance-item strong{font-size:22px;font-weight:700}
-.eye-icon{background:rgba(255,255,255,0.1);border:none;color:white;width:28px;height:28px;border-radius:50%;cursor:pointer;display:inline-grid;place-items:center;font-size:12px;margin-right:6px}
+.bank-card-hero{background:linear-gradient(135deg,#0d2b22 0%,#1f4d3e 100%);color:white;border-radius:18px;padding:28px;position:relative;overflow:hidden;box-shadow:0 15px 30px rgba(13,43,34,0.18);margin-bottom:24px}
+.bank-card-top{display:flex;justify-content:space-between;align-items:center;margin-bottom:24px}
+.bank-card-chip{width:40px;height:30px;background:linear-gradient(135deg,#e6c584 0%,#c5a059 100%);border-radius:6px}
+.bank-card-balances{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.balance-item span{display:block;font-size:13px;color:#a3b8b1;margin-bottom:6px;text-transform:uppercase}
+.balance-item strong{font-size:26px;font-weight:700}
+.eye-icon{background:rgba(255,255,255,0.15);border:none;color:white;width:32px;height:32px;border-radius:50%;cursor:pointer;display:inline-grid;place-items:center;font-size:14px;margin-right:6px}
 
-.nav-tabs{display:flex;gap:6px;overflow-x:auto;padding:4px 0 18px;scrollbar-width:none}
+.nav-tabs{display:flex;gap:8px;overflow-x:auto;padding:4px 0 20px;scrollbar-width:none}
 .nav-tabs::-webkit-scrollbar{display:none}
-.nav-tab{white-space:nowrap;border:1.5px solid var(--border);background:white;color:var(--text);padding:10px 16px;border-radius:10px;font-size:12px;font-weight:600}
+.nav-tab{white-space:nowrap;border:1.5px solid var(--border);background:white;color:var(--text);padding:11px 18px;border-radius:10px;font-size:14px;font-weight:600}
 .nav-tab.active{background:var(--primary);color:white;border-color:var(--primary)}
 
-.card{background:var(--card);border:1.5px solid var(--border);border-radius:14px;padding:20px;margin-bottom:16px;box-shadow:var(--shadow)}
-.card-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:14px;padding-bottom:8px;border-bottom:1px solid var(--border)}
-.card-title{font-size:15px;font-weight:700;color:var(--primary)}
+.card{background:var(--card);border:1.5px solid var(--border);border-radius:16px;padding:24px;margin-bottom:18px;box-shadow:var(--shadow)}
+.card-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;padding-bottom:10px;border-bottom:1px solid var(--border)}
+.card-title{font-size:17px;font-weight:700;color:var(--primary)}
 
-.transaction-row{display:flex;justify-content:space-between;align-items:center;padding:12px 0;border-bottom:1px solid #f0f4f2}
+.transaction-row{display:flex;justify-content:space-between;align-items:center;padding:14px 0;border-bottom:1px solid #f0f4f2}
 .transaction-row:last-child{border-bottom:0}
-.tx-info h4{margin:0 0 3px;font-size:13px;font-weight:600}
-.tx-info span{font-size:11px;color:var(--muted)}
-.tx-amount{font-size:13px;font-weight:700}
+.tx-info h4{margin:0 0 4px;font-size:15px;font-weight:600}
+.tx-info span{font-size:13px;color:var(--muted)}
+.tx-amount{font-size:15px;font-weight:700}
 .tx-amount.plus{color:var(--green)}
 .tx-amount.minus{color:var(--red)}
 
-.notice{background:#f0f4f2;border-radius:10px;padding:12px;font-size:12px;line-height:1.7;margin:10px 0;border-right:4px solid var(--primary)}
-.empty-state{text-align:center;padding:28px;color:var(--muted);font-size:12px}
+.notice{background:#f0f4f2;border-radius:12px;padding:14px;font-size:14px;line-height:1.7;margin:12px 0;border-right:4px solid var(--primary)}
+.empty-state{text-align:center;padding:32px;color:var(--muted);font-size:14px}
 
-/* الفوتر الرسمي بالحقوق المطلوبة */
-footer{background:#0d2b22;color:#a3b8b1;text-align:center;padding:16px;font-size:11px;margin-top:auto;border-top:1px solid rgba(255,255,255,0.1);letter-spacing:0.5px}
+/* الفوتر */
+footer{background:#0d2b22;color:#a3b8b1;text-align:center;padding:18px;font-size:12px;margin-top:auto;border-top:1px solid rgba(255,255,255,0.1);letter-spacing:0.5px}
 
-.toast{position:fixed;bottom:20px;right:50%;transform:translateX(50%);background:#0d2b22;color:white;padding:11px 20px;border-radius:10px;z-index:99999;max-width:90%;font-size:12px;font-weight:500;box-shadow:0 8px 20px rgba(0,0,0,0.2)}
-.loading-overlay{position:fixed;inset:0;background:rgba(255,255,255,0.85);z-index:99998;display:grid;place-items:center;color:var(--primary);font-weight:bold}
-.spinner{width:32px;height:32px;border:3px solid var(--border);border-top-color:var(--primary);border-radius:50%;animation:spin .8s linear infinite;margin:0 auto 10px}
+.toast{position:fixed;bottom:24px;right:50%;transform:translateX(50%);background:#0d2b22;color:white;padding:13px 22px;border-radius:12px;z-index:99999;max-width:90%;font-size:14px;font-weight:500;box-shadow:0 8px 20px rgba(0,0,0,0.2)}
+.loading-overlay{position:fixed;inset:0;background:rgba(255,255,255,0.88);z-index:99998;display:grid;place-items:center;color:var(--primary);font-weight:bold;font-size:16px}
+.spinner{width:36px;height:36px;border:3.5px solid var(--border);border-top-color:var(--primary);border-radius:50%;animation:spin .8s linear infinite;margin:0 auto 12px}
 @keyframes spin{to{transform:rotate(360deg)}}
 </style>
 </head>
@@ -89,41 +87,39 @@ footer{background:#0d2b22;color:#a3b8b1;text-align:center;padding:16px;font-size
 
 <header id="header" class="hidden">
  <div class="bank-brand">
-  <div class="bank-logo">ف</div>
   <div>
    <div class="bank-title">بنك العائلة</div>
    <div class="bank-subtitle" id="headerRoleLabel">الحساب الفردي</div>
   </div>
  </div>
- <div style="display:flex;align-items:center;gap:10px">
-  <span id="headerName" style="font-size:12px;font-weight:600"></span>
-  <button class="btn outline small" onclick="logout()">خروج</button>
+ <div style="display:flex;align-items:center;gap:12px">
+  <span id="headerName" style="font-size:14px;font-weight:600"></span>
+  <button class="btn outline small" onclick="logout()">تسجيل الخروج</button>
  </div>
 </header>
 
-<!-- شاشة تسجيل الدخول -->
+<!-- شاشة تسجيل الدخول بدون أي شعارات -->
 <section id="loginScreen" class="auth-container">
  <div class="auth-card">
   <div class="auth-logo-area">
-   <div class="big-logo">ف</div>
    <h1>بنك العائلة</h1>
-   <p>تسجيل الدخول الآمن</p>
+   <p>تسجيل الدخول الآمن للحسابات المصرفية</p>
   </div>
 
   <form id="loginForm" onsubmit="handleLoginSubmit(event)">
    <div class="field">
-    <label>اختر الحساب</label>
+    <label>اختر الحساب المصرفي</label>
     <select id="loginFamilyId">
      <option value="azoz">عزوز</option>
      <option value="sahab">سحاب</option>
-     <option value="mama">ماما (الإدارة)</option>
+     <option value="mama">ماما (لوحة الإدارة)</option>
     </select>
    </div>
    <div class="field">
     <label>الرمز السري</label>
     <input id="loginPin" type="password" maxlength="6" placeholder="أدخل الرمز السري">
    </div>
-   <button type="submit" id="loginBtn" class="btn gold" style="margin-top:18px">تسجيل الدخول</button>
+   <button type="submit" id="loginBtn" class="btn gold" style="margin-top:20px">تسجيل الدخول</button>
   </form>
  </div>
 </section>
@@ -134,7 +130,7 @@ footer{background:#0d2b22;color:#a3b8b1;text-align:center;padding:16px;font-size
  <div class="bank-card-hero" id="bankHeroCard">
   <div class="bank-card-top">
    <div class="bank-card-chip"></div>
-   <span id="cardHolderName" style="font-size:12px;letter-spacing:1px;color:#e2e8e5">FAMILY BANK</span>
+   <span id="cardHolderName" style="font-size:13px;letter-spacing:1px;color:#e2e8e5">FAMILY BANK</span>
   </div>
   <div class="bank-card-balances" id="balancesDisplayContainer">
    <div class="balance-item">
@@ -239,7 +235,7 @@ async function apiRequest(payload) {
  }
 }
 
-// دالة تسجيل الدخول المحدثة لضمان فتح صفحة العضو مباشرة وحفظ الجلسة
+// دالة تسجيل الدخول المؤكدة والمصححة للانتقال السليم
 async function handleLoginSubmit(event) {
  event.preventDefault();
  if (isProcessing) return;
@@ -289,7 +285,7 @@ async function handleLoginSubmit(event) {
 
   if (currentUser.mustChangePin) {
    setTimeout(() => {
-    alert("تنبيه أمني: يرجى الانتقال إلى الإعدادات وتغيير الرمز السري لحسابك.");
+    alert("تنبيه أمني: يرجى الانتقال إلى الإعدادات وتغيير الرمز السري الخاص بحسابك.");
    }, 500);
   }
  } catch (err) {
@@ -377,7 +373,7 @@ function renderFamilySummary() {
    </div>
    <div style="text-align:left">
     <div style="font-weight:700;color:var(--primary)">${money(acc.balance)}</div>
-    <div style="font-size:11px;color:var(--gold)">${points(acc.points)}</div>
+    <div style="font-size:12px;color:var(--gold)">${points(acc.points)}</div>
    </div>
   </div>
  `).join("");
@@ -421,8 +417,8 @@ function pageHome(c) {
  c.innerHTML = `
  <div class="card" style="border-right: 4px solid var(--gold);">
   <div class="card-header"><span class="card-title">🌟 قسم النقاط والمكافآت</span></div>
-  <p class="muted">${currentUser.is_admin ? "أهلاً بك يا ماما. من هنا يمكنك مراقبة وتعديل نقاط أفراد العائلة." : "رصيد نقاطك الحالي يعكس إنجازاتك ومكافآتك العائلية. كل 1000 نقطة تعادل 5 ريالات."}</p>
-  <div style="display:flex;gap:10px;margin-top:14px;flex-wrap:wrap">
+  <p class="muted" style="line-height:1.6">${currentUser.is_admin ? "أهلاً بك يا ماما. من هنا يمكنك مراقبة وتعديل نقاط أفراد العائلة." : "رصيد نقاطك الحالي يعكس إنجازاتك ومكافآتك العائلية. كل 1000 نقطة تعادل 5 ريالات."}</p>
+  <div style="display:flex;gap:12px;margin-top:16px;flex-wrap:wrap">
    ${!currentUser.is_admin ? '<button class="btn gold" onclick="go(\'convert\')">تحويل النقاط إلى رصيد نقدي</button>' : ''}
    ${!currentUser.is_admin ? '<button class="btn outline" style="color:var(--primary);border-color:var(--primary)" onclick="go(\'gifts\')">إرسال هدية بالنقاط</button>' : ''}
    ${currentUser.is_admin ? '<button class="btn gold" onclick="go(\'admin\')">منح مكافأة جديدة</button>' : ''}
@@ -431,12 +427,12 @@ function pageHome(c) {
 
  <div class="card">
   <div class="card-header"><span class="card-title">${currentUser.is_admin ? "لوحة الإدارة والتحكم" : "الخدمات السريعة وملخص الحساب"}</span></div>
-  <p class="muted">${currentUser.is_admin ? "أهلاً بك يا ماما. يمكنك اعتماد طلبات الشحن، ومراقبة حركة أرصدة العائلة بكل مرونة." : "معدل تحويل النقاط المعتمد: كل 1000 نقطة تعادل 5.00 ريال سعودي."}</p>
-  ${currentUser.is_admin ? '<button class="btn" onclick="go(\'admin\')" style="margin-top:12px">فتح لوحة الإدارة</button>' : ''}
+  <p class="muted" style="line-height:1.6">${currentUser.is_admin ? "أهلاً بك يا ماما. يمكنك اعتماد طلبات الشحن، ومراقبة حركة أرصدة العائلة بكل مرونة." : "معدل تحويل النقاط المعتمد: كل 1000 نقطة تعادل 5.00 ريال سعودي."}</p>
+  ${currentUser.is_admin ? '<button class="btn" onclick="go(\'admin\')" style="margin-top:14px">فتح لوحة الإدارة</button>' : ''}
  </div>
 
  <div class="card">
-  <div class="card-header"><span class="card-title">آخر العمليات</span></div>
+  <div class="card-header"><span class="card-title">آخر العمليات المصرفية</span></div>
   ${ledgerHTML((allLedger || []).slice(0, 5))}
  </div>`;
 }
@@ -617,7 +613,7 @@ function pageNotifications(c) {
      <h4>${escapeHTML(n.title)}</h4>
      <span>${escapeHTML(n.body)}</span>
     </div>
-    <div class="tx-amount" style="font-size:11px">${new Date(n.created_at).toLocaleDateString('ar-SA')}</div>
+    <div class="tx-amount" style="font-size:12px">${new Date(n.created_at).toLocaleDateString('ar-SA')}</div>
    </div>
   `).join("") : '<div class="empty-state">لا توجد تنبيهات جديدة</div>'}
  </div>`;
@@ -660,7 +656,7 @@ function pageAdmin(c) {
      <h4>${escapeHTML(t.user_name)} يطلب شحن ${money(t.amount)}</h4>
      <span>ملاحظة: ${escapeHTML(t.note || 'بدون')}</span>
     </div>
-    <div style="display:flex;gap:6px">
+    <div style="display:flex;gap:8px">
      <button class="btn small" onclick="handleTopUp('${t.id}', 'approved')">قبول</button>
      <button class="btn red small" onclick="handleTopUp('${t.id}', 'rejected')">رفض</button>
     </div>
