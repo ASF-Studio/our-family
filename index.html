@@ -98,7 +98,6 @@ footer{background:#0d2b22;color:#a3b8b1;text-align:center;padding:18px;font-size
  </div>
 </header>
 
-<!-- شاشة تسجيل الدخول -->
 <section id="loginScreen" class="auth-container">
  <div class="auth-card">
   <div class="auth-logo-area">
@@ -124,9 +123,7 @@ footer{background:#0d2b22;color:#a3b8b1;text-align:center;padding:18px;font-size
  </div>
 </section>
 
-<!-- لوحة التطبيق -->
 <main id="app" class="container hidden">
- 
  <div class="bank-card-hero" id="bankHeroCard">
   <div class="bank-card-top">
    <div class="bank-card-chip"></div>
@@ -154,7 +151,7 @@ footer{background:#0d2b22;color:#a3b8b1;text-align:center;padding:18px;font-size
 </main>
 
 <footer>
- جميع الحقوق محفوظة لبنك العائلة © AFCAFS Studio
+ جميع الحقوق محفوظة لبنك العائلة ©
 </footer>
 
 <div id="toast" class="toast hidden"></div>
@@ -228,7 +225,7 @@ async function apiRequest(payload) {
   }
   return data;
  } catch (err) {
-  console.error("API Request Error:", err);
+  console.error("API Error:", err);
   toast(err.message || "خطأ في الاتصال بالخادم");
   throw err;
  } finally {
@@ -236,7 +233,7 @@ async function apiRequest(payload) {
  }
 }
 
-// دالة تسجيل الدخول المضمونة للتنقل الفوري وتجاوز شاشة الدخول بلا تأخير
+// الدالة النهائية المحسنة للتحقق والتنقل الفوري بدون بقاء في صفحة الدخول
 async function handleLoginSubmit(event) {
  event.preventDefault();
  if (isProcessing) return;
@@ -268,33 +265,34 @@ async function handleLoginSubmit(event) {
 
   const data = await response.json().catch(() => ({}));
   if (!response.ok || !data.success) {
-   throw new Error(data.error || "فشل تسجيل الدخول: تحقق من الرمز السري");
+   throw new Error(data.error || "فشل تسجيل الدخول: الرمز السري غير صحيح");
   }
 
-  // حفظ الجلسة والمستخدم فوراً
+  // 1. تعيين البيانات فوراً وحفظها في التخزين المحلي قبل جلب باقي التفاصيل
   currentUser = data.currentUser;
   localStorage.setItem("family_bank_user_id", currentUser.id);
 
   el("loginPin").value = "";
 
-  // الانتقال الحتمي فورا وإخفاء شاشة الدخول وإظهار التطبيق
+  // 2. إخفاء شاشة تسجيل الدخول وإظهار واجهة العضو مباشرة
   el("loginScreen").classList.add("hidden");
   el("header").classList.remove("hidden");
   el("app").classList.remove("hidden");
 
-  // جلب البيانات الإضافية وتحديث واجهة الحساب الخاص بالمستخدم
+  // 3. جلب بقية السجلات والطلبات الخاصة بالحساب وتحديث العرض
   await refreshData();
   currentPage = "home";
   renderApp();
-  toast(`أهلاً بك يا ${currentUser.name}, تم تسجيل الدخول بنجاح`);
+  
+  toast(`مرحباً بك يا ${currentUser.name}, تم تسجيل الدخول بنجاح`);
 
   if (currentUser.mustChangePin) {
    setTimeout(() => {
-    alert("تنبيه أمني: يرجى الانتقال إلى الإعدادات وتغيير الرمز السري الخاص بحسابك لحمايته.");
+    alert("تنبيه أمني: يرجى الانتقال إلى قسم الإعدادات وتغيير الرمز السري الافتراضي لحسابك لحمايته.");
    }, 500);
   }
  } catch (err) {
-  console.error("Login Error:", err);
+  console.error("Login Navigation Error:", err);
   toast(err.message || "فشل تسجيل الدخول");
  } finally {
   isProcessing = false;
@@ -469,7 +467,7 @@ function pageConvert(c) {
 async function doConvert() {
  const pts = Number(el("convertPoints").value);
  if (!pts || pts < 25 || pts % 25 !== 0) return toast("الحد الأدنى للتحويل 25 نقطة ويجب أن يكون من مضاعفاتها");
- if (pts > currentUser.points) return toast("رصيد النقاط غير كافٍ لإتمام العملية");
+ if (pts > currentUser.points) return toast("رصيد نقاطك غير كافٍ لإتمام العملية");
 
  await apiRequest({ action: "convertPoints", pointsToConvert: pts });
  await refreshData();
