@@ -16,35 +16,37 @@ button{cursor:pointer}
 
 header{background:linear-gradient(135deg,var(--primary) 0%,var(--primary-light) 100%);color:white;padding:16px 6%;display:flex;align-items:center;justify-content:space-between;box-shadow:0 4px 20px rgba(0,0,0,0.12)}
 .bank-brand{display:flex;align-items:center;gap:12px}
-.bank-logo{width:40px;height:40px;background:var(--gold);border-radius:10px;display:grid;place-items:center;font-weight:bold;font-size:18px;color:var(--primary)}
+.bank-logo{width:42px;height:42px;background:var(--gold);border-radius:10px;display:grid;place-items:center;font-weight:bold;font-size:18px;color:var(--primary);box-shadow:0 4px 10px rgba(197,160,89,0.3)}
 .bank-title{font-size:16px;font-weight:bold}
 .bank-subtitle{font-size:11px;color:var(--gold-light)}
 
 .container{max-width:1000px;margin:auto;padding:24px 16px 60px}
 
-.auth-container{max-width:400px;margin:8vh auto;padding:16px}
-.auth-card{background:var(--card);border-radius:20px;padding:30px;box-shadow:var(--shadow);border:1px solid var(--border)}
+/* شاشة تسجيل الدخول بتصميم بنكي فاخر */
+.auth-container{max-width:420px;margin:7vh auto;padding:16px}
+.auth-card{background:var(--card);border-radius:20px;padding:32px;box-shadow:var(--shadow);border:1.5px solid var(--border)}
 .auth-logo-area{text-align:center;margin-bottom:24px}
-.auth-logo-area .big-logo{width:60px;height:60px;background:var(--primary);color:var(--gold);border-radius:14px;display:inline-grid;place-items:center;font-size:26px;font-weight:bold;margin-bottom:12px}
+.auth-logo-area .big-logo{width:64px;height:64px;background:var(--primary);color:var(--gold);border-radius:16px;display:inline-grid;place-items:center;font-size:28px;font-weight:bold;margin-bottom:12px;box-shadow:0 6px 15px rgba(13,43,34,0.2)}
 .auth-logo-area h1{font-size:20px;margin:0 0 6px;color:var(--primary)}
 .auth-logo-area p{font-size:12px;color:var(--muted);margin:0}
 
-.field{margin:15px 0}
-.field label{display:block;font-size:12px;font-weight:600;margin-bottom:6px;color:var(--text)}
-input,select,textarea{width:100%;padding:12px 14px;border:1.5px solid var(--border);border-radius:10px;background:#fff;color:var(--text);font-size:13px;transition:all .2s}
+.field{margin:16px 0}
+.field label{display:block;font-size:12px;font-weight:600;margin-bottom:8px;color:var(--text)}
+input,select,textarea{width:100%;padding:13px 16px;border:1.5px solid var(--border);border-radius:12px;background:#fff;color:var(--text);font-size:14px;transition:all .2s}
 input:focus,select:focus,textarea:focus{border-color:var(--primary);outline:none;box-shadow:0 0 0 3px rgba(13,43,34,0.08)}
 
-.btn{border:0;border-radius:10px;padding:13px 18px;background:var(--primary);color:white;font-weight:600;font-size:13px;display:block;width:100%;text-align:center;cursor:pointer;transition:all .2s;box-shadow:0 4px 12px rgba(13,43,34,0.15)}
+.btn{border:0;border-radius:12px;padding:14px 20px;background:var(--primary);color:white;font-weight:600;font-size:14px;display:block;width:100%;text-align:center;cursor:pointer;transition:all .2s;box-shadow:0 4px 12px rgba(13,43,34,0.15)}
 .btn:hover{background:var(--primary-light)}
-.btn.gold{background:var(--gold);color:var(--primary)}
+.btn.gold{background:var(--gold);color:var(--primary);box-shadow:0 4px 12px rgba(197,160,89,0.25)}
 .btn.gold:hover{background:var(--gold-light)}
 .btn.red{background:var(--red)}
-.btn.small{padding:7px 12px;font-size:11px;width:auto}
+.btn.small{padding:8px 14px;font-size:11px;width:auto}
 .btn.outline{background:transparent;border:1.5px solid rgba(255,255,255,0.3);color:white}
 
+/* البطاقة المصرفية المتميزة */
 .bank-card-hero{background:linear-gradient(135deg,#0d2b22 0%,#1f4d3e 100%);color:white;border-radius:18px;padding:24px;position:relative;overflow:hidden;box-shadow:0 15px 30px rgba(13,43,34,0.18);margin-bottom:20px}
 .bank-card-top{display:flex;justify-content:space-between;align-items:center;margin-bottom:22px}
-.bank-card-chip{width:34px;height:26px;background:linear-gradient(135deg,#e6c584 0%,#c5a059 100%);border-radius:4px}
+.bank-card-chip{width:36px;height:28px;background:linear-gradient(135deg,#e6c584 0%,#c5a059 100%);border-radius:5px}
 .bank-card-balances{display:grid;grid-template-columns:1fr 1fr;gap:14px}
 .balance-item span{display:block;font-size:11px;color:#a3b8b1;margin-bottom:5px;text-transform:uppercase}
 .balance-item strong{font-size:22px;font-weight:700}
@@ -52,7 +54,7 @@ input:focus,select:focus,textarea:focus{border-color:var(--primary);outline:none
 
 .nav-tabs{display:flex;gap:6px;overflow-x:auto;padding:4px 0 18px;scrollbar-width:none}
 .nav-tabs::-webkit-scrollbar{display:none}
-.nav-tab{white-space:nowrap;border:1.5px solid var(--border);background:white;color:var(--text);padding:9px 16px;border-radius:10px;font-size:12px;font-weight:600}
+.nav-tab{white-space:nowrap;border:1.5px solid var(--border);background:white;color:var(--text);padding:10px 16px;border-radius:10px;font-size:12px;font-weight:600}
 .nav-tab.active{background:var(--primary);color:white;border-color:var(--primary)}
 
 .card{background:var(--card);border:1.5px solid var(--border);border-radius:14px;padding:20px;margin-bottom:16px;box-shadow:var(--shadow)}
@@ -96,21 +98,28 @@ input:focus,select:focus,textarea:focus{border-color:var(--primary);outline:none
  </div>
 </header>
 
-<!-- شاشة تسجيل الدخول المباشرة (تم إلغاء إنشاء الحساب بالكامل) -->
+<!-- شاشة تسجيل الدخول المباشرة باختيار الحساب والرمز السري -->
 <section id="loginScreen" class="auth-container">
  <div class="auth-card">
   <div class="auth-logo-area">
    <div class="big-logo">ف</div>
    <h1>بنك العائلة</h1>
-   <p>تسجيل الدخول المعتمد للحسابات العائلية</p>
+   <p>الخدمات المصرفية الآمنة للأفراد</p>
   </div>
 
-  <div class="field"><label>البريد الإلكتروني المصرفي</label><input id="loginEmail" type="email" placeholder="name@family.bank"></div>
-  <div class="field"><label>كلمة المرور السرية</label><input id="loginPassword" type="password" placeholder="••••••••"></div>
-  <button type="button" class="btn gold" onclick="handleLogin()" style="margin-top:18px">تسجيل الدخول الآمن</button>
-  <div style="text-align:center;margin-top:14px">
-   <span style="font-size:11px;color:var(--muted)">الحسابات المعتمدة: عزوز، سحاب، ماما</span>
+  <div class="field">
+   <label>اختر الحساب المصرفي</label>
+   <select id="loginFamilyId">
+    <option value="azoz">عزوز</option>
+    <option value="sahab">سحاب</option>
+    <option value="mama">ماما (الإدارة)</option>
+   </select>
   </div>
+  <div class="field">
+   <label>الرمز السري (PIN)</label>
+   <input id="loginPin" type="password" maxlength="6" placeholder="أدخل الرمز (الافتراضي 1111)">
+  </div>
+  <button type="button" class="btn gold" onclick="handleLogin()" style="margin-top:18px">تسجيل الدخول الآمن</button>
  </div>
 </section>
 
@@ -124,12 +133,12 @@ input:focus,select:focus,textarea:focus{border-color:var(--primary);outline:none
   </div>
   <div class="bank-card-balances" id="balancesDisplayContainer">
    <div class="balance-item">
-    <span>الرصيد النقدي <button class="eye-icon" onclick="toggleHide('balance')">👁</button></span>
-    <strong id="myBalance">0.00 ر.س</strong>
-   </div>
-   <div class="balance-item">
     <span>رصيد النقاط <button class="eye-icon" onclick="toggleHide('points')">👁</button></span>
     <strong id="myPoints" style="color:var(--gold-light)">0 نقطة</strong>
+   </div>
+   <div class="balance-item">
+    <span>الرصيد النقدي <button class="eye-icon" onclick="toggleHide('balance')">👁</button></span>
+    <strong id="myBalance">0.00 ر.س</strong>
    </div>
   </div>
  </div>
@@ -199,15 +208,13 @@ function toggleHide(type) {
 async function apiRequest(payload) {
  showLoading(true);
  try {
-  const session = (await supabaseClient.auth.getSession()).data.session;
-  const token = session?.access_token || SUPABASE_ANON_KEY;
-
+  const currentUserId = currentUser?.id || localStorage.getItem("family_bank_user_id") || "";
   const response = await fetch(EDGE_FUNCTION_URL, {
    method: "POST",
    headers: {
     "Content-Type": "application/json",
     "apikey": SUPABASE_ANON_KEY,
-    "Authorization": `Bearer ${token}`
+    "x-user-id": currentUserId
    },
    body: JSON.stringify(payload)
   });
@@ -227,35 +234,47 @@ async function apiRequest(payload) {
 
 async function handleLogin() {
  if (isProcessing) return;
- const email = el("loginEmail").value.trim();
- const password = el("loginPassword").value.trim();
+ const familyId = el("loginFamilyId").value;
+ const pin = el("loginPin").value.trim();
 
- if(!email || !password) return toast("يرجى إدخال البريد الإلكتروني وكلمة المرور");
+ if(!pin) return toast("يرجى إدخال الرمز السري");
 
  isProcessing = true;
- showLoading(true, "جاري التحقق وتسجيل الدخول...");
+ showLoading(true, "جاري التحقق وتسجيل الدخول الآمن...");
 
  try {
-  const { data, error } = await supabaseClient.auth.signInWithPassword({ email, password });
-  if (error || !data.user) throw new Error(error?.message || "بيانات الدخول غير صحيحة");
+  const response = await fetch(EDGE_FUNCTION_URL, {
+   method: "POST",
+   headers: {
+    "Content-Type": "application/json",
+    "apikey": SUPABASE_ANON_KEY
+   },
+   body: JSON.stringify({ action: "login", familyId, pin })
+  });
 
-  el("loginEmail").value = "";
-  el("loginPassword").value = "";
-
-  await refreshData();
-  
-  if (currentUser && currentUser.blocked) {
-   await supabaseClient.auth.signOut();
-   throw new Error("عذراً، حسابك موقوف (محظور) من قِبل إدارة البنك");
+  const data = await response.json().catch(() => ({}));
+  if (!response.ok || !data.success) {
+   throw new Error(data.error || "فشل تسجيل الدخول");
   }
 
+  currentUser = data.currentUser;
+  localStorage.setItem("family_bank_user_id", currentUser.id);
+
+  el("loginPin").value = "";
   el("loginScreen").classList.add("hidden");
   el("header").classList.remove("hidden");
   el("app").classList.remove("hidden");
 
+  await refreshData();
   currentPage = "home";
   renderApp();
   toast("مرحباً بك في الخدمات المصرفية لبنك العائلة");
+
+  if (currentUser.mustChangePin) {
+   setTimeout(() => {
+    alert("تنبيه أمني: هذا حساب جديد برمز افتراضي (1111). يرجى الانتقال إلى الإعدادات وتغيير الرمز السري لحماية حسابك.");
+   }, 500);
+  }
  } catch (err) {
   toast(err.message || "فشل تسجيل الدخول");
  } finally {
@@ -280,18 +299,22 @@ async function refreshData() {
 }
 
 async function restoreSession() {
- const session = (await supabaseClient.auth.getSession()).data.session;
- if (session) {
-  await refreshData();
-  if (currentUser) {
-   if (currentUser.blocked) {
-    await logout();
-    return alert("عذراً، حسابك موقوف من قِبل الإدارة");
+ const savedId = localStorage.getItem("family_bank_user_id");
+ if (savedId) {
+  try {
+   await refreshData();
+   if (currentUser) {
+    if (currentUser.blocked) {
+     logout();
+     return alert("عذراً، حسابك موقوف من قِبل الإدارة");
+    }
+    el("loginScreen").classList.add("hidden");
+    el("header").classList.remove("hidden");
+    el("app").classList.remove("hidden");
+    renderApp();
    }
-   el("loginScreen").classList.add("hidden");
-   el("header").classList.remove("hidden");
-   el("app").classList.remove("hidden");
-   renderApp();
+  } catch(e) {
+   logout();
   }
  }
 }
@@ -302,7 +325,6 @@ function renderApp() {
  el("cardHolderName").textContent = currentUser.name.toUpperCase() + " / FAMILY BANK";
  el("headerRoleLabel").textContent = currentUser.is_admin ? "لوحة الإدارة المصرفية" : "الحساب المصرفي الفردي";
 
- const balancesContainer = el("balancesDisplayContainer");
  const familyCard = el("familySummaryCard");
  const heroCard = el("bankHeroCard");
 
@@ -341,8 +363,8 @@ function renderFamilySummary() {
 
 function renderNav() {
  const items = currentUser.is_admin
-  ? [["home","الرئيسية"],["admin","الإدارة والعمليات"],["ledger","السجل المصرفي"],["notifications",`التنبيهات (${allNotifications.filter(n=>!n.read).length})`]]
-  : [["home","الرئيسية"],["convert","تحويل النقاط"],["topup","شحن الرصيد"],["gifts","الهدايا"],["purchase","المشتريات"],["ledger","سجل الحساب"],["notifications",`التنبيهات (${allNotifications.filter(n=>!n.read).length})`]];
+  ? [["home","الرئيسية"],["admin","الإدارة والعمليات"],["ledger","السجل المصرفي"],["notifications",`التنبيهات (${allNotifications.filter(n=>!n.read).length})`],["settings","الإعدادات"]]
+  : [["home","الرئيسية"],["convert","تحويل النقاط"],["topup","شحن الرصيد"],["gifts","الهدايا"],["purchase","المشتريات"],["ledger","سجل الحساب"],["notifications",`التنبيهات (${allNotifications.filter(n=>!n.read).length})`],["settings","الإعدادات"]];
  
  const navEl = el("navigation");
  if(navEl) {
@@ -364,7 +386,8 @@ function renderPage() {
   purchase: pagePurchase,
   ledger: pageLedger,
   notifications: pageNotifications,
-  admin: pageAdmin
+  admin: pageAdmin,
+  settings: pageSettings
  };
  const container = el("pageContent");
  if(container && pages[currentPage]) {
@@ -372,13 +395,25 @@ function renderPage() {
  }
 }
 
+// الصفحة الرئيسية تبدأ بقسم النقاط والمكافآت أولاً
 function pageHome(c) {
  c.innerHTML = `
+ <div class="card" style="border-right: 4px solid var(--gold);">
+  <div class="card-header"><span class="card-title">🌟 قسم النقاط والمكافآت (الرئيسي)</span></div>
+  <p class="muted">${currentUser.is_admin ? "أهلاً بك يا ماما. من هنا يمكنك مراقبة وتعديل نقاط أفراد العائلة." : "رصيد نقاطك الحالي يعكس إنجازاتك ومكافآتك العائلية. كل 1000 نقطة تعادل 5 ريالات."}</p>
+  <div style="display:flex;gap:10px;margin-top:14px;flex-wrap:wrap">
+   ${!currentUser.is_admin ? '<button class="btn gold" onclick="go(\'convert\')">تحويل النقاط إلى رصيد نقدي</button>' : ''}
+   ${!currentUser.is_admin ? '<button class="btn outline" style="color:var(--primary);border-color:var(--primary)" onclick="go(\'gifts\')">إرسال هدية بالنقاط</button>' : ''}
+   ${currentUser.is_admin ? '<button class="btn gold" onclick="go(\'admin\')">منح مكافأة جديدة</button>' : ''}
+  </div>
+ </div>
+
  <div class="card">
   <div class="card-header"><span class="card-title">${currentUser.is_admin ? "لوحة الإدارة والتحكم المصرفي" : "الخدمات السريعة وملخص الحساب"}</span></div>
-  <p class="muted">${currentUser.is_admin ? "أهلاً بك يا ماما. يمكنك اعتماد طلبات الشحن، منح المكافآت، ومراقبة حركة أرصدة العائلة بكل مرونة." : "معدل تحويل النقاط المعتمد: كل 1000 نقطة تعادل 5.00 ريال سعودي."}</p>
-  ${currentUser.is_admin ? '<button class="btn gold" onclick="go(\'admin\')" style="margin-top:12px">فتح لوحة الإدارة المصرفية</button>' : '<button class="btn gold" onclick="go(\'convert\')" style="margin-top:12px">تحويل النقاط إلى رصيد نقدي</button>'}
+  <p class="muted">${currentUser.is_admin ? "أهلاً بك يا ماما. يمكنك اعتماد طلبات الشحن، ومراقبة حركة أرصدة العائلة بكل مرونة." : "معدل تحويل النقاط المعتمد: كل 1000 نقطة تعادل 5.00 ريال سعودي."}</p>
+  ${currentUser.is_admin ? '<button class="btn" onclick="go(\'admin\')" style="margin-top:12px">فتح لوحة الإدارة المصرفية</button>' : ''}
  </div>
+
  <div class="card">
   <div class="card-header"><span class="card-title">آخر العمليات المصرفية</span></div>
   ${ledgerHTML((allLedger || []).slice(0, 5))}
@@ -567,6 +602,24 @@ function pageNotifications(c) {
  </div>`;
 }
 
+function pageSettings(c) {
+ c.innerHTML = `
+ <div class="card">
+  <div class="card-header"><span class="card-title">إعدادات الأمان وحماية الحساب</span></div>
+  <p class="muted">قم بتغيير الرمز السري الخاص بحسابك لضمان أعلى مستويات الأمان.</p>
+  <div class="field"><label>الرمز السري الجديد</label><input id="newPinInput" type="password" maxlength="6" placeholder="أدخل 4 أرقام على الأقل"></div>
+  <button class="btn gold" onclick="doChangePin()">تحديث الرمز السري</button>
+ </div>`;
+}
+
+async function doChangePin() {
+ const newPin = el("newPinInput").value.trim();
+ if (!newPin || newPin.length < 4) return toast("الرمز السري يجب ألا يقل عن 4 أرقام");
+ await apiRequest({ action: "changePin", newPin });
+ toast("تم تحديث الرمز السري بنجاح!");
+ el("newPinInput").value = "";
+}
+
 function pageAdmin(c) {
  c.innerHTML = `
  <div class="card">
@@ -617,7 +670,7 @@ async function doAdminAdjust() {
  if(type === 'moneyPlus') moneyDelta = val;
  if(type === 'moneyMinus') moneyDelta = -val;
  if(type === 'pointsPlus') pointsDelta = val;
- if(type === 'pointsMinus') pointsDelta = -val;
+ if(type === 'pointsMinus') pointsDelta = val ? -val : 0;
  if(type === 'reward') { pointsDelta = val; isReward = true; }
 
  await apiRequest({ action: "adminAdjust", targetId, moneyDelta, pointsDelta, reason, isReward });
@@ -644,9 +697,9 @@ async function doToggleBlock() {
  toast("تم تحديث حالة الحساب الأمنية بنجاح");
 }
 
-async function logout() {
- await supabaseClient.auth.signOut();
+function logout() {
  currentUser = null;
+ localStorage.removeItem("family_bank_user_id");
  el("app").classList.add("hidden");
  el("header").classList.add("hidden");
  el("loginScreen").classList.remove("hidden");
