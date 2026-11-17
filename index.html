@@ -20,14 +20,14 @@ header{background:var(--main);color:white;padding:17px 5%;display:flex;align-ite
 h2{font-size:19px;margin:0 0 15px}
 h3{font-size:15px;margin:0 0 12px}
 .muted{color:var(--muted);font-size:12px;line-height:1.9}
-.login-wrap{max-width:410px;margin:9vh auto;padding:16px;position:relative;z-index:999}
+.login-wrap{max-width:410px;margin:9vh auto;padding:16px}
 .login-title{text-align:center;margin-bottom:22px}
 .login-title h1{font-size:23px;margin:0 0 8px;color:var(--main)}
 .field{margin:14px 0}
 .field label{display:block;font-size:13px;font-weight:bold;margin-bottom:7px}
-input,select{width:100%;padding:12px;border:1px solid var(--border);border-radius:10px;background:white;color:var(--text);outline:none;position:relative;z-index:1000}
+input,select{width:100%;padding:12px;border:1px solid var(--border);border-radius:10px;background:white;color:var(--text);outline:none}
 input:focus,select:focus{border-color:var(--main)}
-.btn{border:0;border-radius:10px;padding:13px 16px;background:var(--main);color:white;font-weight:bold;position:relative;z-index:1001;display:block;width:100%;text-align:center;cursor:pointer;pointer-events:auto!important;-webkit-tap-highlight-color:transparent}
+.btn{border:0;border-radius:10px;padding:13px 16px;background:var(--main);color:white;font-weight:bold;display:block;width:100%;text-align:center;cursor:pointer;pointer-events:auto!important}
 .btn:disabled{opacity:.6;cursor:not-allowed}
 .btn.light{background:var(--soft);color:var(--main)}
 .btn.red{background:#faeeee;color:var(--red)}
@@ -76,7 +76,7 @@ input:focus,select:focus{border-color:var(--main)}
   <h1>بنك العائلة</h1>
   <p class="muted">المحفظة العائلية</p>
  </div>
- <div class="card" style="position:relative; z-index:999;">
+ <div class="card">
   <h2>تسجيل الدخول</h2>
   <div class="field">
    <label>الحساب</label>
@@ -170,13 +170,13 @@ async function apiRequest(payload) {
    body: JSON.stringify(payload)
   });
 
-  const data = await response.json();
+  const data = await response.json().catch(() => ({}));
   if (!response.ok || !data.success) {
-   throw new Error(data.error || "حدث خطأ في السيرفر");
+   throw new Error(data.error || "تعذر الاتصال بالخادم (خطأ في استجابة السيرفر)");
   }
   return data;
  } catch (err) {
-  toast(err.message);
+  toast(err.message || "حدث خطأ غير متوقع");
   throw err;
  } finally {
   showLoading(false);
@@ -197,15 +197,19 @@ async function handleLogin() {
 
  if (!pin) {
   toast("يرجى إدخال الرقم السري");
+  pinField.focus();
   return;
  }
 
  isProcessing = true;
- if(btn) btn.disabled = true;
+ if(btn) {
+  btn.disabled = true;
+  btn.textContent = "جاري التحقق...";
+ }
 
  try {
   const res = await apiRequest({ action: "login", userId, pin });
-  if (!res || !res.user) throw new Error("تعذر جلب بيانات المستخدم");
+  if (!res || !res.user) throw new Error("بيانات الدخول غير صحيحة");
   
   currentUser = res.user;
   pinField.value = "";
@@ -219,10 +223,13 @@ async function handleLogin() {
   renderApp();
   toast("تم تسجيل الدخول بنجاح");
  } catch (err) {
-  // الخطأ معروض مسبقاً عبر apiRequest و toast
+  // تم عرض الخطأ عبر apiRequest و toast
  } finally {
   isProcessing = false;
-  if(btn) btn.disabled = false;
+  if(btn) {
+   btn.disabled = false;
+   btn.textContent = "دخول";
+  }
  }
 }
 
