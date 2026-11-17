@@ -20,19 +20,18 @@ header{background:var(--main);color:white;padding:17px 5%;display:flex;align-ite
 h2{font-size:19px;margin:0 0 15px}
 h3{font-size:15px;margin:0 0 12px}
 .muted{color:var(--muted);font-size:12px;line-height:1.9}
-.login-wrap{max-width:410px;margin:9vh auto;padding:16px;position:relative;z-index:10}
+.login-wrap{max-width:410px;margin:9vh auto;padding:16px;position:relative;z-index:999}
 .login-title{text-align:center;margin-bottom:22px}
 .login-title h1{font-size:23px;margin:0 0 8px;color:var(--main)}
 .field{margin:14px 0}
 .field label{display:block;font-size:13px;font-weight:bold;margin-bottom:7px}
-input,select{width:100%;padding:12px;border:1px solid var(--border);border-radius:10px;background:white;color:var(--text);outline:none;position:relative;z-index:5}
+input,select{width:100%;padding:12px;border:1px solid var(--border);border-radius:10px;background:white;color:var(--text);outline:none;position:relative;z-index:1000}
 input:focus,select:focus{border-color:var(--main)}
-.btn{border:0;border-radius:10px;padding:11px 16px;background:var(--main);color:white;font-weight:bold;position:relative;z-index:5;display:inline-block;text-align:center}
+.btn{border:0;border-radius:10px;padding:13px 16px;background:var(--main);color:white;font-weight:bold;position:relative;z-index:1001;display:block;width:100%;text-align:center;cursor:pointer;pointer-events:auto!important;-webkit-tap-highlight-color:transparent}
 .btn:disabled{opacity:.6;cursor:not-allowed}
 .btn.light{background:var(--soft);color:var(--main)}
 .btn.red{background:#faeeee;color:var(--red)}
-.btn.small{padding:8px 12px;font-size:12px}
-.btn.full{width:100%}
+.btn.small{padding:8px 12px;font-size:12px;width:auto}
 .topline{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap}
 .grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
 .stat{background:#f0f4f2;border:1px solid var(--border);border-radius:12px;padding:16px}
@@ -52,8 +51,8 @@ input:focus,select:focus{border-color:var(--main)}
 .notice{background:var(--soft);border-radius:10px;padding:12px;font-size:12px;line-height:1.9;margin:12px 0}
 .empty{text-align:center;padding:25px;color:var(--muted);font-size:13px}
 .profile-chip{background:#ffffff20;border-radius:8px;padding:7px 11px;font-size:12px}
-.toast{position:fixed;bottom:20px;right:50%;transform:translateX(50%);background:#203d34;color:white;padding:12px 18px;border-radius:10px;z-index:9999;max-width:90%;font-size:13px}
-.loading{position:fixed;inset:0;background:rgba(255,255,255,0.85);z-index:10000;display:grid;place-items:center;color:var(--main);font-weight:bold;text-align:center}
+.toast{position:fixed;bottom:20px;right:50%;transform:translateX(50%);background:#203d34;color:white;padding:12px 18px;border-radius:10px;z-index:99999;max-width:90%;font-size:13px}
+.loading{position:fixed;inset:0;background:rgba(255,255,255,0.85);z-index:99998;display:grid;place-items:center;color:var(--main);font-weight:bold;text-align:center}
 .spinner{width:32px;height:32px;border:4px solid var(--soft);border-top-color:var(--main);border-radius:50%;animation:spin .8s linear infinite;margin:0 auto 12px}
 @keyframes spin{to{transform:rotate(360deg)}}
 </style>
@@ -77,7 +76,7 @@ input:focus,select:focus{border-color:var(--main)}
   <h1>بنك العائلة</h1>
   <p class="muted">المحفظة العائلية</p>
  </div>
- <div class="card" style="position:relative; z-index:5;">
+ <div class="card" style="position:relative; z-index:999;">
   <h2>تسجيل الدخول</h2>
   <div class="field">
    <label>الحساب</label>
@@ -91,7 +90,7 @@ input:focus,select:focus{border-color:var(--main)}
    <label>الرقم السري</label>
    <input id="loginPin" type="password" inputmode="numeric" placeholder="أدخل الرقم السري (الافتراضي 1111)">
   </div>
-  <button type="button" class="btn full" id="loginButton" onclick="handleLogin()">دخول</button>
+  <button type="button" class="btn" id="loginButton">دخول</button>
  </div>
 </section>
 
@@ -206,7 +205,7 @@ async function handleLogin() {
 
  try {
   const res = await apiRequest({ action: "login", userId, pin });
-  if (!res || !res.user) throw new Error("تعذر جبيانات المستخدم");
+  if (!res || !res.user) throw new Error("تعذر جلب بيانات المستخدم");
   
   currentUser = res.user;
   pinField.value = "";
@@ -226,6 +225,21 @@ async function handleLogin() {
   if(btn) btn.disabled = false;
  }
 }
+
+// ربط الزر برمجياً بشكل مباشر لضمان استجابته التامة على الكمبيوتر والجوال
+document.addEventListener("DOMContentLoaded", () => {
+ const loginBtn = el("loginButton");
+ if (loginBtn) {
+  loginBtn.addEventListener("click", (e) => {
+   e.preventDefault();
+   handleLogin();
+  });
+  loginBtn.addEventListener("touchend", (e) => {
+   e.preventDefault();
+   handleLogin();
+  });
+ }
+});
 
 async function refreshData() {
  try {
@@ -317,7 +331,7 @@ function pageConvert(c) {
   <p class="muted">كل 1000 نقطة = 5 ريالات (يجب أن تكون المضاعفات من 1000 فما فوق)</p>
   <div class="notice">رصيدك الحالي: <b>${points(currentUser.points)} نقطة</b></div>
   <div class="field"><label>عدد النقاط</label><input id="convertAmount" type="number" step="1000" min="1000" placeholder="مثال: 1000"></div>
-  <button class="btn full" onclick="doConvertPoints()">تحويل الآن</button>
+  <button class="btn" onclick="doConvertPoints()">تحويل الآن</button>
  </div>`;
 }
 
@@ -338,7 +352,7 @@ function pageGift(c) {
   <h2>🎁 إرسال نقاط</h2>
   <div class="field"><label>المستلم</label><select id="giftTo">${others.map(a=>`<option value="${a.id}">${escapeHTML(a.name)}</option>`).join("")}</select></div>
   <div class="field"><label>عدد النقاط</label><input id="giftPoints" type="number" min="1" placeholder="عدد النقاط"></div>
-  <button class="btn full" onclick="doSendPoints()">إرسال النقاط</button>
+  <button class="btn" onclick="doSendPoints()">إرسال النقاط</button>
  </div>`;
 }
 
@@ -359,7 +373,7 @@ function pagePurchase(c) {
   <h2>🛒 تسجيل مشتريات (خصم أموال)</h2>
   <div class="field"><label>اسم الغرض</label><input id="purchaseItem" placeholder="مثال: كتاب، لعبة..."></div>
   <div class="field"><label>المبلغ (ريال)</label><input id="purchaseCost" type="number" step="0.5" min="1" placeholder="المبلغ"></div>
-  <button class="btn red full" onclick="doPurchase()">شراء وخصم المبلغ</button>
+  <button class="btn red" onclick="doPurchase()">شراء وخصم المبلغ</button>
  </div>`;
 }
 
@@ -436,7 +450,7 @@ function pageAdmin(c) {
   <div class="field"><label>تعديل الأموال (+ للإضافة أو - للخصم)</label><input id="adminMoneyDelta" type="number" placeholder="مثال: 50 أو -20"></div>
   <div class="field"><label>تعديل النقاط (+ للإضافة أو - للخصم)</label><input id="adminPointsDelta" type="number" placeholder="مثال: 500 أو -200"></div>
   <div class="field"><label>السبب / الملاحظة</label><input id="adminReason" placeholder="مثال: مكافأة تفوق"></div>
-  <button class="btn full" onclick="doAdminAdjust()">تنفيذ التعديل</button>
+  <button class="btn" onclick="doAdminAdjust()">تنفيذ التعديل</button>
  </div>`;
 }
 
@@ -468,7 +482,7 @@ function pageSettings(c) {
   <div class="field"><label>الرمز الحالي</label><input id="oldPin" type="password" inputmode="numeric" placeholder="أدخل الرمز الحالي"></div>
   <div class="field"><label>الرمز الجديد</label><input id="newPin" type="password" inputmode="numeric" placeholder="أدخل الرمز الجديد"></div>
   <div class="field"><label>تأكيد الرمز الجديد</label><input id="confirmPin" type="password" inputmode="numeric" placeholder="أعد إدخال الرمز الجديد"></div>
-  <button class="btn full" onclick="doChangePin()">حفظ الرمز الجديد</button>
+  <button class="btn" onclick="doChangePin()">حفظ الرمز الجديد</button>
  </div>`;
 }
 
