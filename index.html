@@ -381,4 +381,121 @@ function ledgerHTML(list, allowDelete = false) {
   const m = Number(item.amount_change || 0);
   const p = Number(item.points_change || 0);
   let changeStr = "";
-  let cls
+  let cls = "";
+  if (m !== 0) {
+   changeStr = `${m > 0 ? "+" : ""}${money(m)}`;
+   cls = m > 0 ? "plus" : "minus";
+  } else if (p !== 0) {
+   changeStr = `${p > 0 ? "+" : ""}${points(p)} نقطة`;
+   cls = p > 0 ? "plus" : "minus";
+  }
+
+  const delBtn = allowDelete && currentUser.is_admin ? `<button class="btn red small" onclick="deleteSingleRecord('${item.id}')">حذف</button>` : "";
+  return `<div class="row">
+   <div>
+    <div class="row-title">${escapeHTML(item.user_name)}: ${escapeHTML(item.description)}</div>
+    <div class="row-sub">${date}</div>
+    ${delBtn}
+   </div>
+   <div class="amount ${cls}">${changeStr}</div>
+  </div>`;
+ }).join("");
+}
+
+function pageLedger(c) {
+ c.innerHTML = `<div class="card">
+  <div class="topline" style="margin-bottom:12px;">
+   <h2>📜 سجل العمليات</h2>
+   ${currentUser.is_admin ? '<button class="btn red small" onclick="clearLedger()">حذف السجل بالكامل</button>' : ''}
+  </div>
+  ${ledgerHTML(allLedger, currentUser.is_admin)}
+ </div>`;
+}
+
+async function deleteSingleRecord(recordId) {
+ if (!confirm("هل تريد حذف هذه العملية من السجل؟")) return;
+ await apiRequest({ action: "clearLedger", adminId: currentUser.id, recordId });
+ await refreshData();
+ renderApp();
+ toast("تم الحذف بنجاح");
+}
+
+async function clearLedger() {
+ if (!confirm("تحذير: سيتم حذف جميع سجلات العمليات، هل أنت متأكد؟")) return;
+ await apiRequest({ action: "clearLedger", adminId: currentUser.id });
+ await refreshData();
+ renderApp();
+ toast("تم تفريغ السجل بنجاح");
+}
+
+function pageAdmin(c) {
+ c.innerHTML = `<div class="card">
+  <h2>👑 لوحة التحكم والإدارة</h2>
+  <div class="field"><label>اختر الحساب المستهدف</label><select id="adminTargetUser">${allAccounts.map(a=>`<option value="${a.id}">${escapeHTML(a.name)}</option>`).join("")}</select></div>
+  <div class="field"><label>تعديل الأموال (+ للإضافة أو - للخصم)</label><input id="adminMoneyDelta" type="number" placeholder="مثال: 50 أو -20"></div>
+  <div class="field"><label>تعديل النقاط (+ للإضافة أو - للخصم)</label><input id="adminPointsDelta" type="number" placeholder="مثال: 500 أو -200"></div>
+  <div class="field"><label>السبب / الملاحظة</label><input id="adminReason" placeholder="مثال: مكافأة تفوق"></div>
+  <button class="btn" onclick="doAdminAdjust()">تنفيذ التعديل</button>
+ </div>`;
+}
+
+async function doAdminAdjust() {
+ const targetId = el("adminTargetUser").value;
+ const moneyDelta = Number(el("adminMoneyDelta").value || 0);
+ const pointsDelta = Number(el("adminPointsDelta").value || 0);
+ const reason = el("adminReason").value.trim();
+
+ if (moneyDelta === 0 && pointsDelta === 0) return alert("أدخل قيمة لتعديل المال أو النقاط");
+
+ await apiRequest({
+  action: "adminAdjust",
+  adminId: currentUser.id,
+  targetId,
+  moneyDelta,
+  pointsDelta,
+  reason
+ });
+
+ await refreshData();
+ renderApp();
+ toast("تم تعديل الأرصدة بنجاح!");
+}
+
+function pageSettings(c) {
+ c.innerHTML = `<div class="card">
+  <h2>🔐 تغيير رمز الدخول</h2>
+  <div class="field"><label>الرمز الحالي</label><input id="oldPin" type="password" inputmode="numeric" placeholder="أدخل الرمز الحالي"></div>
+  <div class="field"><label>الرمز الجديد</label><input id="newPin" type="password" inputmode="numeric" placeholder="أدخل الرمز الجديد"></div>
+  <div class="field"><label>تأكيد الرمز الجديد</label><input id="confirmPin" type="password" inputmode="numeric" placeholder="أعد إدخال الرمز الجديد"></div>
+  <button class="btn" onclick="doChangePin()">حفظ الرمز الجديد</button>
+ </div>`;
+}
+
+async function doChangePin() {
+ const oldPin = el("oldPin").value.trim();
+ const newPin = el("newPin").value.trim();
+ const confirmPin = el("confirmPin").value.trim();
+
+ if (!oldPin || !newPin || !confirmPin) return toast("يرجى تعبئة جميع حقول الرموز السريّة");
+ if (newPin.length < 4) return toast("الرمز الجديد يجب ألا يقل عن 4 أرقام");
+ if (newPin !== confirmPin) return toast("الرمز الجديد وتأكيد الرمز غير متطابقين");
+
+ await apiRequest({ action: "changePin", userId: currentUser.id, oldPin, newPin });
+ el("oldPin").value = "";
+ el("newPin").value = "";
+ el("confirmPin").value = "";
+ toast("تم حفظ الرمز الجديد بنجاح وأصبح معتمداً للدخول!");
+}
+
+function logout() {
+ currentUser = null;
+ allAccounts = [];
+ allLedger = [];
+ el("app").classList.add("hidden");
+ el("header").classList.add("hidden");
+ el("loginScreen").classList.remove("hidden");
+ el("loginPin").value = "";
+}
+</script>
+</body>
+</html>
