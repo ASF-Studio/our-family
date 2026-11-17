@@ -136,7 +136,7 @@ let busy = false;
 let toastTimer;
 
 function el(id){return document.getElementById(id)}
-function escapeHTML(value){return String(value??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]))}
+function escapeHTML(value){return String(value??"").replace(/[&<>"']/g,c=>({"&":"&","<":"<",">":">",'"':""","'":"'"}[c]))}
 function money(value){return (Number(value)||0).toLocaleString("ar-SA",{minimumFractionDigits:0,maximumFractionDigits:2})+" ر.س"}
 function points(value){return (Number(value)||0).toLocaleString("ar-SA")}
 
