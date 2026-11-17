@@ -11,148 +11,103 @@
 :root{--main:#173d34;--bg:#f4f6f5;--card:#fff;--text:#24332e;--muted:#7b8983;--border:#e5ebe8;--soft:#edf3f0;--red:#b84b4b;--gold:#9a741e}
 *{box-sizing:border-box}
 body{margin:0;background:var(--bg);color:var(--text);font-family:Tahoma,Arial,sans-serif}
-button,input,select{font:inherit}
-button{cursor:pointer}
-.hidden{display:none!important}
+button,input,select{font:inherit}button{cursor:pointer}.hidden{display:none!important}
 header{background:var(--main);color:white;padding:17px 5%;display:flex;align-items:center;justify-content:space-between;gap:12px}
-.brand{font-size:18px;font-weight:bold}
-.header-user{font-size:12px;color:#d6e4de;margin-top:5px}
-.container{max-width:960px;margin:auto;padding:22px 16px 55px}
-.card{background:var(--card);border:1px solid var(--border);border-radius:15px;padding:20px;margin-bottom:14px}
-h2{font-size:19px;margin:0 0 15px}
-h3{font-size:15px;margin:0 0 12px}
+.brand{font-size:19px;font-weight:bold}.header-user{font-size:12px;color:#d6e4de;margin-top:5px}
+.container{max-width:850px;margin:auto;padding:20px 15px 50px}
+.card{background:var(--card);border:1px solid var(--border);border-radius:16px;padding:20px;margin-bottom:14px}
+h2{font-size:19px;margin:0 0 15px}h3{font-size:15px;margin:0 0 12px}
 .muted{color:var(--muted);font-size:12px;line-height:1.9}
 .login-wrap{max-width:410px;margin:7vh auto;padding:16px}
-.login-title{text-align:center;margin-bottom:22px}
-.login-title h1{font-size:23px;margin:0 0 8px;color:var(--main)}
-.field{margin:14px 0}
-.field label{display:block;font-size:13px;font-weight:bold;margin-bottom:7px}
-input,select{width:100%;padding:12px;border:1px solid var(--border);border-radius:10px;background:white;color:var(--text);outline:none}
-input:focus,select:focus{border-color:var(--main)}
-.btn{border:0;border-radius:10px;padding:13px 16px;background:var(--main);color:white;font-weight:bold;display:block;width:100%;text-align:center}
-.btn:disabled{opacity:.6;cursor:not-allowed}
-.btn.light{background:var(--soft);color:var(--main)}
-.btn.red{background:#faeeee;color:var(--red)}
+.login-title{text-align:center;margin-bottom:22px}.login-title h1{font-size:25px;color:var(--main)}
+.field{margin:14px 0}.field label{display:block;font-size:13px;font-weight:bold;margin-bottom:7px}
+input,select{width:100%;padding:13px;border:1px solid var(--border);border-radius:10px;background:white;color:var(--text);outline:none}
+.btn{border:0;border-radius:11px;padding:13px 16px;background:var(--main);color:white;font-weight:bold;display:block;width:100%;text-align:center}
+.btn.light{background:var(--soft);color:var(--main)}.btn.red{background:#faeeee;color:var(--red)}
 .btn.small{padding:8px 12px;font-size:12px;width:auto}
-.link-btn{background:none;border:none;color:var(--main);text-decoration:underline;padding:0;font-size:12px;cursor:pointer;margin-top:10px;display:inline-block}
+.link-btn{background:none;border:none;color:var(--main);text-decoration:underline;padding:0;font-size:12px;cursor:pointer;margin-top:10px}
 .topline{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap}
 .grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
-.stat{background:#f0f4f2;border:1px solid var(--border);border-radius:12px;padding:16px}
-.stat span{display:block;color:var(--muted);font-size:12px;margin-bottom:9px}
-.stat strong{font-size:22px;color:var(--main)}
-.stat.points{background:#f8f5eb}
-.stat.points strong{color:var(--gold)}
+.stat{background:#eaf2ee;border:1px solid var(--border);border-radius:15px;padding:22px 16px;min-height:120px}
+.stat span{display:block;color:var(--muted);font-size:13px;margin-bottom:13px}
+.stat strong{font-size:30px;color:var(--main)}
+.stat.points{background:#f8f5eb}.stat.points strong{color:var(--gold)}
 .nav{display:flex;gap:7px;overflow-x:auto;padding:3px 0 14px}
-.nav button{white-space:nowrap;border:1px solid var(--border);background:white;color:var(--main);padding:10px 14px;border-radius:9px;font-size:13px}
-.nav button.active{background:var(--main);color:white;border-color:var(--main)}
+.nav button{white-space:nowrap;border:1px solid var(--border);background:white;color:var(--main);padding:11px 15px;border-radius:10px;font-size:13px}
+.nav button.active{background:var(--main);color:white}
 .row{display:flex;justify-content:space-between;align-items:center;gap:12px;padding:13px 0;border-bottom:1px solid var(--border)}
-.row:last-child{border-bottom:0}
-.row-title{font-size:13px;font-weight:bold}
+.row:last-child{border-bottom:0}.row-title{font-size:13px;font-weight:bold}
 .row-sub{font-size:11px;color:var(--muted);margin-top:5px;line-height:1.7}
-.amount{font-size:13px;font-weight:bold;white-space:nowrap}
-.plus{color:#258052}.minus{color:var(--red)}
+.amount{font-size:13px;font-weight:bold;white-space:nowrap}.plus{color:#258052}.minus{color:var(--red)}
 .notice{background:var(--soft);border-radius:10px;padding:12px;font-size:12px;line-height:1.9;margin:12px 0}
 .empty{text-align:center;padding:25px;color:var(--muted);font-size:13px}
 .profile-chip{background:#ffffff20;border-radius:8px;padding:7px 11px;font-size:12px}
 .toast{position:fixed;bottom:20px;right:50%;transform:translateX(50%);background:#203d34;color:white;padding:12px 18px;border-radius:10px;z-index:99999;max-width:90%;font-size:13px}
-.loading{position:fixed;inset:0;background:rgba(255,255,255,.85);z-index:99998;display:grid;place-items:center;color:var(--main);font-weight:bold;text-align:center}
+.loading{position:fixed;inset:0;background:#ffffffdf;z-index:99998;display:grid;place-items:center;color:var(--main);font-weight:bold;text-align:center}
 .spinner{width:32px;height:32px;border:4px solid var(--soft);border-top-color:var(--main);border-radius:50%;animation:spin .8s linear infinite;margin:0 auto 12px}
 @keyframes spin{to{transform:rotate(360deg)}}
-@media(max-width:480px){.card{padding:16px}.stat strong{font-size:19px}.row{align-items:flex-start}.amount{font-size:12px}}
+.action-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+@media(max-width:480px){.card{padding:16px}.stat strong{font-size:25px}.action-grid{grid-template-columns:1fr}}
 </style>
 </head>
 <body>
 
 <div id="loading" class="loading hidden">
-  <div><div class="spinner"></div><div id="loadingText">جاري التحميل...</div></div>
+ <div><div class="spinner"></div><div id="loadingText">جاري التحميل...</div></div>
 </div>
 
 <header id="header" class="hidden">
-  <div>
-    <div class="brand">بنك العائلة</div>
-    <div class="header-user" id="headerName"></div>
-  </div>
-  <button class="btn light small" onclick="logout()">خروج</button>
+ <div><div class="brand">بنك العائلة</div><div class="header-user" id="headerName"></div></div>
+ <button class="btn light small" onclick="logout()">خروج</button>
 </header>
 
 <section id="loginScreen" class="login-wrap">
-  <div class="login-title">
-    <h1>بنك العائلة</h1>
-    <p class="muted">المحفظة العائلية الآمنة</p>
+ <div class="login-title">
+  <h1>بنك العائلة</h1>
+  <p class="muted">محفظتك العائلية</p>
+ </div>
+ <div class="card" id="loginCard">
+  <h2>تسجيل الدخول</h2>
+  <div class="field"><label>اختر حسابك</label>
+   <select id="loginFamilyId">
+    <option value="azoz">عزوز</option><option value="sahab">سحاب</option><option value="mama">ماما</option>
+   </select>
   </div>
+  <div class="field"><label>البريد الإلكتروني</label><input id="loginEmail" type="email" autocomplete="username" placeholder="example@gmail.com"></div>
+  <div class="field"><label>كلمة المرور</label><input id="loginPassword" type="password" autocomplete="current-password"></div>
+  <button class="btn" onclick="handleLogin()">دخول</button>
+  <div style="text-align:center;margin-top:14px"><button class="link-btn" onclick="toggleAuthMode('signup')">إنشاء حساب جديد</button></div>
+ </div>
 
-  <div class="card" id="loginCard">
-    <h2>تسجيل الدخول</h2>
-    <div class="field">
-      <label>اختر حسابك</label>
-      <select id="loginFamilyId">
-        <option value="azoz">عزوز</option>
-        <option value="sahab">سحاب</option>
-        <option value="mama">ماما</option>
-      </select>
-    </div>
-    <div class="field">
-      <label>البريد الإلكتروني</label>
-      <input id="loginEmail" type="email" autocomplete="username" placeholder="example@domain.com">
-    </div>
-    <div class="field">
-      <label>كلمة المرور</label>
-      <input id="loginPassword" type="password" autocomplete="current-password" placeholder="أدخل كلمة المرور">
-    </div>
-    <button type="button" class="btn" onclick="handleLogin()">دخول</button>
-    <div style="text-align:center;margin-top:14px">
-      <button type="button" class="link-btn" onclick="toggleAuthMode('signup')">ليس لديك حساب؟ إنشاء حساب جديد</button>
-    </div>
+ <div class="card hidden" id="signupCard">
+  <h2>إنشاء حساب</h2>
+  <div class="field"><label>اختر الحساب</label>
+   <select id="signupFamilyId">
+    <option value="azoz">عزوز</option><option value="sahab">سحاب</option><option value="mama">ماما (الإدارة)</option>
+   </select>
   </div>
-
-  <div class="card hidden" id="signupCard">
-    <h2>إنشاء حساب جديد</h2>
-    <div class="field">
-      <label>اختر الحساب</label>
-      <select id="signupFamilyId">
-        <option value="azoz">عزوز</option>
-        <option value="sahab">سحاب</option>
-        <option value="mama">ماما (الإدارة)</option>
-      </select>
-    </div>
-    <div class="field">
-      <label>البريد الإلكتروني</label>
-      <input id="signupEmail" type="email" autocomplete="email" placeholder="بريدك الإلكتروني">
-    </div>
-    <div class="field">
-      <label>كلمة المرور</label>
-      <input id="signupPassword" type="password" autocomplete="new-password" minlength="2" placeholder="حرفان على الأقل">
-    </div>
-    <button type="button" class="btn" onclick="handleSignup()">إتمام التسجيل</button>
-    <div style="text-align:center;margin-top:14px">
-      <button type="button" class="link-btn" onclick="toggleAuthMode('login')">لديك حساب بالفعل؟ تسجيل الدخول</button>
-    </div>
-  </div>
+  <div class="field"><label>البريد الإلكتروني</label><input id="signupEmail" type="email" autocomplete="email"></div>
+  <div class="field"><label>كلمة المرور</label><input id="signupPassword" type="password" minlength="2" placeholder="حرفان أو رقمان على الأقل"></div>
+  <button class="btn" onclick="handleSignup()">إتمام التسجيل</button>
+  <div style="text-align:center;margin-top:14px"><button class="link-btn" onclick="toggleAuthMode('login')">العودة لتسجيل الدخول</button></div>
+ </div>
 </section>
 
 <main id="app" class="container hidden">
-  <div class="card">
-    <div class="topline">
-      <div>
-        <div class="muted">مرحبًا بك</div>
-        <h2 id="welcomeTitle" style="margin:5px 0 0">أهلًا</h2>
-      </div>
-      <span class="profile-chip" id="roleLabel"></span>
-    </div>
+ <div class="card">
+  <div class="topline">
+   <div><div class="muted">مرحبًا بك</div><h2 id="welcomeTitle" style="margin:5px 0 0">أهلًا</h2></div>
+   <span class="profile-chip" id="roleLabel"></span>
   </div>
+ </div>
 
-  <div class="grid" style="margin-bottom:16px">
-    <div class="stat"><span>الرصيد المالي</span><strong id="myBalance">0 ر.س</strong></div>
-    <div class="stat points"><span>رصيد النقاط</span><strong id="myPoints">0</strong></div>
-  </div>
+ <div id="memberBalances" class="grid" style="margin-bottom:16px">
+  <div class="stat"><span>الرصيد المالي</span><strong id="myBalance">0 ر.س</strong></div>
+  <div class="stat points"><span>رصيد النقاط</span><strong id="myPoints">0</strong></div>
+ </div>
 
-  <div class="card" id="familySummaryCard">
-    <h3>أرصدة أفراد العائلة</h3>
-    <div id="familySummary"></div>
-  </div>
-
-  <div class="nav" id="navigation"></div>
-  <section id="pageContent"></section>
+ <div class="nav" id="navigation"></div>
+ <section id="pageContent"></section>
 </main>
 
 <div id="toast" class="toast hidden"></div>
@@ -160,679 +115,321 @@ input:focus,select:focus{border-color:var(--main)}
 <script>
 "use strict";
 
-const SUPABASE_URL = "https://ayfxtomfqrantxmpqgof.supabase.co";
-const SUPABASE_ANON_KEY = "sb_publishable_2d8TzhMCRIuc6daKrObBGA_7i0jUIxe";
-const EDGE_FUNCTION_URL = SUPABASE_URL + "/functions/v1/family-api";
+const SUPABASE_URL="https://ayfxtomfqrantxmpqgof.supabase.co";
+const SUPABASE_ANON_KEY="sb_publishable_2d8TzhMCRIuc6daKrObBGA_7i0jUIxe";
+const EDGE_FUNCTION_URL=SUPABASE_URL+"/functions/v1/family-api";
 
-let supabaseClient = null;
-let currentUser = null;
-let allAccounts = [];
-let allLedger = [];
-let currentPage = "home";
-let isProcessing = false;
-let toastTimer;
+let supabaseClient=null,currentUser=null,allAccounts=[],allLedger=[];
+let currentPage="home",isProcessing=false,toastTimer;
 
-function el(id) {
-  return document.getElementById(id);
+const el=id=>document.getElementById(id);
+
+function escapeHTML(value){
+ return String(value??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;"}[c]));
+}
+function money(value){
+ return (Number(value)||0).toLocaleString("ar-SA",{minimumFractionDigits:0,maximumFractionDigits:2})+" ر.س";
+}
+function points(value){return (Number(value)||0).toLocaleString("ar-SA");}
+function showLoading(show,text="جاري التحميل..."){
+ el("loadingText").textContent=text;el("loading").classList.toggle("hidden",!show);
+}
+function toast(message){
+ const t=el("toast");t.textContent=message;t.classList.remove("hidden");
+ clearTimeout(toastTimer);toastTimer=setTimeout(()=>t.classList.add("hidden"),4000);
+}
+function toggleAuthMode(mode){
+ const signup=mode==="signup";
+ el("loginCard").classList.toggle("hidden",signup);
+ el("signupCard").classList.toggle("hidden",!signup);
+}
+function initSupabase(){
+ if(!window.supabase?.createClient)throw new Error("تعذر تحميل Supabase");
+ supabaseClient=window.supabase.createClient(SUPABASE_URL,SUPABASE_ANON_KEY,{
+  auth:{persistSession:true,autoRefreshToken:true,detectSessionInUrl:true}
+ });
 }
 
-function escapeHTML(value) {
-  return String(value ?? "").replace(/[&<>"']/g, c => ({
-    "&": "&amp;",
-    "<": "&lt;",
-    ">": "&gt;",
-    '"': "&quot;",
-    "'": "&#039;"
-  })[c]);
+async function apiRequest(payload){
+ const {data:sessionData,error:sessionError}=await supabaseClient.auth.getSession();
+ if(sessionError)throw sessionError;
+ const accessToken=sessionData.session?.access_token;
+ if(payload.action!=="signup"&&!accessToken)throw new Error("سجل دخولك أولاً");
+ showLoading(true,"جاري تنفيذ الطلب...");
+ try{
+  const response=await fetch(EDGE_FUNCTION_URL,{
+   method:"POST",
+   headers:{
+    "Content-Type":"application/json","apikey":SUPABASE_ANON_KEY,
+    "Authorization":"Bearer "+(payload.action==="signup"?SUPABASE_ANON_KEY:accessToken)
+   },
+   body:JSON.stringify(payload)
+  });
+  const raw=await response.text();let data;
+  try{data=JSON.parse(raw)}catch{throw new Error("رد السيرفر غير مفهوم")}
+  if(!response.ok||!data.success)throw new Error(data.error||"تعذر تنفيذ الطلب");
+  return data;
+ }finally{showLoading(false)}
 }
 
-function money(value) {
-  return (Number(value) || 0).toLocaleString("ar-SA", {
-    minimumFractionDigits: 0,
-    maximumFractionDigits: 2
-  }) + " ر.س";
+async function handleSignup(){
+ if(isProcessing)return;
+ const targetFamilyId=el("signupFamilyId").value;
+ const email=el("signupEmail").value.trim();
+ const password=el("signupPassword").value;
+ if(!email||!/^[a-zA-Z0-9]{2,}$/.test(password))return toast("كلمة المرور حرفان على الأقل، حروف إنجليزية أو أرقام");
+ isProcessing=true;
+ try{
+  const result=await apiRequest({action:"signup",email,password,targetFamilyId});
+  el("loginEmail").value=email;el("loginFamilyId").value=targetFamilyId;
+  el("loginPassword").value="";el("signupPassword").value="";
+  toggleAuthMode("login");toast(result.message||"تم إنشاء الحساب");
+ }catch(e){toast(e.message)}
+ finally{isProcessing=false}
 }
 
-function points(value) {
-  return (Number(value) || 0).toLocaleString("ar-SA");
+async function refreshData(){
+ const res=await apiRequest({action:"getData"});
+ if(!res.currentUser?.id)throw new Error("بيانات المستخدم غير مكتملة");
+ allAccounts=Array.isArray(res.accounts)?res.accounts:[];
+ allLedger=Array.isArray(res.ledger)?res.ledger:[];
+ currentUser=allAccounts.find(a=>String(a.id)===String(res.currentUser.id));
+ if(!currentUser){
+  currentUser={id:res.currentUser.id,name:res.currentUser.name,balance:0,points:0};
+ }
+ currentUser.is_admin=!!res.currentUser.is_admin;
+ currentUser.name=res.currentUser.name||currentUser.name;
+ return res;
 }
 
-function showLoading(show, text = "جاري التحميل...") {
-  el("loadingText").textContent = text;
-  el("loading").classList.toggle("hidden", !show);
-}
-
-function toast(message) {
-  const t = el("toast");
-  t.textContent = message;
-  t.classList.remove("hidden");
-  clearTimeout(toastTimer);
-  toastTimer = setTimeout(() => t.classList.add("hidden"), 4500);
-}
-
-function toggleAuthMode(mode) {
-  const signup = mode === "signup";
-  el("loginCard").classList.toggle("hidden", signup);
-  el("signupCard").classList.toggle("hidden", !signup);
-}
-
-function initSupabase() {
-  if (!window.supabase || !window.supabase.createClient) {
-    throw new Error("تعذر تحميل مكتبة Supabase. حدّث الصفحة وتأكد من اتصال الإنترنت.");
+async function handleLogin(){
+ if(isProcessing)return;
+ const email=el("loginEmail").value.trim(),password=el("loginPassword").value;
+ const selected=el("loginFamilyId").value;
+ if(!email||!password)return toast("أدخل البريد وكلمة المرور");
+ isProcessing=true;
+ try{
+  showLoading(true,"جاري تسجيل الدخول...");
+  const {data,error}=await supabaseClient.auth.signInWithPassword({email,password});
+  if(error)throw error;
+  if(!data.user)throw new Error("تعذر التحقق من بيانات الدخول");
+  await refreshData();
+  if(String(currentUser.id)!==selected){
+   await supabaseClient.auth.signOut();currentUser=null;
+   throw new Error("الحساب المختار لا يطابق البريد المستخدم");
   }
-
-  supabaseClient = window.supabase.createClient(
-    SUPABASE_URL,
-    SUPABASE_ANON_KEY
-  );
+  enterApp();
+  el("loginEmail").value="";el("loginPassword").value="";
+  toast("تم تسجيل الدخول بنجاح");
+ }catch(e){toast(e.message||"تعذر تسجيل الدخول")}
+ finally{isProcessing=false;showLoading(false)}
 }
 
-async function apiRequest(payload) {
-  if (!supabaseClient) throw new Error("اتصال Supabase غير جاهز");
-
-  showLoading(true, "جاري تنفيذ الطلب...");
-
-  try {
-    const { data: sessionData, error: sessionError } =
-      await supabaseClient.auth.getSession();
-
-    if (sessionError) throw sessionError;
-
-    const accessToken = sessionData.session?.access_token;
-
-    if (payload.action !== "signup" && !accessToken) {
-      throw new Error("سجل دخولك أولاً");
-    }
-
-    const token = payload.action === "signup"
-      ? SUPABASE_ANON_KEY
-      : accessToken;
-
-    const response = await fetch(EDGE_FUNCTION_URL, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        "apikey": SUPABASE_ANON_KEY,
-        "Authorization": "Bearer " + token
-      },
-      body: JSON.stringify(payload)
-    });
-
-    const raw = await response.text();
-    let data;
-
-    try {
-      data = JSON.parse(raw);
-    } catch {
-      throw new Error("رد السيرفر غير مفهوم. تأكد من نشر Edge Function باسم family-api.");
-    }
-
-    if (!response.ok || !data.success) {
-      throw new Error(data.error || data.message || "تعذر تنفيذ الطلب. رمز الخطأ: " + response.status);
-    }
-
-    return data;
-  } catch (err) {
-    console.error("API error:", err);
-
-    if (err instanceof TypeError) {
-      toast("تعذر الاتصال بالسيرفر. تحقق من نشر الدالة وإعدادات الاتصال.");
-    } else {
-      toast(err.message || "حدث خطأ غير متوقع");
-    }
-
-    throw err;
-  } finally {
-    showLoading(false);
-  }
+function enterApp(){
+ el("loginScreen").classList.add("hidden");
+ el("header").classList.remove("hidden");
+ el("app").classList.remove("hidden");
+ currentPage="home";renderApp();
 }
 
-// إنشاء حساب بدون رمز دعوة
-async function handleSignup() {
-  if (isProcessing) return;
+function renderApp(){
+ if(!currentUser)return;
+ el("headerName").textContent=currentUser.name||"";
+ el("welcomeTitle").textContent="أهلاً، "+(currentUser.name||"");
+ el("roleLabel").textContent=currentUser.is_admin?"الإدارة":"عضو في بنك العائلة";
 
-  const targetFamilyId = el("signupFamilyId").value;
-  const email = el("signupEmail").value.trim();
-  const password = el("signupPassword").value;
-
-  if (!email || !password) {
-    return toast("يرجى تعبئة جميع الحقول");
-  }
-
-  if (password.length < 2) {
-    return toast("كلمة المرور يجب أن تكون حرفين على الأقل");
-  }
-
-  if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
-    return toast("اكتب بريدًا إلكترونيًا صحيحًا");
-  }
-
-  isProcessing = true;
-
-  try {
-    const result = await apiRequest({
-      action: "signup",
-      email,
-      password,
-      targetFamilyId
-    });
-
-    el("loginEmail").value = email;
-    el("loginPassword").value = "";
-    el("loginFamilyId").value = targetFamilyId;
-    el("signupPassword").value = "";
-
-    toggleAuthMode("login");
-    toast(result.message || "تم إنشاء الحساب! سجل دخولك الآن.");
-  } catch (err) {
-    console.error("Signup failed:", err);
-  } finally {
-    isProcessing = false;
-  }
+ // ماما إدارة فقط ولا يظهر لها رصيد أو نقاط
+ el("memberBalances").classList.toggle("hidden",currentUser.is_admin);
+ if(!currentUser.is_admin){
+  el("myBalance").textContent=money(currentUser.balance);
+  el("myPoints").textContent=points(currentUser.points);
+ }
+ renderNav();renderPage();
 }
 
-async function refreshData() {
-  const res = await apiRequest({ action: "getData" });
-
-  if (!res.currentUser || !res.currentUser.id) {
-    throw new Error("السيرفر لا يرجع currentUser. تأكد من تحديث family-api.");
-  }
-
-  allAccounts = Array.isArray(res.accounts) ? res.accounts : [];
-  allLedger = Array.isArray(res.ledger) ? res.ledger : [];
-
-  currentUser = allAccounts.find(
-    a => String(a.id) === String(res.currentUser.id)
-  );
-
-  if (!currentUser) {
-    throw new Error("لم يتم العثور على حسابك في قائمة الحسابات");
-  }
-
-  currentUser.is_admin = !!res.currentUser.is_admin;
-  currentUser.name = res.currentUser.name || currentUser.name;
-
-  return res;
+function renderNav(){
+ const items=currentUser.is_admin
+ ?[["home","الرئيسية"],["admin","إدارة العائلة"],["ledger","السجل"],["settings","الإعدادات"]]
+ :[["home","الرئيسية"],["convert","تحويل النقاط"],["gift","إرسال نقاط"],["purchase","المشتريات"],["ledger","السجل"],["settings","الإعدادات"]];
+ el("navigation").innerHTML=items.map(([id,label])=>
+ `<button class="${currentPage===id?"active":""}" onclick="go('${id}')">${label}</button>`).join("");
+}
+function go(page){currentPage=page;renderApp()}
+function renderPage(){
+ const pages={home:pageHome,convert:pageConvert,gift:pageGift,purchase:pagePurchase,ledger:pageLedger,admin:pageAdmin,settings:pageSettings};
+ (pages[currentPage]||pageHome)(el("pageContent"));
 }
 
-async function handleLogin() {
-  if (isProcessing) return;
-
-  const email = el("loginEmail").value.trim();
-  const password = el("loginPassword").value;
-  const selectedFamilyId = el("loginFamilyId").value;
-
-  if (!email || !password) {
-    return toast("أدخل البريد الإلكتروني وكلمة المرور");
-  }
-
-  isProcessing = true;
-
-  try {
-    showLoading(true, "جاري تسجيل الدخول...");
-
-    const { data, error } = await supabaseClient.auth.signInWithPassword({
-      email,
-      password
-    });
-
-    if (error) throw error;
-    if (!data.user) throw new Error("تعذر التحقق من بيانات الدخول");
-
-    await refreshData();
-
-    if (String(currentUser.id) !== selectedFamilyId) {
-      await supabaseClient.auth.signOut();
-      currentUser = null;
-      allAccounts = [];
-      allLedger = [];
-      throw new Error("الحساب المختار لا يطابق الحساب المرتبط بهذا البريد");
-    }
-
-    el("loginEmail").value = "";
-    el("loginPassword").value = "";
-
-    el("loginScreen").classList.add("hidden");
-    el("header").classList.remove("hidden");
-    el("app").classList.remove("hidden");
-
-    currentPage = "home";
-    renderApp();
-    toast("تم تسجيل الدخول بنجاح");
-  } catch (err) {
-    console.error("Login failed:", err);
-    toast(err.message || "تعذر تسجيل الدخول");
-  } finally {
-    isProcessing = false;
-    showLoading(false);
-  }
+function pageHome(c){
+ c.innerHTML=currentUser.is_admin?`
+ <div class="card"><h2>لوحة ماما</h2><p class="muted">من هنا تقدرين تديرين فلوس ونقاط أفراد العائلة.</p>
+ <button class="btn" onclick="go('admin')">فتح إدارة العائلة</button></div>
+ <div class="card"><h3>آخر العمليات</h3>${ledgerHTML(allLedger.slice(0,5))}</div>
+ `:`
+ <div class="card"><h2>الرئيسية</h2><p class="muted">كل 1000 نقطة تساوي 5 ريالات.</p>
+ <div class="action-grid">
+ <button class="btn" onclick="go('convert')">تحويل النقاط</button>
+ <button class="btn light" onclick="go('gift')">إرسال نقاط</button>
+ </div></div>
+ <div class="card"><h3>آخر عملياتك</h3>${ledgerHTML(allLedger.filter(x=>String(x.user_id)===String(currentUser.id)).slice(0,5))}</div>`;
 }
 
-function renderApp() {
-  if (!currentUser) return;
-
-  el("headerName").textContent = currentUser.name || "";
-  el("welcomeTitle").textContent = "أهلاً، " + currentUser.name;
-  el("roleLabel").textContent = currentUser.is_admin
-    ? "صلاحية الإدارة (ماما)"
-    : "عضو في بنك العائلة";
-
-  el("myBalance").textContent = money(currentUser.balance);
-  el("myPoints").textContent = points(currentUser.points);
-
-  renderFamilySummary();
-  renderNav();
-  renderPage();
+const pointOptions=[25,50,75,100,250,500,1000,2000,5000];
+function pointSelect(id){
+ return `<select id="${id}">${pointOptions.map(n=>`<option value="${n}">${points(n)} نقطة</option>`).join("")}<option value="custom">مبلغ آخر</option></select>
+ <input id="${id}Custom" class="hidden" type="number" min="25" step="25" placeholder="أدخل عدد النقاط">`;
+}
+function selectedPoints(id){
+ const v=el(id).value;
+ return v==="custom"?Number(el(id+"Custom").value):Number(v);
+}
+function pageConvert(c){
+ c.innerHTML=`<div class="card"><h2>تحويل النقاط إلى أموال</h2>
+ <p class="muted">كل 1000 نقطة = 5 ريالات. أقل تحويل 25 نقطة.</p>
+ <div class="notice">رصيدك: <b>${points(currentUser.points)} نقطة</b></div>
+ <div class="field"><label>اختر عدد النقاط</label>${pointSelect("convertAmount")}</div>
+ <button class="btn" onclick="doConvertPoints()">تحويل الآن</button></div>`;
+ bindCustom("convertAmount");
+}
+function bindCustom(id){
+ el(id).addEventListener("change",()=>el(id+"Custom").classList.toggle("hidden",el(id).value!=="custom"));
+}
+async function doConvertPoints(){
+ const pts=selectedPoints("convertAmount");
+ if(!Number.isSafeInteger(pts)||pts<25||pts%25!==0)return toast("أقل تحويل 25 نقطة، وبمضاعفات 25");
+ if(pts>Number(currentUser.points))return toast("رصيد النقاط غير كافٍ");
+ try{
+  await apiRequest({action:"convertPoints",pointsToConvert:pts});
+  await refreshData();renderApp();toast("تم تحويل النقاط بنجاح");
+ }catch(e){toast(e.message)}
 }
 
-function renderFamilySummary() {
-  el("familySummary").innerHTML = allAccounts.map(acc => `
-    <div class="row">
-      <div><strong>${escapeHTML(acc.name)}</strong></div>
-      <div>
-        <span class="amount plus" style="margin-left:8px">${money(acc.balance)}</span>
-        <span class="amount" style="color:var(--gold)">${points(acc.points)} نقطة</span>
-      </div>
-    </div>
-  `).join("") || '<div class="empty">لا توجد حسابات لعرضها</div>';
+function pageGift(c){
+ const others=[{id:"azoz",name:"عزوز"},{id:"sahab",name:"سحاب"}].filter(a=>a.id!==currentUser.id);
+ c.innerHTML=`<div class="card"><h2>إرسال نقاط</h2>
+ <p class="muted">أقل إرسال 25 نقطة.</p>
+ <div class="field"><label>المستلم</label><select id="giftTo">${others.map(a=>`<option value="${a.id}">${a.name}</option>`).join("")}</select></div>
+ <div class="field"><label>عدد النقاط</label>${pointSelect("giftPoints")}</div>
+ <button class="btn" onclick="doSendPoints()">إرسال النقاط</button></div>`;
+ bindCustom("giftPoints");
+}
+async function doSendPoints(){
+ const toId=el("giftTo")?.value,pts=selectedPoints("giftPoints");
+ if(!toId)return toast("اختر المستلم");
+ if(!Number.isSafeInteger(pts)||pts<25||pts%25!==0)return toast("أقل إرسال 25 نقطة، وبمضاعفات 25");
+ if(pts>Number(currentUser.points))return toast("نقاطك لا تكفي");
+ try{
+  await apiRequest({action:"sendPoints",toId,points:pts});
+  await refreshData();renderApp();toast("تم إرسال النقاط");
+ }catch(e){toast(e.message)}
 }
 
-function renderNav() {
-  const items = currentUser.is_admin
-    ? [["home","الرئيسية"],["admin","لوحة الإدارة"],["ledger","السجل"],["settings","الإعدادات"]]
-    : [["home","الرئيسية"],["convert","تحويل النقاط"],["gift","إرسال نقاط"],["purchase","المشتريات"],["ledger","السجل"],["settings","الإعدادات"]];
-
-  el("navigation").innerHTML = items.map(([id,label]) => `
-    <button class="${currentPage === id ? "active" : ""}" onclick="go('${id}')">${label}</button>
-  `).join("");
+function pagePurchase(c){
+ c.innerHTML=`<div class="card"><h2>المشتريات</h2>
+ <div class="field"><label>اسم الغرض</label><input id="purchaseItem" placeholder="مثال: كتاب"></div>
+ <div class="field"><label>المبلغ بالريال</label><input id="purchaseCost" type="number" min="0.01" step="0.5" placeholder="المبلغ"></div>
+ <button class="btn red" onclick="doPurchase()">تسجيل الشراء وخصم المبلغ</button></div>`;
+}
+async function doPurchase(){
+ const item=el("purchaseItem").value.trim(),cost=Number(el("purchaseCost").value);
+ if(!item||!Number.isFinite(cost)||cost<=0)return toast("أدخل اسم الغرض والمبلغ");
+ if(cost>Number(currentUser.balance))return toast("الرصيد غير كافٍ");
+ try{
+  await apiRequest({action:"purchase",item,cost});await refreshData();renderApp();toast("تم تسجيل الشراء");
+ }catch(e){toast(e.message)}
 }
 
-function go(page) {
-  currentPage = page;
-  renderApp();
+function ledgerHTML(list){
+ if(!list.length)return '<div class="empty">لا توجد عمليات مسجلة</div>';
+ return list.map(item=>{
+  const date=item.created_at?new Date(item.created_at).toLocaleString("ar-SA",{dateStyle:"short",timeStyle:"short"}):"";
+  const m=Number(item.amount_change||0),p=Number(item.points_change||0);
+  const value=m?`${m>0?"+":""}${money(m)}`:p?`${p>0?"+":""}${points(p)} نقطة`:"";
+  const cls=(m||p)>0?"plus":(m||p)<0?"minus":"";
+  return `<div class="row"><div><div class="row-title">${escapeHTML(item.description)}</div><div class="row-sub">${escapeHTML(date)}</div></div><div class="amount ${cls}">${value}</div></div>`;
+ }).join("");
+}
+function pageLedger(c){
+ const list=currentUser.is_admin?allLedger:allLedger.filter(x=>String(x.user_id)===String(currentUser.id));
+ c.innerHTML=`<div class="card"><h2>سجل العمليات</h2>${ledgerHTML(list)}</div>`;
 }
 
-function renderPage() {
-  const pages = {
-    home: pageHome,
-    convert: pageConvert,
-    gift: pageGift,
-    purchase: pagePurchase,
-    ledger: pageLedger,
-    admin: pageAdmin,
-    settings: pageSettings
-  };
-
-  (pages[currentPage] || pageHome)(el("pageContent"));
+function pageAdmin(c){
+ if(!currentUser.is_admin){c.innerHTML='<div class="card">هذه الصفحة للإدارة فقط</div>';return}
+ const targets=[{id:"azoz",name:"عزوز"},{id:"sahab",name:"سحاب"}];
+ c.innerHTML=`<div class="card"><h2>إدارة العائلة</h2>
+ <p class="muted">اختاري الشخص ثم نوع العملية.</p>
+ <div class="field"><label>الحساب</label><select id="adminTargetUser">${targets.map(a=>`<option value="${a.id}">${a.name}</option>`).join("")}</select></div>
+ <div class="field"><label>نوع العملية</label>
+ <select id="adminAction">
+ <option value="moneyPlus">زيادة فلوس</option>
+ <option value="moneyMinus">خصم فلوس</option>
+ <option value="pointsPlus">زيادة نقاط</option>
+ <option value="pointsMinus">خصم نقاط</option>
+ </select></div>
+ <div class="field"><label>المبلغ أو النقاط</label><input id="adminValue" type="number" min="1" step="1" placeholder="اكتب القيمة"></div>
+ <div class="field"><label>السبب</label><input id="adminReason" placeholder="مثال: مكافأة"></div>
+ <button class="btn" onclick="doAdminAdjust()">تنفيذ العملية</button></div>`;
+}
+async function doAdminAdjust(){
+ const targetId=el("adminTargetUser").value,kind=el("adminAction").value;
+ const value=Number(el("adminValue").value),reason=el("adminReason").value.trim();
+ if(!Number.isFinite(value)||value<=0)return toast("أدخل قيمة صحيحة");
+ const moneyDelta=kind==="moneyPlus"?value:kind==="moneyMinus"?-value:0;
+ const pointsDelta=kind==="pointsPlus"?value:kind==="pointsMinus"?-value:0;
+ try{
+  await apiRequest({action:"adminAdjust",targetId,moneyDelta,pointsDelta,reason});
+  await refreshData();renderApp();toast("تم تنفيذ العملية");
+ }catch(e){toast(e.message)}
 }
 
-function pageHome(c) {
-  c.innerHTML = `
-    <div class="card">
-      <h2>الرئيسية</h2>
-      <p class="muted">
-        ${currentUser.is_admin
-          ? "أهلاً بك يا ماما، يمكنك إدارة أرصدة أفراد العائلة."
-          : "كل 1000 نقطة تساوي 5 ريالات."}
-      </p>
-      ${currentUser.is_admin
-        ? `<button class="btn" onclick="go('admin')">انتقل إلى لوحة الإدارة</button>`
-        : `<button class="btn" onclick="go('convert')">تحويل النقاط إلى أموال</button>`}
-    </div>
-    <div class="card">
-      <h3>آخر العمليات</h3>
-      ${ledgerHTML(allLedger.slice(0,5), false)}
-    </div>
-  `;
+function pageSettings(c){
+ c.innerHTML=`<div class="card"><h2>الإعدادات</h2>
+ <h3>تغيير كلمة المرور</h3>
+ <div class="field"><label>كلمة المرور الجديدة</label><input id="newPassword" type="password" minlength="2" placeholder="حرفان أو رقمان على الأقل"></div>
+ <div class="field"><label>تأكيد كلمة المرور</label><input id="confirmPassword" type="password" placeholder="أعد كتابة كلمة المرور"></div>
+ <button class="btn" onclick="doChangePassword()">حفظ كلمة المرور</button></div>`;
+}
+async function doChangePassword(){
+ const a=el("newPassword").value,b=el("confirmPassword").value;
+ if(!/^[a-zA-Z0-9]{2,}$/.test(a))return toast("استخدم حرفين إنجليزيين أو رقمين على الأقل");
+ if(a!==b)return toast("كلمتا المرور غير متطابقتين");
+ showLoading(true,"جاري تحديث كلمة المرور...");
+ try{
+  const {error}=await supabaseClient.auth.updateUser({password:a});
+  if(error)throw error;
+  el("newPassword").value="";el("confirmPassword").value="";
+  toast("تم تغيير كلمة المرور");
+ }catch(e){toast(e.message)}
+ finally{showLoading(false)}
 }
 
-function pageConvert(c) {
-  c.innerHTML = `
-    <div class="card">
-      <h2>🔄 تحويل النقاط إلى أموال</h2>
-      <p class="muted">كل 1000 نقطة = 5 ريالات.</p>
-      <div class="notice">رصيدك الحالي: <b>${points(currentUser.points)} نقطة</b></div>
-      <div class="field">
-        <label>عدد النقاط</label>
-        <input id="convertAmount" type="number" step="1000" min="1000" placeholder="مثال: 1000">
-      </div>
-      <button class="btn" onclick="doConvertPoints()">تحويل الآن</button>
-    </div>
-  `;
+async function logout(){
+ showLoading(true,"جاري تسجيل الخروج...");
+ try{await supabaseClient.auth.signOut()}catch(e){console.error(e)}
+ currentUser=null;allAccounts=[];allLedger=[];currentPage="home";
+ el("app").classList.add("hidden");el("header").classList.add("hidden");
+ el("loginScreen").classList.remove("hidden");
+ el("loginPassword").value="";toggleAuthMode("login");showLoading(false);
 }
 
-async function doConvertPoints() {
-  const pts = Number(el("convertAmount").value);
-
-  if (!Number.isSafeInteger(pts) || pts < 1000 || pts % 1000 !== 0) {
-    return toast("يجب أن تكون النقاط من مضاعفات 1000");
-  }
-
-  if (pts > Number(currentUser.points)) return toast("رصيد النقاط غير كافٍ");
-
-  try {
-    await apiRequest({ action: "convertPoints", pointsToConvert: pts });
-    await refreshData();
-    renderApp();
-    toast("تم تحويل النقاط بنجاح");
-  } catch (err) {}
+async function restoreSession(){
+ const {data,error}=await supabaseClient.auth.getSession();
+ if(error)throw error;
+ if(!data.session)return;
+ showLoading(true,"جاري استعادة جلستك...");
+ try{await refreshData();enterApp()}
+ catch(e){
+  console.error(e);await supabaseClient.auth.signOut();
+  currentUser=null;toast(e.message||"تعذر استعادة الجلسة");
+ }
+ finally{showLoading(false)}
 }
 
-function pageGift(c) {
-  const others = allAccounts.filter(a => a.id !== currentUser.id);
-
-  c.innerHTML = `
-    <div class="card">
-      <h2>🎁 إرسال نقاط</h2>
-      <div class="field">
-        <label>المستلم</label>
-        <select id="giftTo">
-          ${others.map(a => `<option value="${escapeHTML(a.id)}">${escapeHTML(a.name)}</option>`).join("")}
-        </select>
-      </div>
-      <div class="field">
-        <label>عدد النقاط</label>
-        <input id="giftPoints" type="number" min="1" step="1" placeholder="عدد النقاط">
-      </div>
-      <button class="btn" onclick="doSendPoints()">إرسال النقاط</button>
-    </div>
-  `;
+async function startApp(){
+ try{initSupabase();await restoreSession()}
+ catch(e){console.error(e);toast(e.message||"تعذر تشغيل التطبيق")}
 }
-
-async function doSendPoints() {
-  const toId = el("giftTo")?.value;
-  const pointsVal = Number(el("giftPoints").value);
-
-  if (!toId) return toast("اختر المستلم");
-  if (!Number.isSafeInteger(pointsVal) || pointsVal <= 0) return toast("أدخل عدد نقاط صحيح");
-  if (pointsVal > Number(currentUser.points)) return toast("نقاطك لا تكفي");
-
-  try {
-    await apiRequest({ action: "sendPoints", toId, points: pointsVal });
-    await refreshData();
-    renderApp();
-    toast("تم إرسال النقاط بنجاح");
-  } catch (err) {}
-}
-
-function pagePurchase(c) {
-  c.innerHTML = `
-    <div class="card">
-      <h2>🛒 تسجيل مشتريات</h2>
-      <div class="field">
-        <label>اسم الغرض</label>
-        <input id="purchaseItem" placeholder="مثال: كتاب">
-      </div>
-      <div class="field">
-        <label>المبلغ (ريال)</label>
-        <input id="purchaseCost" type="number" step="0.5" min="0.01" placeholder="المبلغ">
-      </div>
-      <button class="btn red" onclick="doPurchase()">شراء وخصم المبلغ</button>
-    </div>
-  `;
-}
-
-async function doPurchase() {
-  const item = el("purchaseItem").value.trim();
-  const cost = Number(el("purchaseCost").value);
-
-  if (!item || !Number.isFinite(cost) || cost <= 0) {
-    return toast("أدخل اسم الغرض والمبلغ بشكل صحيح");
-  }
-
-  if (cost > Number(currentUser.balance)) return toast("الرصيد المالي غير كافٍ");
-
-  try {
-    await apiRequest({ action: "purchase", item, cost });
-    await refreshData();
-    renderApp();
-    toast("تم تسجيل الشراء وخصم المبلغ");
-  } catch (err) {}
-}
-
-function ledgerHTML(list, allowDelete = false) {
-  if (!list.length) return '<div class="empty">لا توجد عمليات مسجلة بعد</div>';
-
-  return list.map(item => {
-    const date = item.created_at
-      ? new Date(item.created_at).toLocaleString("ar-SA", {dateStyle:"short",timeStyle:"short"})
-      : "";
-
-    const m = Number(item.amount_change || 0);
-    const p = Number(item.points_change || 0);
-
-    let changeStr = "";
-    let cls = "";
-
-    if (m !== 0) {
-      changeStr = `${m > 0 ? "+" : ""}${money(m)}`;
-      cls = m > 0 ? "plus" : "minus";
-    } else if (p !== 0) {
-      changeStr = `${p > 0 ? "+" : ""}${points(p)} نقطة`;
-      cls = p > 0 ? "plus" : "minus";
-    }
-
-    const delBtn = allowDelete && currentUser.is_admin
-      ? `<button class="btn red small" onclick="deleteSingleRecord('${escapeHTML(item.id)}')">حذف</button>`
-      : "";
-
-    return `
-      <div class="row">
-        <div>
-          <div class="row-title">${escapeHTML(item.user_name)}: ${escapeHTML(item.description)}</div>
-          <div class="row-sub">${escapeHTML(date)}</div>
-          ${delBtn}
-        </div>
-        <div class="amount ${cls}">${changeStr}</div>
-      </div>
-    `;
-  }).join("");
-}
-
-function pageLedger(c) {
-  c.innerHTML = `
-    <div class="card">
-      <div class="topline" style="margin-bottom:12px">
-        <h2>📜 سجل العمليات</h2>
-        ${currentUser.is_admin
-          ? '<button class="btn red small" onclick="clearLedger()">حذف السجل بالكامل</button>'
-          : ""}
-      </div>
-      ${ledgerHTML(allLedger, currentUser.is_admin)}
-    </div>
-  `;
-}
-
-async function deleteSingleRecord(recordId) {
-  if (!confirm("هل تريد حذف هذه العملية من السجل؟")) return;
-
-  try {
-    await apiRequest({ action: "clearLedger", recordId });
-    await refreshData();
-    renderApp();
-    toast("تم حذف العملية");
-  } catch (err) {}
-}
-
-async function clearLedger() {
-  if (!confirm("سيتم حذف جميع سجلات العمليات، هل أنت متأكد؟")) return;
-
-  try {
-    await apiRequest({ action: "clearLedger" });
-    await refreshData();
-    renderApp();
-    toast("تم تفريغ السجل");
-  } catch (err) {}
-}
-
-function pageAdmin(c) {
-  if (!currentUser.is_admin) {
-    c.innerHTML = '<div class="card"><div class="empty">هذه الصفحة للإدارة فقط</div></div>';
-    return;
-  }
-
-  c.innerHTML = `
-    <div class="card">
-      <h2>👑 لوحة التحكم والإدارة</h2>
-      <div class="field">
-        <label>اختر الحساب المستهدف</label>
-        <select id="adminTargetUser">
-          ${allAccounts.map(a => `<option value="${escapeHTML(a.id)}">${escapeHTML(a.name)}</option>`).join("")}
-        </select>
-      </div>
-      <div class="field">
-        <label>تعديل الأموال (+ إضافة أو - خصم)</label>
-        <input id="adminMoneyDelta" type="number" step="0.01" placeholder="مثال: 50 أو -20">
-      </div>
-      <div class="field">
-        <label>تعديل النقاط (+ إضافة أو - خصم)</label>
-        <input id="adminPointsDelta" type="number" step="1" placeholder="مثال: 500 أو -200">
-      </div>
-      <div class="field">
-        <label>السبب / الملاحظة</label>
-        <input id="adminReason" placeholder="مثال: مكافأة">
-      </div>
-      <button class="btn" onclick="doAdminAdjust()">تنفيذ التعديل</button>
-    </div>
-  `;
-}
-
-async function doAdminAdjust() {
-  const targetId = el("adminTargetUser").value;
-  const moneyDelta = Number(el("adminMoneyDelta").value || 0);
-  const pointsDelta = Number(el("adminPointsDelta").value || 0);
-  const reason = el("adminReason").value.trim();
-
-  if (!Number.isFinite(moneyDelta) || !Number.isFinite(pointsDelta)) {
-    return toast("القيم غير صحيحة");
-  }
-
-  if (moneyDelta === 0 && pointsDelta === 0) {
-    return toast("أدخل قيمة لتعديل المال أو النقاط");
-  }
-
-  try {
-    await apiRequest({
-      action: "adminAdjust",
-      targetId,
-      moneyDelta,
-      pointsDelta,
-      reason
-    });
-
-    await refreshData();
-    renderApp();
-    toast("تم تعديل الأرصدة بنجاح");
-  } catch (err) {}
-}
-
-function pageSettings(c) {
-  c.innerHTML = `
-    <div class="card">
-      <h2>🔐 تغيير كلمة المرور</h2>
-      <div class="field">
-        <label>كلمة المرور الجديدة</label>
-        <input id="newPassword" type="password" autocomplete="new-password" minlength="2" placeholder="حرفان على الأقل">
-      </div>
-      <div class="field">
-        <label>تأكيد كلمة المرور</label>
-        <input id="confirmPassword" type="password" autocomplete="new-password" placeholder="أعد إدخال كلمة المرور">
-      </div>
-      <button class="btn" onclick="doChangePassword()">حفظ كلمة المرور</button>
-    </div>
-  `;
-}
-
-async function doChangePassword() {
-  const newPass = el("newPassword").value;
-  const confirmPass = el("confirmPassword").value;
-
-  if (!newPass || !confirmPass) return toast("يرجى تعبئة الحقول");
-  if (newPass.length < 2) return toast("كلمة المرور يجب أن تكون حرفين على الأقل");
-  if (newPass !== confirmPass) return toast("كلمتا المرور غير متطابقتين");
-
-  showLoading(true, "جاري تحديث كلمة المرور...");
-
-  try {
-    const { error } = await supabaseClient.auth.updateUser({ password: newPass });
-    if (error) throw error;
-
-    el("newPassword").value = "";
-    el("confirmPassword").value = "";
-    toast("تم تحديث كلمة المرور بنجاح");
-  } catch (err) {
-    toast(err.message || "تعذر تحديث كلمة المرور");
-  } finally {
-    showLoading(false);
-  }
-}
-
-async function logout() {
-  showLoading(true, "جاري تسجيل الخروج...");
-
-  try {
-    await supabaseClient.auth.signOut();
-  } catch (err) {
-    console.error(err);
-  } finally {
-    currentUser = null;
-    allAccounts = [];
-    allLedger = [];
-    currentPage = "home";
-
-    el("app").classList.add("hidden");
-    el("header").classList.add("hidden");
-    el("loginScreen").classList.remove("hidden");
-
-    el("loginPassword").value = "";
-    toggleAuthMode("login");
-    showLoading(false);
-  }
-}
-
-async function restoreSession() {
-  try {
-    const { data, error } = await supabaseClient.auth.getSession();
-    if (error) throw error;
-    if (!data.session) return;
-
-    showLoading(true, "جاري استعادة جلستك...");
-    await refreshData();
-
-    el("loginScreen").classList.add("hidden");
-    el("header").classList.remove("hidden");
-    el("app").classList.remove("hidden");
-
-    currentPage = "home";
-    renderApp();
-  } catch (err) {
-    console.error("Restore session error:", err);
-    await supabaseClient.auth.signOut();
-    currentUser = null;
-    toast(err.message || "تعذر استعادة الحساب، سجل دخولك من جديد");
-  } finally {
-    showLoading(false);
-  }
-}
-
-window.addEventListener("error", function(event) {
-  console.error("JavaScript error:", event.error || event.message);
-});
-
-window.addEventListener("unhandledrejection", function(event) {
-  console.error("Unhandled error:", event.reason);
-});
-
-async function startApp() {
-  try {
-    initSupabase();
-    await restoreSession();
-  } catch (err) {
-    console.error(err);
-    toast(err.message || "تعذر تشغيل التطبيق");
-  }
-}
-
 startApp();
 </script>
 </body>
