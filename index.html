@@ -15,8 +15,10 @@ header{background:white;padding:18px 5%;border-bottom:1px solid #e5ebe7;display:
 h2{font-size:20px;margin:0 0 17px}
 h3{font-size:16px;margin:0 0 12px}
 .muted{font-size:13px;color:#77827b}
-input{width:100%;padding:13px;border:1px solid #dfe7e1;border-radius:10px;margin:8px 0 12px;font:inherit}
+input,select{font:inherit}
+input{width:100%;padding:13px;border:1px solid #dfe7e1;border-radius:10px;margin:8px 0 12px}
 button{font:inherit;cursor:pointer;border:0;border-radius:10px;padding:12px 15px}
+button:disabled{opacity:.55;cursor:not-allowed}
 .btn{background:#176b45;color:white;font-weight:bold}
 .light{background:#edf5f0;color:#176b45}
 .danger{background:#fff0f0;color:#c83f45}
@@ -38,10 +40,27 @@ button{font:inherit;cursor:pointer;border:0;border-radius:10px;padding:12px 15px
 .message{padding:12px;border-radius:10px;margin-top:10px;background:#eaf7ee;color:#176b45}
 .error{background:#fff0f0;color:#b52e35}
 .notice{background:#f0f7f2;color:#176b45;padding:13px;border-radius:11px;margin:12px 0}
+#operationOverlay{position:fixed;inset:0;background:rgba(20,35,27,.55);z-index:9999;display:flex;align-items:center;justify-content:center;padding:20px}
+.operation-card{background:white;border-radius:18px;padding:28px 22px;width:100%;max-width:340px;text-align:center;box-shadow:0 15px 50px #0002}
+.loader{width:43px;height:43px;border:4px solid #e3eee7;border-top-color:#176b45;border-radius:50%;animation:spin .8s linear infinite;margin:0 auto 18px}
+@keyframes spin{to{transform:rotate(360deg)}}
+.success-mark{width:48px;height:48px;border-radius:50%;background:#e5f5e9;color:#176b45;font-size:30px;font-weight:bold;display:flex;align-items:center;justify-content:center;margin:0 auto 15px}
+.operation-card h3{font-size:19px;margin:0 0 10px}
+.operation-card p{color:#77827b;font-size:14px;margin:0 0 17px}
 @media(max-width:550px){.grid{grid-template-columns:1fr}.stat strong{font-size:26px}}
 </style>
 </head>
 <body>
+
+<div id="operationOverlay" class="hidden">
+ <div class="operation-card">
+  <div id="operationLoader" class="loader"></div>
+  <div id="operationSuccess" class="success-mark hidden">✓</div>
+  <h3 id="operationTitle">جاري تنفيذ العملية</h3>
+  <p id="operationText">يرجى الانتظار...</p>
+  <button id="operationClose" class="btn hidden" style="width:100%" onclick="closeOperation()">حسنًا</button>
+ </div>
+</div>
 
 <header>
  <div class="logo">بنك العائلة</div>
@@ -97,20 +116,28 @@ button{font:inherit;cursor:pointer;border:0;border-radius:10px;padding:12px 15px
    <h3 id="transferTitle"></h3>
    <div id="receiver" class="notice"></div>
    <input id="transferAmount" type="number" min="0.01" placeholder="أدخل المبلغ أو النقاط">
-   <button class="btn" onclick="sendTransfer()">تأكيد التحويل</button>
+   <button id="sendTransferBtn" class="btn" style="width:100%" onclick="sendTransfer()">تأكيد التحويل</button>
    <div id="transferMsg"></div>
   </div>
  </div>
 
  <div id="convert" class="panel hidden">
-  <h2>تحويل النقاط إلى رصيد</h2>
-  <div class="notice">كل 1000 نقطة = 5 ريالات</div>
+  <h2>تحويل النقاط</h2>
+  <p class="muted">اختر عدد النقاط اللي تبي تحوّلها.</p>
+  <label for="convertAmount">عدد النقاط</label>
+  <select id="convertAmount" style="width:100%;padding:13px;border:1px solid #dfe7e1;border-radius:10px;margin:8px 0 14px">
+   <option value="25">25 نقطة</option>
+   <option value="50">50 نقطة</option>
+   <option value="75">75 نقطة</option>
+   <option value="100">100 نقطة</option>
+   <option value="150">150 نقطة</option>
+   <option value="200">200 نقطة</option>
+   <option value="250">250 نقطة</option>
+   <option value="500">500 نقطة</option>
+   <option value="1000">1000 نقطة</option>
+  </select>
   <p>نقاطك الحالية: <b id="convertCurrent">0</b></p>
-  <button class="btn" style="width:100%" onclick="convertAll()">تحويل النقاط إلى ريال</button>
-  <div class="stat" style="margin-top:13px">
-   <span>المبلغ الذي ستحصل عليه</span>
-   <strong id="convertValue">0.00 ر.س</strong>
-  </div>
+  <button id="convertBtn" class="btn" style="width:100%" onclick="convertPoints()">تأكيد تحويل النقاط</button>
   <div id="convertMsg"></div>
  </div>
 
@@ -192,7 +219,7 @@ const cats=[
 const allowed=[25,50,75,100,150,200,250,500,1000];
 let token=localStorage.getItem("family_token")||"";
 let role=localStorage.getItem("family_role")||"";
-let account=null,accounts=[],transferType="";
+let account=null,accounts=[],transferType="",operationBusy=false;
 
 async function api(action,data={}){
  const r=await fetch(API,{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({action,token,...data})});
@@ -212,6 +239,24 @@ function tab(id,btn){
  show(id);
  document.querySelectorAll("#userTabs .tab").forEach(x=>x.classList.remove("active"));
  btn.classList.add("active");
+}
+function showOperation(title,text){
+ document.getElementById("operationLoader").classList.remove("hidden");
+ document.getElementById("operationSuccess").classList.add("hidden");
+ document.getElementById("operationClose").classList.add("hidden");
+ document.getElementById("operationTitle").textContent=title;
+ document.getElementById("operationText").textContent=text;
+ document.getElementById("operationOverlay").classList.remove("hidden");
+}
+function operationSuccess(title,text){
+ document.getElementById("operationLoader").classList.add("hidden");
+ document.getElementById("operationSuccess").classList.remove("hidden");
+ document.getElementById("operationTitle").textContent=title;
+ document.getElementById("operationText").textContent=text;
+ document.getElementById("operationClose").classList.remove("hidden");
+}
+function closeOperation(){
+ document.getElementById("operationOverlay").classList.add("hidden");
 }
 async function login(){
  try{
@@ -247,7 +292,6 @@ async function load(){
    document.getElementById("balance").textContent=money(account.balance);
    document.getElementById("points").textContent=Number(account.points).toLocaleString()+" نقطة";
    document.getElementById("convertCurrent").textContent=account.points;
-   document.getElementById("convertValue").textContent=money(account.points/200);
    renderStore();
   }
  }catch(e){
@@ -281,30 +325,66 @@ function prepareTransfer(type){
  document.getElementById("transferBox").classList.remove("hidden");
  document.getElementById("transferTitle").textContent=type==="money"?"تحويل فلوس":"تحويل نقاط";
  document.getElementById("receiver").textContent="المستلم: "+other;
- document.getElementById("transferAmount").value="";
- document.getElementById("transferAmount").step=type==="money"?"0.01":"1";
+ const amountInput=document.getElementById("transferAmount");
+ amountInput.value="";
+ amountInput.step=type==="money"?"0.01":"1";
+ amountInput.min=type==="money"?"0.01":"1";
+ amountInput.placeholder=type==="money"?"أدخل المبلغ بالريال":"أدخل عدد النقاط";
+ document.getElementById("transferMsg").innerHTML="";
 }
 async function sendTransfer(){
+ if(operationBusy)return;
  const amount=Number(document.getElementById("transferAmount").value);
  if(!Number.isFinite(amount)||amount<=0)return msg("transferMsg","أدخل كمية صحيحة",true);
  if(transferType==="points"&&!allowed.includes(amount))return msg("transferMsg","عدد النقاط غير معتمد",true);
+ if(transferType==="money"&&Math.round(amount*100)!==amount*100)return msg("transferMsg","المبلغ غير صحيح",true);
  if(!confirm("تأكيد التحويل؟"))return;
+
+ operationBusy=true;
+ const btn=document.getElementById("sendTransferBtn");
+ btn.disabled=true;
  try{
-  if(transferType==="money")await api("sendMoney",{amount,requestId:crypto.randomUUID()});
-  else await api("sendGift",{points:amount,requestId:crypto.randomUUID()});
-  msg("transferMsg","✓ تم التحويل");
+  const requestId=crypto.randomUUID();
+  if(transferType==="money"){
+   showOperation("جاري التحويل","جاري تحويل الفلوس إلى الحساب الثاني، يرجى الانتظار...");
+   await api("sendMoney",{amount,requestId});
+  }else{
+   showOperation("جاري التحويل","جاري تحويل النقاط إلى الحساب الثاني، يرجى الانتظار...");
+   await api("sendGift",{points:amount,requestId});
+  }
   await load();
- }catch(e){msg("transferMsg",e.message,true)}
+  operationSuccess("تم التحويل بنجاح","اكتملت عملية التحويل بنجاح.");
+  document.getElementById("transferAmount").value="";
+ }catch(e){
+  closeOperation();
+  msg("transferMsg",e.message,true);
+ }finally{
+  operationBusy=false;
+  btn.disabled=false;
+ }
 }
-async function convertAll(){
- const p=Number(account.points);
- if(p<=0)return msg("convertMsg","ما عندك نقاط للتحويل",true);
- if(!confirm("تحويل جميع نقاطك ("+p+") إلى "+money(p/200)+"؟"))return;
+async function convertPoints(){
+ if(operationBusy)return;
+ const points=Number(document.getElementById("convertAmount").value);
+ if(!allowed.includes(points))return msg("convertMsg","اختر عدد نقاط صحيح",true);
+ if(Number(account.points)<points)return msg("convertMsg","رصيد نقاطك غير كافٍ",true);
+ if(!confirm("تأكيد تحويل "+points+" نقطة؟"))return;
+
+ operationBusy=true;
+ const btn=document.getElementById("convertBtn");
+ btn.disabled=true;
+ showOperation("جاري تحويل النقاط","جاري تنفيذ تحويل النقاط، يرجى الانتظار...");
  try{
-  await api("convertPoints",{points:p});
-  msg("convertMsg","✓ تم تحويل النقاط");
+  await api("convertPoints",{points,requestId:crypto.randomUUID()});
   await load();
- }catch(e){msg("convertMsg",e.message,true)}
+  operationSuccess("تم التحويل بنجاح","تم تحويل النقاط بنجاح.");
+ }catch(e){
+  closeOperation();
+  msg("convertMsg",e.message,true);
+ }finally{
+  operationBusy=false;
+  btn.disabled=false;
+ }
 }
 async function changePin(){
  const currentPin=document.getElementById("oldPin").value;
