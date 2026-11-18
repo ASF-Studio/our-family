@@ -94,7 +94,6 @@ input:focus,select:focus,textarea:focus{border-color:var(--primary);outline:none
  pointer-events: none;
 }
 
-/* مساعدة نظام الأصفار الثلاثة */
 .hint-text{font-size:12px;color:var(--muted);margin-top:6px;display:block}
 
 footer{background:#0d2b22;color:#a3b8b1;text-align:center;padding:18px;font-size:12px;margin-top:auto;border-top:1px solid rgba(255,255,255,0.1);letter-spacing:0.5px}
@@ -516,10 +515,8 @@ function pageTopUp(c) {
  </div>`;
 }
 
-// نظام إدخال الأصفار الثلاثة الذكي (000) للهللات
 function formatZeroSystem(inputEl, hintId) {
  const rawVal = Number(inputEl.value) || 0;
- // إذا أدخل المستخدم أرقاماً كبيرة مفترضة بنظام الأصفار الثلاثة، نقسم على 1000 أو نتعامل معها كـ هللات
  const actualVal = rawVal >= 1000 ? rawVal / 1000 : rawVal;
  const hint = el(hintId);
  if(hint) {
@@ -597,7 +594,6 @@ function giftsHTML(list) {
  `).join("");
 }
 
-// قسم المشتريات السريعة (مصلح تماماً وسهل جداً)
 function pagePurchase(c) {
  const products = [
   { name: "وجبة سريعة / غداء", price: 35.00 },
@@ -629,7 +625,7 @@ function pagePurchase(c) {
 async function doPurchase(product, cost) {
  if (cost > currentUser.balance) {
   return toast(`عذراً، رصيدك النقدي (${money(currentUser.balance)}) لا يكفي لشراء (${product}) بسعر ${money(cost)}`);
-}
+ }
 
  if (!confirm(`هل تأكيد شراء (${product}) بسعر ${money(cost)}؟`)) return;
 
@@ -707,7 +703,6 @@ async function doChangePin() {
  el("newPinInput").value = "";
 }
 
-// لوحة إدارة ماما الكاملة
 function pageAdmin(c) {
  c.innerHTML = `
  <div class="card">
