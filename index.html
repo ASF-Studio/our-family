@@ -70,7 +70,33 @@ input:focus,select:focus,textarea:focus{border-color:var(--primary);outline:none
 .notice{background:#f0f4f2;border-radius:12px;padding:14px;font-size:14px;line-height:1.7;margin:12px 0;border-right:4px solid var(--primary)}
 .empty-state{text-align:center;padding:32px;color:var(--muted);font-size:14px}
 
-/* الفوتر المطلوب بدقة */
+/* شبكة منتجات المشتريات السريعة */
+.products-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:14px;margin-top:16px}
+.product-card{border:1.5px solid var(--border);border-radius:14px;padding:18px;text-align:center;background:#fff;transition:all .2s}
+.product-card:hover{border-color:var(--primary);box-shadow:0 6px 15px rgba(13,43,34,0.06)}
+.product-card h4{margin:0 0 8px;font-size:16px;color:var(--primary)}
+.product-card p{font-size:15px;font-weight:700;color:var(--gold);margin:0 0 14px}
+
+/* تأثيرات الـ Animation لتحويل النقاط */
+@keyframes coinFly {
+ 0% { transform: translateY(0) scale(1); opacity: 1; }
+ 50% { transform: translateY(-40px) scale(1.2); color: var(--gold); }
+ 100% { transform: translateY(-80px) scale(0.8); opacity: 0; }
+}
+.coin-anim { position: relative; display: inline-block; }
+.coin-anim.active::after {
+ content: "🪙 +💰";
+ position: absolute;
+ right: 50%;
+ top: -10px;
+ animation: coinFly 1s ease-out forwards;
+ font-size: 20px;
+ pointer-events: none;
+}
+
+/* مساعدة نظام الأصفار الثلاثة */
+.hint-text{font-size:12px;color:var(--muted);margin-top:6px;display:block}
+
 footer{background:#0d2b22;color:#a3b8b1;text-align:center;padding:18px;font-size:12px;margin-top:auto;border-top:1px solid rgba(255,255,255,0.1);letter-spacing:0.5px}
 
 .toast{position:fixed;bottom:24px;right:50%;transform:translateX(50%);background:#0d2b22;color:white;padding:13px 22px;border-radius:12px;z-index:99999;max-width:90%;font-size:14px;font-weight:500;box-shadow:0 8px 20px rgba(0,0,0,0.2)}
@@ -429,19 +455,13 @@ function renderPage() {
 function pageHome(c) {
  c.innerHTML = `
  <div class="card" style="border-right: 4px solid var(--gold);">
-  <div class="card-header"><span class="card-title">🌟 قسم النقاط والمكافآت</span></div>
-  <p class="muted" style="line-height:1.6">${currentUser.is_admin ? "أهلاً بك يا ماما. من هنا يمكنك مراقبة وتعديل نقاط أفراد العائلة." : "رصيد نقاطك الحالي يعكس إنجازاتك ومكافآتك العائلية. كل 1000 نقطة تعادل 5 ريالات."}</p>
+  <div class="card-header"><span class="card-title">🌟 حسابي العائلي</span></div>
+  <p class="muted" style="line-height:1.6">${currentUser.is_admin ? "أهلاً بك يا ماما. من هنا يمكنك إدارة حسابات وأرصدة العائلة." : "أهلاً بك. استعرض رصيدك، حول نقاطك بسهولة، وتسوق بضغطة زر واحدة."}</p>
   <div style="display:flex;gap:12px;margin-top:16px;flex-wrap:wrap">
-   ${!currentUser.is_admin ? '<button class="btn gold" onclick="go(\'convert\')">تحويل النقاط إلى رصيد نقدي</button>' : ''}
-   ${!currentUser.is_admin ? '<button class="btn outline" style="color:var(--primary);border-color:var(--primary)" onclick="go(\'gifts\')">إرسال هدية بالنقاط</button>' : ''}
-   ${currentUser.is_admin ? '<button class="btn gold" onclick="go(\'admin\')">إدارة الحسابات والعمليات</button>' : ''}
+   ${!currentUser.is_admin ? '<button class="btn gold" onclick="go(\'convert\')">تحويل النقاط إلى فلوس</button>' : ''}
+   ${!currentUser.is_admin ? '<button class="btn outline" style="color:var(--primary);border-color:var(--primary)" onclick="go(\'purchase\')">قسم المشتريات السريعة</button>' : ''}
+   ${currentUser.is_admin ? '<button class="btn gold" onclick="go(\'admin\')">إدارة الأرصدة والطلبات</button>' : ''}
   </div>
- </div>
-
- <div class="card">
-  <div class="card-header"><span class="card-title">${currentUser.is_admin ? "لوحة الإدارة والتحكم" : "الخدمات السريعة وملخص الحساب"}</span></div>
-  <p class="muted" style="line-height:1.6">${currentUser.is_admin ? "أهلاً بك يا ماما. يمكنك إضافة أو خصم أو سحب الأموال والنقاط، واعتماد طلبات الشحن بكل مرونة وثقة." : "معدل تحويل النقاط المعتمد: كل 1000 نقطة تعادل 5.00 ريال سعودي."}</p>
-  ${currentUser.is_admin ? '<button class="btn" onclick="go(\'admin\')" style="margin-top:14px">فتح لوحة الإدارة</button>' : ''}
  </div>
 
  <div class="card">
@@ -453,32 +473,41 @@ function pageHome(c) {
 function pageConvert(c) {
  c.innerHTML = `
  <div class="card">
-  <div class="card-header"><span class="card-title">تحويل النقاط إلى رصيد نقدي</span></div>
-  <p class="muted">قيمة التحويل: 1000 نقطة = 5 ريالات. (الحد الأدنى 25 نقطة ومضاعفاتها).</p>
+  <div class="card-header"><span class="card-title">تحويل النقاط إلى فلوس</span></div>
+  <p class="muted">قيمة التحويل: كل 1000 نقطة تساوي 5.00 ر.س (الحد الأدنى 25 نقطة ومضاعفاتها).</p>
   <div class="notice">رصيد نقاطك الحالي: <b>${points(currentUser.points)}</b></div>
-  <div class="field"><label>عدد النقاط المراد تحويلها</label><input id="convertPoints" type="number" step="25" min="25" placeholder="مثال: 250"></div>
-  <button class="btn gold" onclick="doConvert()">تنفيذ التحويل الفوري</button>
+  <div class="field"><label>عدد النقاط المراد تحويلها</label><input id="convertPoints" type="number" step="25" min="25" placeholder="مثال: 500"></div>
+  <button id="convertBtn" class="btn gold coin-anim" onclick="doConvert()">تحويل النقاط فوراً</button>
  </div>`;
 }
 
 async function doConvert() {
  const pts = Number(el("convertPoints").value);
- if (!pts || pts < 25 || pts % 25 !== 0) return toast("الحد الأدنى للتحويل 25 نقطة ويجب أن يكون من مضاعفاتها");
+ if (!pts || pts < 25 || pts % 25 !== 0) return toast("الحد الأدنى 25 نقطة ويجب أن يكون من مضاعفاتها");
  if (pts > currentUser.points) return toast("رصيد النقاط غير كافٍ لإتمام العملية");
 
- await apiRequest({ action: "convertPoints", pointsToConvert: pts });
- await refreshData();
- renderApp();
- toast("تم تحويل النقاط وإضافة المبلغ لمحفظتك بنجاح!");
+ const btn = el("convertBtn");
+ if(btn) btn.classList.add("active");
+
+ setTimeout(async () => {
+  await apiRequest({ action: "convertPoints", pointsToConvert: pts });
+  await refreshData();
+  renderApp();
+  toast("تم تحويل النقاط وإضافة المبلغ لمحفظتك بنجاح!");
+ }, 600);
 }
 
 function pageTopUp(c) {
  c.innerHTML = `
  <div class="card">
-  <div class="card-header"><span class="card-title">طلب شحن الرصيد النقدي</span></div>
-  <p class="muted">أدخل المبلغ المطلوب شحنه ليتم مراجعته واعتماده رسمياً من قِبل إدارة البنك (ماما).</p>
-  <div class="field"><label>المبلغ (ريال سعودي)</label><input id="topUpAmount" type="number" step="5" min="5" placeholder="مثال: 100"></div>
-  <div class="field"><label>ملاحظة للإدارة</label><input id="topUpNote" placeholder="سبب أو تفاصيل الشحن..."></div>
+  <div class="card-header"><span class="card-title">طلب شحن رصيد جديد</span></div>
+  <p class="muted">أدخل المبلغ (يدعم إدخال الهللات والأصفار)، وسيتم إرسال الطلب لماما للاعتماد الفوري.</p>
+  <div class="field">
+   <label>المبلغ (ريال سعودي)</label>
+   <input id="topUpAmountRaw" type="number" step="0.01" min="1" placeholder="مثال: 50 أو 50000 للأصفار الثلاثة" oninput="formatZeroSystem(this, 'topUpFormatted')">
+   <span id="topUpFormatted" class="hint-text">المبلغ الفعلي: 0.00 ر.س</span>
+  </div>
+  <div class="field"><label>ملاحظة للإدارة (اختياري)</label><input id="topUpNote" placeholder="سبب أو تفاصيل الشحن..."></div>
   <button class="btn gold" onclick="doRequestTopUp()">إرسال طلب الشحن</button>
  </div>
  <div class="card">
@@ -487,25 +516,39 @@ function pageTopUp(c) {
  </div>`;
 }
 
+// نظام إدخال الأصفار الثلاثة الذكي (000) للهللات
+function formatZeroSystem(inputEl, hintId) {
+ const rawVal = Number(inputEl.value) || 0;
+ // إذا أدخل المستخدم أرقاماً كبيرة مفترضة بنظام الأصفار الثلاثة، نقسم على 1000 أو نتعامل معها كـ هللات
+ const actualVal = rawVal >= 1000 ? rawVal / 1000 : rawVal;
+ const hint = el(hintId);
+ if(hint) {
+  hint.textContent = `المبلغ المحسوب بدقة: ${actualVal.toFixed(2)} ر.س`;
+ }
+}
+
 async function doRequestTopUp() {
- const amount = Number(el("topUpAmount").value);
+ const rawVal = Number(el("topUpAmountRaw").value);
+ const amount = rawVal >= 1000 ? rawVal / 1000 : rawVal;
  const note = el("topUpNote").value.trim();
+
  if(!amount || amount <= 0) return toast("يرجى إدخال مبلغ صالح للشحن");
 
  await apiRequest({ action: "requestTopUp", amount, note });
  await refreshData();
  renderApp();
- toast("تم إرسال طلب الشحن بنجاح وهو قيد المراجعة");
+ toast("تم إرسال طلب الشحن بنجاح وهو بانتظار موافقة ماما");
 }
 
 function topUpHTML(list) {
  if (!list.length) return `<div class="empty-state">لا توجد طلبات شحن سابقة</div>`;
  return list.map(item => {
   const statusMap = { pending: 'قيد المراجعة', approved: 'معتمد', rejected: 'مرفوض' };
+  const reasonText = item.admin_reason ? ` | السبب: ${escapeHTML(item.admin_reason)}` : '';
   return `<div class="transaction-row">
    <div class="tx-info">
     <h4>شحن رصيد بقيمة ${money(item.amount)}</h4>
-    <span>ملاحظة: ${escapeHTML(item.note || 'بدون ملاحظات')} | الحالة: <b>${statusMap[item.status] || item.status}</b></span>
+    <span>ملاحظة: ${escapeHTML(item.note || 'بدون')} | الحالة: <b>${statusMap[item.status] || item.status}</b>${reasonText}</span>
    </div>
    <div class="tx-amount">${new Date(item.created_at).toLocaleDateString('ar-SA')}</div>
   </div>`;
@@ -515,14 +558,14 @@ function topUpHTML(list) {
 function pageGifts(c) {
  c.innerHTML = `
  <div class="card">
-  <div class="card-header"><span class="card-title">إرسال الهدايا والمكافآت (بالنقاط)</span></div>
-  <div class="field"><label>المستلم</label><select id="giftTo">${allRecipients.map(a=>`<option value="${a.id}">${escapeHTML(a.name)}</option>`).join("")}</select></div>
-  <div class="field"><label>عدد النقاط</label><input id="giftPoints" type="number" step="25" min="25" placeholder="عدد النقاط"></div>
-  <div class="field"><label>رسالة إهداء</label><input id="giftMessage" placeholder="رسالة تهنئة أو تقدير..."></div>
+  <div class="card-header"><span class="card-title">إرسال هدية نقاط لعضو آخر</span></div>
+  <div class="field"><label>اختر المستلم</label><select id="giftTo">${allRecipients.map(a=>`<option value="${a.id}">${escapeHTML(a.name)}</option>`).join("")}</select></div>
+  <div class="field"><label>عدد النقاط</label><input id="giftPoints" type="number" step="25" min="25" placeholder="عدد النقاط المراد إهداؤها"></div>
+  <div class="field"><label>رسالة الإهداء (اختياري)</label><input id="giftMessage" placeholder="كل عام وأنت بخير..."></div>
   <button class="btn gold" onclick="doSendGift()">إرسال الهدية فوراً</button>
  </div>
  <div class="card">
-  <div class="card-header"><span class="card-title">سجل الهدايا المرسلة والمستلمة</span></div>
+  <div class="card-header"><span class="card-title">سجل الهدايا</span></div>
   ${giftsHTML(allGifts)}
  </div>`;
 }
@@ -554,32 +597,46 @@ function giftsHTML(list) {
  `).join("");
 }
 
+// قسم المشتريات السريعة (مصلح تماماً وسهل جداً)
 function pagePurchase(c) {
+ const products = [
+  { name: "وجبة سريعة / غداء", price: 35.00 },
+  { name: "قهوة ومشروب بارد", price: 18.00 },
+  { name: "كتاب / أداة مدرسية", price: 45.00 },
+  { name: "لعبة إلكترونية / ترفيه", price: 100.00 },
+  { name: "وجبة خفيفة / سناك", price: 10.00 },
+  { name: "أخرى (طلب خاص)", price: 25.00 }
+ ];
+
  c.innerHTML = `
  <div class="card">
-  <div class="card-header"><span class="card-title">تسجيل عملية شراء جديدة</span></div>
-  <p class="muted">قم بتسجيل مشترياتك وخصم قيمتها مباشرة من رصيدك النقدي المتوفر.</p>
-  <div class="field"><label>اسم المنتج أو الغرض</label><input id="purItem" placeholder="مثال: كتاب دراسي، جهاز..."></div>
-  <div class="field"><label>مكان الشراء / اسم المتجر</label><input id="purStore" placeholder="مثال: مكتبة جرير، متجر إلكتروني..."></div>
-  <div class="field"><label>السعر (ريال سعودي)</label><input id="purCost" type="number" step="0.5" min="1" placeholder="المبلغ"></div>
-  <div class="field"><label>ملاحظات إضافية</label><input id="purNotes" placeholder="اختياري..."></div>
-  <button class="btn red" onclick="doPurchase()">خصم وإتمام الشراء</button>
+  <div class="card-header"><span class="card-title">🛒 قسم المشتريات السريعة</span></div>
+  <p class="muted">اختر المنتج الذي ترغب بشرائه وسيتم خصم سعره مباشرة من رصيدك النقدي بكل سهولة وسرعة.</p>
+  <div class="notice">رصيدك النقدي المتوفر: <b>${money(currentUser.balance)}</b></div>
+  
+  <div class="products-grid">
+   ${products.map(p => `
+    <div class="product-card">
+     <h4>${escapeHTML(p.name)}</h4>
+     <p>${money(p.price)}</p>
+     <button class="btn gold small" onclick="doPurchase('${escapeHTML(p.name)}', ${p.price})">شراء الآن</button>
+    </div>
+   `).join("")}
+  </div>
  </div>`;
 }
 
-async function doPurchase() {
- const item = el("purItem").value.trim();
- const store = el("purStore").value.trim();
- const cost = Number(el("purCost").value);
- const notes = el("purNotes").value.trim();
+async function doPurchase(product, cost) {
+ if (cost > currentUser.balance) {
+  return toast(`عذراً، رصيدك النقدي (${money(currentUser.balance)}) لا يكفي لشراء (${product}) بسعر ${money(cost)}`);
+}
 
- if(!item || !store || !cost || cost <= 0) return toast("يرجى إدخال المنتج، مكان الشراء، والمبلغ بشكل صحيح");
- if(cost > currentUser.balance) return toast("رصيدك النقدي غير كافٍ لإتمام عملية الشراء");
+ if (!confirm(`هل تأكيد شراء (${product}) بسعر ${money(cost)}؟`)) return;
 
- await apiRequest({ action: "purchase", item, cost, store, notes });
+ await apiRequest({ action: "purchase", product, cost });
  await refreshData();
  renderApp();
- toast("تم تسجيل الشراء وخصم المبلغ من محفظتك بنجاح");
+ toast(`تم شراء "${product}" بنجاح وخصم المبلغ من محفظتك`);
 }
 
 function ledgerHTML(list) {
@@ -611,7 +668,7 @@ function ledgerHTML(list) {
 function pageLedger(c) {
  c.innerHTML = `
  <div class="card">
-  <div class="card-header"><span class="card-title">السجل والمعاملات المالية</span></div>
+  <div class="card-header"><span class="card-title">📜 سجل العمليات المصرفية الشامل</span></div>
   ${ledgerHTML(allLedger)}
  </div>`;
 }
@@ -619,7 +676,7 @@ function pageLedger(c) {
 function pageNotifications(c) {
  c.innerHTML = `
  <div class="card">
-  <div class="card-header"><span class="card-title">التنبيهات والإشعارات</span></div>
+  <div class="card-header"><span class="card-title">🔔 التنبيهات والإشعارات</span></div>
   ${allNotifications.length ? allNotifications.map(n => `
    <div class="transaction-row">
     <div class="tx-info">
@@ -635,42 +692,46 @@ function pageNotifications(c) {
 function pageSettings(c) {
  c.innerHTML = `
  <div class="card">
-  <div class="card-header"><span class="card-title">إعدادات الأمان وحماية الحساب</span></div>
-  <p class="muted">قم بتغيير الرمز السري الخاص بحسابك لضمان أعلى مستويات الأمان.</p>
-  <div class="field"><label>الرمز السري الجديد</label><input id="newPinInput" type="password" maxlength="6" placeholder="أدخل 4 أرقام على الأقل"></div>
-  <button class="btn gold" onclick="doChangePin()">تحديث الرمز السري</button>
+  <div class="card-header"><span class="card-title">🔒 إعدادات الأمان وحماية الحساب</span></div>
+  <p class="muted">قم بتغيير الرقم السري الخاص بحسابك لضمان أعلى مستويات الخصوصية والأمان.</p>
+  <div class="field"><label>الرقم السري الجديد</label><input id="newPinInput" type="password" maxlength="6" placeholder="أدخل 4 أرقام على الأقل"></div>
+  <button class="btn gold" onclick="doChangePin()">تحديث الرقم السري</button>
  </div>`;
 }
 
 async function doChangePin() {
  const newPin = el("newPinInput").value.trim();
- if (!newPin || newPin.length < 4) return toast("الرمز السري يجب ألا يقل عن 4 أرقام");
+ if (!newPin || newPin.length < 4) return toast("الرقم السري يجب ألا يقل عن 4 أرقام");
  await apiRequest({ action: "changePin", newPin });
- toast("تم تحديث الرمز السري بنجاح!");
+ toast("تم تحديث الرقم السري بنجاح!");
  el("newPinInput").value = "";
 }
 
+// لوحة إدارة ماما الكاملة
 function pageAdmin(c) {
  c.innerHTML = `
  <div class="card">
-  <div class="card-header"><span class="card-title">⚖️ لوحة إدارة الأرصدة والنقاط (ماما)</span></div>
-  <p class="muted">من هنا يمكنك إضافة أو خصم أو سحب الأموال والنقاط بدقة، مع إلزامية كتابة السبب ليتم تسجيله في السجل وإرسال إشعار فوري للعضو.</p>
+  <div class="card-header"><span class="card-title">👑 لوحة إدارة الأرصدة والنقاط (ماما)</span></div>
+  <p class="muted">إضافة أو خصم الأموال والنقاط للأفراد بكل سهولة، مع إمكانية كتابة السبب ليظهر في السجل والإشعارات.</p>
   
   <div class="field"><label>اختر العضو المستهدف</label><select id="admTarget">${allAccounts.map(a=>`<option value="${a.id}">${escapeHTML(a.name)} (رصيد: ${money(a.balance)} | نقاط: ${points(a.points)})</option>`).join("")}</select></div>
   <div class="field"><label>نوع العملية الإدارية</label><select id="admType">
    <option value="moneyPlus">➕ إضافة رصيد نقدي</option>
-   <option value="moneyMinus">➖ خصم / سحب رصيد نقدي</option>
-   <option value="pointsPlus">➕ إضافة نقاط (عامة)</option>
-   <option value="pointsMinus">➖ خصم / سحب نقاط</option>
-   <option value="reward">🌟 منح مكافأة (نقاط)</option>
+   <option value="moneyMinus">➖ خصم رصيد نقدي</option>
+   <option value="pointsPlus">➕ إضافة نقاط</option>
+   <option value="pointsMinus">➖ خصم نقاط</option>
   </select></div>
-  <div class="field"><label>القيمة (المبلغ أو النقاط)</label><input id="admVal" type="number" min="1" placeholder="أدخل القيمة العددية..."></div>
-  <div class="field"><label>السبب / الملاحظة الإدارية (إلزامي)</label><input id="admReason" placeholder="مثال: خصم بسبب إهمال الواجب، أو مكافأة تفوق..."></div>
-  <button class="btn gold" onclick="confirmAdminAdjust()">تنفيذ وإرسال العملية</button>
+  <div class="field">
+   <label>القيمة (المبلغ أو النقاط)</label>
+   <input id="admValRaw" type="number" step="0.01" min="1" placeholder="أدخل القيمة العددية..." oninput="formatZeroSystem(this, 'admFormatted')">
+   <span id="admFormatted" class="hint-text">القيمة الفعلية: 0</span>
+  </div>
+  <div class="field"><label>سبب الإضافة أو الخصم (اختياري)</label><input id="admReason" placeholder="مثال: مكافأة تفوق دراسي، أو خصم بسبب..."></div>
+  <button class="btn gold" onclick="confirmAdminAdjust()">تنفيذ العملية الإدارية</button>
  </div>
 
  <div class="card">
-  <div class="card-header"><span class="card-title">طلبات الشحن المعلقة (${allTopUps.filter(t=>t.status==='pending').length})</span></div>
+  <div class="card-header"><span class="card-title">📥 طلبات شحن الرصيد المعلقة (${allTopUps.filter(t=>t.status==='pending').length})</span></div>
   ${allTopUps.filter(t=>t.status==='pending').length ? allTopUps.filter(t=>t.status==='pending').map(t=>`
    <div class="transaction-row">
     <div class="tx-info">
@@ -686,57 +747,49 @@ function pageAdmin(c) {
  </div>
 
  <div class="card">
-  <div class="card-header"><span class="card-title">إدارة الأمان والتبنيد (إيقاف أو تفعيل الحسابات)</span></div>
+  <div class="card-header"><span class="card-title">🚫 إدارة أمان الحسابات (إيقاف / تفعيل)</span></div>
   <div class="field"><label>اختر العضو</label><select id="blockTarget">${allAccounts.map(a=>`<option value="${a.id}">${escapeHTML(a.name)} - ${a.blocked ? 'موقوف حالياً' : 'نشط'}</option>`).join("")}</select></div>
-  <div class="field"><label>الإجراء</label><select id="blockStatus"><option value="true">إيقاف الحساب (تبنيد)</option><option value="false">إعادة تفعيل الحساب</option></select></div>
-  <button class="btn red" onclick="doToggleBlock()">تطبيق حالة الحساب الأمنية</button>
+  <div class="field"><label>الإجراء الأمني</label><select id="blockStatus"><option value="true">إيقاف الحساب مؤقتاً</option><option value="false">إعادة تفعيل الحساب</option></select></div>
+  <button class="btn red" onclick="doToggleBlock()">تطبيق حالة الحساب</button>
  </div>`;
 }
 
 function confirmAdminAdjust() {
  const targetId = el("admTarget").value;
  const type = el("admType").value;
- const val = Number(el("admVal").value);
+ const rawVal = Number(el("admValRaw").value);
+ const val = rawVal >= 1000 && type.includes('money') ? rawVal / 1000 : rawVal;
  const reason = el("admReason").value.trim();
 
  const targetAcc = allAccounts.find(a => a.id === targetId);
  const targetName = targetAcc ? targetAcc.name : "العضو";
 
- if(!val || val <= 0) return toast("يرجى إدخال قيمة صحيحة أكبر من الصفر");
- if(!reason) return toast("يجب كتابة سبب أو ملاحظة واضحة للعملية");
+ if(!val || val <= 0) return toast("يرجى إدخال قيمة صحيحة");
 
- // التحقق المحلي السريع من الرصيد قبل الإرسال للخادم
  if(type === 'moneyMinus' && targetAcc && val > targetAcc.balance) {
-  return toast(`عذراً، رصيد ${targetName} النقدي (${money(targetAcc.balance)}) لا يكفي لخصم ${money(val)}`);
+  return toast(`عذراً، رصيد ${targetName} النقدي (${money(targetAcc.balance)}) لا يكفي للخصم`);
  }
  if(type === 'pointsMinus' && targetAcc && val > targetAcc.points) {
-  return toast(`عذراً، رصيد نقاط ${targetName} (${points(targetAcc.points)}) لا يكفي لخصم ${points(val)}`);
+  return toast(`عذراً، رصيد نقاط ${targetName} (${points(targetAcc.points)}) لا يكفي للخصم`);
  }
 
  const typeNames = {
   moneyPlus: 'إضافة رصيد نقدي',
-  moneyMinus: 'خصم/سحب رصيد نقدي',
+  moneyMinus: 'خصم رصيد نقدي',
   pointsPlus: 'إضافة نقاط',
-  pointsMinus: 'خصم/سحب نقاط',
-  reward: 'منح مكافأة'
+  pointsMinus: 'خصم نقاط'
  };
 
- if(!confirm(`هل أنت متأكد من رغبتك في تنفيذ عملية (${typeNames[type]}) بقيمة [${val}] لـ (${targetName})؟\nالسبب: ${reason}`)) {
-  return;
- }
+ if(!confirm(`هل تأكيد تنفيذ (${typeNames[type]}) بقيمة [${val}] لـ (${targetName})؟`)) return;
 
  executeAdminAdjust(targetId, type, val, reason);
 }
 
 async function executeAdminAdjust(targetId, type, val, reason) {
- try {
-  await apiRequest({ action: "adminAdjust", targetId, type, val, reason });
-  await refreshData();
-  renderApp();
-  toast("تم تنفيذ العملية الإدارية بنجاح وتحديث الأرصدة وإرسال الإشعار");
- } catch(e) {
-  // الخطأ معالج مسبقاً في apiRequest
- }
+ await apiRequest({ action: "adminAdjust", targetId, type, val, reason });
+ await refreshData();
+ renderApp();
+ toast("تم تنفيذ العملية الإدارية بنجاح وتحديث الأرصدة وإرسال الإشعار");
 }
 
 async function handleTopUp(requestId, status) {
@@ -744,7 +797,7 @@ async function handleTopUp(requestId, status) {
  await apiRequest({ action: "handleTopUp", requestId, status, adminReason });
  await refreshData();
  renderApp();
- toast("تم تحديث حالة طلب الشحن بنجاح");
+ toast("تم تحديث حالة طلب الشحن بنجاح وإرسال الإشعار للعضو");
 }
 
 async function doToggleBlock() {
