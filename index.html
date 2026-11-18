@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
@@ -34,20 +33,36 @@ button:disabled{opacity:.55;cursor:not-allowed}
 .category{border:1px solid #e5ebe7;border-radius:14px;padding:14px;margin:12px 0;background:#fff}
 .category-title{font-size:17px;font-weight:bold;margin-bottom:9px}
 .category input{margin-bottom:7px}
-.admin-box{border:1px solid #e5ebe7;border-radius:15px;padding:17px;margin:12px 0;background:#fff}
-.admin-box h3{font-size:17px}
+.admin-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;margin-top:15px}
+.admin-box{border:1px solid #e5ebe7;border-radius:15px;padding:14px;background:#fff;min-width:0;display:flex;flex-direction:column;justify-content:space-between;min-height:190px}
+.admin-box h3{font-size:16px;min-height:38px}
+.admin-box input{margin:8px 0}
+.admin-box button{width:100%;margin-top:auto}
 .account{padding:14px;border:1px solid #e5ebe7;border-radius:12px;margin:10px 0}
 .message{padding:12px;border-radius:10px;margin-top:10px;background:#eaf7ee;color:#176b45}
 .error{background:#fff0f0;color:#b52e35}
 .notice{background:#f0f7f2;color:#176b45;padding:13px;border-radius:11px;margin:12px 0}
-#operationOverlay{position:fixed;inset:0;background:rgba(20,35,27,.55);z-index:9999;display:flex;align-items:center;justify-content:center;padding:20px}
+.point-buttons{display:grid;grid-template-columns:repeat(3,1fr);gap:9px;margin:14px 0}
+.point-btn{background:#edf5f0;color:#176b45;border:1px solid #dcebe1;font-weight:bold}
+.point-btn.active{background:#176b45;color:white}
+.convert-preview{padding:17px;border:1px solid #e5ebe7;border-radius:13px;margin:15px 0}
+.convert-preview span{display:block;color:#77827b;margin-bottom:8px}
+.convert-preview strong{font-size:25px;color:#176b45}
+#operationOverlay{position:fixed;inset:0;background:rgba(20,35,27,.58);z-index:9999;display:flex;align-items:center;justify-content:center;padding:20px}
 .operation-card{background:white;border-radius:18px;padding:28px 22px;width:100%;max-width:340px;text-align:center;box-shadow:0 15px 50px #0002}
 .loader{width:43px;height:43px;border:4px solid #e3eee7;border-top-color:#176b45;border-radius:50%;animation:spin .8s linear infinite;margin:0 auto 18px}
 @keyframes spin{to{transform:rotate(360deg)}}
 .success-mark{width:48px;height:48px;border-radius:50%;background:#e5f5e9;color:#176b45;font-size:30px;font-weight:bold;display:flex;align-items:center;justify-content:center;margin:0 auto 15px}
 .operation-card h3{font-size:19px;margin:0 0 10px}
 .operation-card p{color:#77827b;font-size:14px;margin:0 0 17px}
-@media(max-width:550px){.grid{grid-template-columns:1fr}.stat strong{font-size:26px}}
+.money-input{direction:ltr;text-align:right;font-variant-numeric:tabular-nums}
+@media(max-width:550px){
+ .grid{grid-template-columns:1fr}
+ .stat strong{font-size:26px}
+ .admin-box{min-height:180px;padding:11px}
+ .admin-grid{gap:9px}
+ .point-buttons{grid-template-columns:repeat(3,1fr)}
+}
 </style>
 </head>
 <body>
@@ -83,11 +98,12 @@ button:disabled{opacity:.55;cursor:not-allowed}
  </div>
  <label>الرقم السري</label>
  <input id="pin" type="password" inputmode="numeric" placeholder="الرقم السري">
- <button class="btn" style="width:100%" onclick="login()">دخول</button>
+ <button id="loginBtn" class="btn" style="width:100%" onclick="login()">دخول</button>
  <div id="loginMsg"></div>
 </div>
 
 <div id="app" class="wrap hidden">
+
  <div class="tabs" id="userTabs">
   <button class="tab active" onclick="tab('home',this)">الرئيسية</button>
   <button class="tab" onclick="tab('transfer',this)">تحويل</button>
@@ -124,19 +140,22 @@ button:disabled{opacity:.55;cursor:not-allowed}
  <div id="convert" class="panel hidden">
   <h2>تحويل النقاط</h2>
   <p class="muted">اختر عدد النقاط اللي تبي تحوّلها.</p>
-  <label for="convertAmount">عدد النقاط</label>
-  <select id="convertAmount" style="width:100%;padding:13px;border:1px solid #dfe7e1;border-radius:10px;margin:8px 0 14px">
-   <option value="25">25 نقطة</option>
-   <option value="50">50 نقطة</option>
-   <option value="75">75 نقطة</option>
-   <option value="100">100 نقطة</option>
-   <option value="150">150 نقطة</option>
-   <option value="200">200 نقطة</option>
-   <option value="250">250 نقطة</option>
-   <option value="500">500 نقطة</option>
-   <option value="1000">1000 نقطة</option>
-  </select>
+  <div class="point-buttons" id="pointButtons">
+   <button class="point-btn active" onclick="selectPoints(25,this)">25</button>
+   <button class="point-btn" onclick="selectPoints(50,this)">50</button>
+   <button class="point-btn" onclick="selectPoints(75,this)">75</button>
+   <button class="point-btn" onclick="selectPoints(100,this)">100</button>
+   <button class="point-btn" onclick="selectPoints(150,this)">150</button>
+   <button class="point-btn" onclick="selectPoints(200,this)">200</button>
+   <button class="point-btn" onclick="selectPoints(250,this)">250</button>
+   <button class="point-btn" onclick="selectPoints(500,this)">500</button>
+   <button class="point-btn" onclick="selectPoints(1000,this)">1000</button>
+  </div>
   <p>نقاطك الحالية: <b id="convertCurrent">0</b></p>
+  <div class="convert-preview">
+   <span>المبلغ بعد التحويل</span>
+   <strong id="convertValue">0.00 ر.س</strong>
+  </div>
   <button id="convertBtn" class="btn" style="width:100%" onclick="convertPoints()">تأكيد تحويل النقاط</button>
   <div id="convertMsg"></div>
  </div>
@@ -158,7 +177,13 @@ button:disabled{opacity:.55;cursor:not-allowed}
 
  <div id="admin" class="hidden">
   <h2>إدارة ماما</h2>
-  <div class="panel">
+  <div class="tabs" id="adminTabs">
+   <button class="tab active" onclick="adminTab('balances',this)">إدارة الأرصدة</button>
+   <button class="tab" onclick="adminTab('accountsPanel',this)">الحسابات</button>
+   <button class="tab" onclick="adminTab('settingsPanel',this)">الإعدادات</button>
+  </div>
+
+  <section id="admin-balances" class="panel">
    <h2>إدارة الأرصدة</h2>
    <label>الحساب المستهدف</label>
    <select id="target" style="width:100%;padding:12px;border:1px solid #ddd;border-radius:10px">
@@ -166,44 +191,44 @@ button:disabled{opacity:.55;cursor:not-allowed}
     <option value="sahab">سحاب</option>
    </select>
 
-   <div class="admin-box">
-    <h3>زيادة نقاط</h3>
-    <input id="addPoints" type="number" placeholder="عدد النقاط">
-    <button class="btn" onclick="adminAction('points','add','addPoints')">زيادة النقاط</button>
-   </div>
-
-   <div class="admin-box">
-    <h3>خصم نقاط</h3>
-    <input id="removePoints" type="number" placeholder="عدد النقاط">
-    <button class="btn danger" onclick="adminAction('points','subtract','removePoints')">خصم النقاط</button>
-   </div>
-
-   <div class="admin-box">
-    <h3>زيادة فلوس</h3>
-    <input id="addMoney" type="number" step="0.01" placeholder="المبلغ بالريال">
-    <button class="btn" onclick="adminAction('balance','add','addMoney')">زيادة الرصيد</button>
-   </div>
-
-   <div class="admin-box">
-    <h3>خصم فلوس</h3>
-    <input id="removeMoney" type="number" step="0.01" placeholder="المبلغ بالريال">
-    <button class="btn danger" onclick="adminAction('balance','subtract','removeMoney')">خصم الرصيد</button>
+   <div class="admin-grid">
+    <div class="admin-box">
+     <h3>زيادة نقاط</h3>
+     <input id="addPoints" type="number" placeholder="عدد النقاط">
+     <button class="btn" onclick="adminAction('points','add','addPoints')">زيادة النقاط</button>
+    </div>
+    <div class="admin-box">
+     <h3>خصم نقاط</h3>
+     <input id="removePoints" type="number" placeholder="عدد النقاط">
+     <button class="danger" onclick="adminAction('points','subtract','removePoints')">خصم النقاط</button>
+    </div>
+    <div class="admin-box">
+     <h3>زيادة فلوس</h3>
+     <input id="addMoney" class="money-input" type="text" inputmode="decimal" value="0.00" placeholder="0.00">
+     <button class="btn" onclick="adminAction('balance','add','addMoney')">زيادة الرصيد</button>
+    </div>
+    <div class="admin-box">
+     <h3>خصم فلوس</h3>
+     <input id="removeMoney" class="money-input" type="text" inputmode="decimal" value="0.00" placeholder="0.00">
+     <button class="danger" onclick="adminAction('balance','subtract','removeMoney')">خصم الرصيد</button>
+    </div>
    </div>
    <div id="adminMsg"></div>
-  </div>
+  </section>
 
-  <div class="panel">
+  <section id="admin-accountsPanel" class="panel hidden">
    <h2>الحسابات</h2>
    <div id="accounts"></div>
-  </div>
+  </section>
 
-  <div class="panel">
-   <h2>تغيير رقم ماما السري</h2>
+  <section id="admin-settingsPanel" class="panel hidden">
+   <h2>الإعدادات</h2>
+   <h3>تغيير رقم ماما السري</h3>
    <input id="adminOldPin" type="password" placeholder="الرقم الحالي">
    <input id="adminNewPin" type="password" placeholder="الرقم الجديد">
    <button class="btn" onclick="adminChangePin()">حفظ الرقم</button>
    <div id="adminPinMsg"></div>
-  </div>
+  </section>
  </div>
 </div>
 
@@ -219,27 +244,61 @@ const cats=[
 const allowed=[25,50,75,100,150,200,250,500,1000];
 let token=localStorage.getItem("family_token")||"";
 let role=localStorage.getItem("family_role")||"";
-let account=null,accounts=[],transferType="",operationBusy=false;
+let account=null,accounts=[],transferType="",selectedPoints=25,operationBusy=false;
 
 async function api(action,data={}){
- const r=await fetch(API,{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({action,token,...data})});
+ const r=await fetch(API,{
+  method:"POST",
+  headers:{"Content-Type":"application/json"},
+  body:JSON.stringify({action,token,...data})
+ });
  const d=await r.json();
  if(!r.ok)throw Error(d.error||"حدث خطأ");
  return d;
 }
+
 function msg(id,text,error=false){
  document.getElementById(id).innerHTML='<div class="message '+(error?'error':'')+'">'+text+'</div>';
 }
-function money(n){return Number(n||0).toFixed(2)+" ر.س"}
+
+function money(n){
+ return Number(n||0).toFixed(2)+" ر.س";
+}
+
+/* قراءة المبلغ بالريال وتحويله إلى هللات صحيحة */
+function parseHalalas(id){
+ const field=document.getElementById(id);
+ const raw=field.value.trim().replace(",",".");
+ if(!/^\d+(\.\d{1,2})?$/.test(raw))return null;
+
+ const parts=raw.split(".");
+ const riyals=Number(parts[0]);
+ const halalas=Number(((parts[1]||"")+"00").slice(0,2));
+ const total=riyals*100+halalas;
+
+ if(!Number.isSafeInteger(total)||total<=0)return null;
+ return total;
+}
+
 function show(id){
  ["home","transfer","convert","store","settings"].forEach(x=>document.getElementById(x).classList.add("hidden"));
  document.getElementById(id).classList.remove("hidden");
 }
+
 function tab(id,btn){
  show(id);
  document.querySelectorAll("#userTabs .tab").forEach(x=>x.classList.remove("active"));
  btn.classList.add("active");
 }
+
+function adminTab(id,btn){
+ ["balances","accountsPanel","settingsPanel"].forEach(x=>{
+  document.getElementById("admin-"+x).classList.toggle("hidden",x!==id);
+ });
+ document.querySelectorAll("#adminTabs .tab").forEach(x=>x.classList.remove("active"));
+ btn.classList.add("active");
+}
+
 function showOperation(title,text){
  document.getElementById("operationLoader").classList.remove("hidden");
  document.getElementById("operationSuccess").classList.add("hidden");
@@ -248,6 +307,7 @@ function showOperation(title,text){
  document.getElementById("operationText").textContent=text;
  document.getElementById("operationOverlay").classList.remove("hidden");
 }
+
 function operationSuccess(title,text){
  document.getElementById("operationLoader").classList.add("hidden");
  document.getElementById("operationSuccess").classList.remove("hidden");
@@ -255,50 +315,85 @@ function operationSuccess(title,text){
  document.getElementById("operationText").textContent=text;
  document.getElementById("operationClose").classList.remove("hidden");
 }
+
 function closeOperation(){
  document.getElementById("operationOverlay").classList.add("hidden");
 }
-async function login(){
+
+async function runOperation(title,text,successTitle,successText,action){
+ if(operationBusy)return false;
+ operationBusy=true;
+ showOperation(title,text);
  try{
-  const admin=document.getElementById("loginType").value==="admin";
-  const d=await api(admin?"mamaLogin":"login",{
-   pin:document.getElementById("pin").value,
-   username:document.getElementById("username").value
-  });
-  token=d.token;role=d.role;account=d.account;
-  localStorage.setItem("family_token",token);
-  localStorage.setItem("family_role",role);
-  await load();
- }catch(e){msg("loginMsg",e.message,true)}
-}
-async function load(){
- try{
-  const d=await api("getData");
-  document.getElementById("login").classList.add("hidden");
-  document.getElementById("app").classList.remove("hidden");
-  document.getElementById("logoutBtn").classList.remove("hidden");
-  if(role==="admin"){
-   document.getElementById("userTabs").classList.add("hidden");
-   ["home","transfer","convert","store","settings"].forEach(x=>document.getElementById(x).classList.add("hidden"));
-   document.getElementById("admin").classList.remove("hidden");
-   accounts=d.accounts||[];
-   renderAccounts();
-  }else{
-   document.getElementById("admin").classList.add("hidden");
-   document.getElementById("userTabs").classList.remove("hidden");
-   account=d.account;
-   if(!account||account.is_blocked)throw Error("الحساب موقوف أو غير موجود");
-   document.getElementById("name").textContent=account.display_name;
-   document.getElementById("balance").textContent=money(account.balance);
-   document.getElementById("points").textContent=Number(account.points).toLocaleString()+" نقطة";
-   document.getElementById("convertCurrent").textContent=account.points;
-   renderStore();
-  }
+  await action();
+  operationSuccess(successTitle,successText);
+  return true;
  }catch(e){
+  closeOperation();
   alert(e.message);
-  if(e.message.includes("الجلسة")||e.message.includes("موقوف"))clear();
+  return false;
+ }finally{
+  operationBusy=false;
  }
 }
+
+async function login(){
+ if(operationBusy)return;
+ const admin=document.getElementById("loginType").value==="admin";
+ const btn=document.getElementById("loginBtn");
+ btn.disabled=true;
+
+ const ok=await runOperation(
+  "جاري تسجيل الدخول",
+  "نتحقق من بيانات الحساب، يرجى الانتظار...",
+  "تم تسجيل الدخول بنجاح",
+  "أهلًا بك في بنك العائلة.",
+  async()=>{
+   const d=await api(admin?"mamaLogin":"login",{
+    pin:document.getElementById("pin").value,
+    username:document.getElementById("username").value
+   });
+   token=d.token;
+   role=d.role;
+   account=d.account;
+   localStorage.setItem("family_token",token);
+   localStorage.setItem("family_role",role);
+   await load();
+  }
+ );
+ btn.disabled=false;
+ if(!ok)return;
+}
+
+async function load(){
+ const d=await api("getData");
+ document.getElementById("login").classList.add("hidden");
+ document.getElementById("app").classList.remove("hidden");
+ document.getElementById("logoutBtn").classList.remove("hidden");
+
+ if(role==="admin"){
+  document.getElementById("userTabs").classList.add("hidden");
+  ["home","transfer","convert","store","settings"].forEach(x=>document.getElementById(x).classList.add("hidden"));
+  document.getElementById("admin").classList.remove("hidden");
+  accounts=d.accounts||[];
+  renderAccounts();
+ }else{
+  document.getElementById("admin").classList.add("hidden");
+  document.getElementById("userTabs").classList.remove("hidden");
+  account=d.account;
+
+  if(!account||account.is_blocked)throw Error("الحساب موقوف أو غير موجود");
+
+  document.getElementById("name").textContent=account.display_name;
+  document.getElementById("balance").textContent=money(account.balance);
+  document.getElementById("points").textContent=Number(account.points).toLocaleString()+" نقطة";
+  document.getElementById("convertCurrent").textContent=Number(account.points).toLocaleString();
+
+  updateConvertPreview();
+  renderStore();
+ }
+}
+
 function renderStore(){
  document.getElementById("storeItems").innerHTML=cats.map((c,i)=>`
   <div class="category">
@@ -308,141 +403,308 @@ function renderStore(){
    <div id="buyMsg${i}"></div>
   </div>`).join("");
 }
+
 async function buy(i){
  const price=Number(document.getElementById("price"+i).value);
+
  if(!Number.isFinite(price)||price<=0||price>100000||Math.round(price*100)!==price*100)
   return msg("buyMsg"+i,"أدخل سعرًا صحيحًا",true);
+
  if(!confirm("تأكيد الشراء من قسم "+cats[i]+" بسعر "+money(price)+"؟"))return;
- try{
-  await api("purchase",{product:cats[i],amount:price});
-  msg("buyMsg"+i,"✓ تمت عملية الشراء");
-  await load();
- }catch(e){msg("buyMsg"+i,e.message,true)}
+
+ const ok=await runOperation(
+  "جاري تنفيذ الشراء",
+  "جاري إتمام عملية الشراء، يرجى الانتظار...",
+  "تم الشراء بنجاح",
+  "تمت عملية الشراء بنجاح.",
+  async()=>{
+   await api("purchase",{product:cats[i],amount:price});
+   await load();
+  }
+ );
+
+ if(ok)document.getElementById("price"+i).value="";
 }
+
 function prepareTransfer(type){
  transferType=type;
  const other=account.username==="azooz"?"سحاب":"عزوز";
+
  document.getElementById("transferBox").classList.remove("hidden");
  document.getElementById("transferTitle").textContent=type==="money"?"تحويل فلوس":"تحويل نقاط";
  document.getElementById("receiver").textContent="المستلم: "+other;
- const amountInput=document.getElementById("transferAmount");
- amountInput.value="";
- amountInput.step=type==="money"?"0.01":"1";
- amountInput.min=type==="money"?"0.01":"1";
- amountInput.placeholder=type==="money"?"أدخل المبلغ بالريال":"أدخل عدد النقاط";
+
+ const input=document.getElementById("transferAmount");
+ input.value="";
+ input.step=type==="money"?"0.01":"1";
+ input.min=type==="money"?"0.01":"1";
+ input.placeholder=type==="money"?"أدخل المبلغ بالريال":"أدخل عدد النقاط";
+
  document.getElementById("transferMsg").innerHTML="";
 }
+
 async function sendTransfer(){
  if(operationBusy)return;
+
  const amount=Number(document.getElementById("transferAmount").value);
- if(!Number.isFinite(amount)||amount<=0)return msg("transferMsg","أدخل كمية صحيحة",true);
- if(transferType==="points"&&!allowed.includes(amount))return msg("transferMsg","عدد النقاط غير معتمد",true);
- if(transferType==="money"&&Math.round(amount*100)!==amount*100)return msg("transferMsg","المبلغ غير صحيح",true);
+
+ if(!Number.isFinite(amount)||amount<=0)
+  return msg("transferMsg","أدخل كمية صحيحة",true);
+
+ if(transferType==="points"&&!allowed.includes(amount))
+  return msg("transferMsg","عدد النقاط غير معتمد",true);
+
+ if(transferType==="money"&&Math.round(amount*100)!==amount*100)
+  return msg("transferMsg","المبلغ غير صحيح",true);
+
  if(!confirm("تأكيد التحويل؟"))return;
 
- operationBusy=true;
  const btn=document.getElementById("sendTransferBtn");
  btn.disabled=true;
- try{
-  const requestId=crypto.randomUUID();
-  if(transferType==="money"){
-   showOperation("جاري التحويل","جاري تحويل الفلوس إلى الحساب الثاني، يرجى الانتظار...");
-   await api("sendMoney",{amount,requestId});
-  }else{
-   showOperation("جاري التحويل","جاري تحويل النقاط إلى الحساب الثاني، يرجى الانتظار...");
-   await api("sendGift",{points:amount,requestId});
+
+ const action=transferType==="money"?"sendMoney":"sendGift";
+ const data=transferType==="money"
+  ?{amount,requestId:crypto.randomUUID()}
+  :{points:amount,requestId:crypto.randomUUID()};
+
+ const ok=await runOperation(
+  "جاري التحويل",
+  transferType==="money"?"جاري تحويل الفلوس إلى الحساب الثاني...":"جاري تحويل النقاط إلى الحساب الثاني...",
+  "تم التحويل بنجاح",
+  "اكتملت عملية التحويل بنجاح.",
+  async()=>{
+   await api(action,data);
+   await load();
   }
-  await load();
-  operationSuccess("تم التحويل بنجاح","اكتملت عملية التحويل بنجاح.");
-  document.getElementById("transferAmount").value="";
- }catch(e){
-  closeOperation();
-  msg("transferMsg",e.message,true);
- }finally{
-  operationBusy=false;
-  btn.disabled=false;
- }
+ );
+
+ if(ok)document.getElementById("transferAmount").value="";
+ btn.disabled=false;
 }
+
+function selectPoints(points,btn){
+ selectedPoints=points;
+ document.querySelectorAll(".point-btn").forEach(x=>x.classList.remove("active"));
+ btn.classList.add("active");
+ updateConvertPreview();
+}
+
+function updateConvertPreview(){
+ const value=selectedPoints/200;
+ document.getElementById("convertValue").textContent=money(value);
+}
+
 async function convertPoints(){
  if(operationBusy)return;
- const points=Number(document.getElementById("convertAmount").value);
- if(!allowed.includes(points))return msg("convertMsg","اختر عدد نقاط صحيح",true);
- if(Number(account.points)<points)return msg("convertMsg","رصيد نقاطك غير كافٍ",true);
- if(!confirm("تأكيد تحويل "+points+" نقطة؟"))return;
 
- operationBusy=true;
+ if(!allowed.includes(selectedPoints))
+  return msg("convertMsg","اختر عدد نقاط صحيح",true);
+
+ if(Number(account.points)<selectedPoints)
+  return msg("convertMsg","رصيد نقاطك غير كافٍ",true);
+
+ if(!confirm("تأكيد تحويل "+selectedPoints+" نقطة؟"))return;
+
  const btn=document.getElementById("convertBtn");
  btn.disabled=true;
- showOperation("جاري تحويل النقاط","جاري تنفيذ تحويل النقاط، يرجى الانتظار...");
- try{
-  await api("convertPoints",{points,requestId:crypto.randomUUID()});
-  await load();
-  operationSuccess("تم التحويل بنجاح","تم تحويل النقاط بنجاح.");
- }catch(e){
-  closeOperation();
-  msg("convertMsg",e.message,true);
- }finally{
-  operationBusy=false;
-  btn.disabled=false;
- }
+
+ const ok=await runOperation(
+  "جاري تحويل النقاط",
+  "جاري تنفيذ تحويل النقاط إلى رصيدك، يرجى الانتظار...",
+  "تم التحويل بنجاح",
+  "تم تحويل النقاط بنجاح.",
+  async()=>{
+   await api("convertPoints",{points:selectedPoints,requestId:crypto.randomUUID()});
+   await load();
+  }
+ );
+
+ btn.disabled=false;
 }
+
 async function changePin(){
  const currentPin=document.getElementById("oldPin").value;
  const newPin=document.getElementById("newPin").value;
- if(!/^\d{4,12}$/.test(newPin))return msg("pinMsg","الرقم الجديد يجب أن يكون 4 إلى 12 رقمًا",true);
- try{await api("changePin",{currentPin,newPin});msg("pinMsg","✓ تم تغيير الرقم")}
- catch(e){msg("pinMsg",e.message,true)}
+
+ if(!/^\d{4,12}$/.test(newPin))
+  return msg("pinMsg","الرقم الجديد يجب أن يكون 4 إلى 12 رقمًا",true);
+
+ const ok=await runOperation(
+  "جاري تغيير الرقم السري",
+  "يرجى الانتظار...",
+  "تم تغيير الرقم",
+  "تم تغيير الرقم السري بنجاح.",
+  async()=>{
+   await api("changePin",{currentPin,newPin});
+  }
+ );
+
+ if(ok){
+  document.getElementById("oldPin").value="";
+  document.getElementById("newPin").value="";
+ }
 }
+
 async function adminAction(kind,operation,id){
- const amount=Number(document.getElementById(id).value);
+ if(operationBusy)return;
+
  const username=document.getElementById("target").value;
- if(!Number.isFinite(amount)||amount<=0)return msg("adminMsg","أدخل كمية صحيحة",true);
- if(kind==="points"&&!allowed.includes(amount))return msg("adminMsg","عدد النقاط غير معتمد",true);
- if(kind==="balance"&&Math.round(amount*100)!==amount*100)return msg("adminMsg","المبلغ غير صحيح",true);
+ let amount;
+
+ if(kind==="balance"){
+  const halalas=parseHalalas(id);
+
+  if(halalas===null)
+   return msg("adminMsg","أدخل مبلغًا صحيحًا، مثال: 10.50 أو 0.25",true);
+
+  // تحويل الهللات إلى مبلغ بالريال بعد التحقق منها
+  amount=Number((halalas/100).toFixed(2));
+ }else{
+  amount=Number(document.getElementById(id).value);
+
+  if(!Number.isFinite(amount)||amount<=0)
+   return msg("adminMsg","أدخل كمية صحيحة",true);
+
+  if(!allowed.includes(amount))
+   return msg("adminMsg","عدد النقاط غير معتمد",true);
+ }
+
  if(!confirm("تأكيد العملية؟"))return;
- try{
-  if(kind==="balance")await api("mamaAdjustBalance",{username,amount,operation,requestId:crypto.randomUUID()});
-  else await api("mamaAdjustPoints",{username,points:amount,operation,requestId:crypto.randomUUID()});
-  document.getElementById(id).value="";
-  msg("adminMsg","✓ تمت العملية بنجاح");
-  await load();
- }catch(e){msg("adminMsg",e.message,true)}
+
+ const accountName=username==="azooz"?"عزوز":"سحاب";
+
+ const ok=await runOperation(
+  "جاري تحديث الرصيد",
+  kind==="points"?"جاري تعديل نقاط "+accountName+"...":"جاري تعديل رصيد "+accountName+"...",
+  "تمت العملية بنجاح",
+  "تم تحديث بيانات "+accountName+" بنجاح.",
+  async()=>{
+   if(kind==="balance"){
+    await api("mamaAdjustBalance",{
+     username,
+     amount,
+     operation,
+     requestId:crypto.randomUUID()
+    });
+   }else{
+    await api("mamaAdjustPoints",{
+     username,
+     points:amount,
+     operation,
+     requestId:crypto.randomUUID()
+    });
+   }
+
+   if(kind==="balance"){
+    document.getElementById(id).value="0.00";
+   }else{
+    document.getElementById(id).value="";
+   }
+
+   await load();
+  }
+ );
+
+ if(ok&&kind==="points"&&operation==="add"){
+  const accountsTab=document.querySelector("#adminTabs .tab:nth-child(2)");
+  adminTab("accountsPanel",accountsTab);
+
+  const accountCard=[...document.querySelectorAll(".account")]
+   .find(x=>x.dataset.username===username);
+
+  if(accountCard)
+   accountCard.scrollIntoView({behavior:"smooth",block:"center"});
+ }
 }
+
 function renderAccounts(){
  document.getElementById("accounts").innerHTML=accounts.map(a=>`
-  <div class="account">
+  <div class="account" data-username="${a.username}">
    <b>${a.display_name}</b>
-   <p>${money(a.balance)} — ${a.points} نقطة</p>
+   <p>الرصيد: ${money(a.balance)}</p>
+   <p>النقاط: ${Number(a.points).toLocaleString()} نقطة</p>
    <p>${a.is_blocked?"الحساب موقوف":"الحساب نشط"}</p>
    <button class="${a.is_blocked?"btn":"danger"}" onclick="toggleBlock('${a.username}')">${a.is_blocked?"إعادة تفعيل الحساب":"إيقاف الحساب"}</button>
   </div>`).join("");
 }
+
 async function toggleBlock(username){
  if(!confirm("تأكيد تغيير حالة الحساب؟"))return;
- try{await api("toggleBlock",{username});await load()}
- catch(e){alert(e.message)}
+
+ await runOperation(
+  "جاري تحديث الحساب",
+  "يرجى الانتظار...",
+  "تم تحديث الحساب",
+  "تم تغيير حالة الحساب بنجاح.",
+  async()=>{
+   await api("toggleBlock",{username});
+   await load();
+  }
+ );
 }
+
 async function adminChangePin(){
  const currentPin=document.getElementById("adminOldPin").value;
  const newPin=document.getElementById("adminNewPin").value;
- if(!/^\d{4,12}$/.test(newPin))return msg("adminPinMsg","الرقم الجديد غير صحيح",true);
- try{await api("changePin",{currentPin,newPin});msg("adminPinMsg","✓ تم تغيير الرقم")}
- catch(e){msg("adminPinMsg",e.message,true)}
+
+ if(!/^\d{4,12}$/.test(newPin))
+  return msg("adminPinMsg","الرقم الجديد غير صحيح",true);
+
+ const ok=await runOperation(
+  "جاري تغيير الرقم السري",
+  "يرجى الانتظار...",
+  "تم تغيير الرقم",
+  "تم تغيير رقم ماما السري بنجاح.",
+  async()=>{
+   await api("changePin",{currentPin,newPin});
+  }
+ );
+
+ if(ok){
+  document.getElementById("adminOldPin").value="";
+  document.getElementById("adminNewPin").value="";
+ }
 }
+
 function clear(){
- token="";role="";account=null;
+ token="";
+ role="";
+ account=null;
+
  localStorage.removeItem("family_token");
  localStorage.removeItem("family_role");
+
  document.getElementById("app").classList.add("hidden");
  document.getElementById("login").classList.remove("hidden");
  document.getElementById("logoutBtn").classList.add("hidden");
 }
+
 async function logout(){
  if(!confirm("متأكد من تسجيل الخروج؟"))return;
- try{await api("logout")}catch(e){}
- clear();
+
+ await runOperation(
+  "جاري تسجيل الخروج",
+  "يرجى الانتظار...",
+  "تم تسجيل الخروج",
+  "تم تسجيل الخروج بنجاح.",
+  async()=>{
+   try{await api("logout")}catch(e){}
+   clear();
+  }
+ );
 }
-if(token&&role)load();
+
+if(token&&role){
+ showOperation("جاري فتح الحساب","جاري تحميل بياناتك...");
+
+ load()
+  .then(()=>operationSuccess("تم الدخول","تم تحميل بيانات الحساب بنجاح."))
+  .catch(e=>{
+   closeOperation();
+   clear();
+   alert(e.message);
+  });
+}
 </script>
 </body>
 </html>
