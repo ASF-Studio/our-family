@@ -10,16 +10,30 @@
 body{margin:0;background:#101827;color:#fff;font-family:Arial,sans-serif}
 main{max-width:850px;margin:auto;padding:20px}
 .card{background:#1c293d;padding:20px;border-radius:18px;margin:14px 0}
-h1,h2{color:#7ee0c1}
+h1,h2,h3{color:#7ee0c1}
 input,button,select{width:100%;padding:13px;border:0;border-radius:10px;margin:7px 0;font-size:16px}
 input,select{background:#101827;color:white;border:1px solid #43536c}
 button{background:#39bd9a;color:#071b18;font-weight:bold;cursor:pointer}
 button.secondary{background:#34445e;color:white}
-.hidden{display:none}
+button.danger{background:#a94350;color:white}
+.hidden{display:none!important}
 .tabs{display:grid;grid-template-columns:repeat(3,1fr);gap:6px}
 .tabs button{font-size:13px}
 .stat{font-size:25px;font-weight:bold}
 small{color:#b9c7d9}
+.accounts,.choices,.products{display:grid;grid-template-columns:repeat(2,1fr);gap:10px}
+.accountBtn,.choice,.product{background:#263951;color:white;border:1px solid #43536c}
+.accountBtn.selected,.choice.selected{border:2px solid #7ee0c1;background:#254c4a}
+.choice{padding:12px}
+.choice b{display:block;font-size:19px}
+.products{grid-template-columns:repeat(2,1fr)}
+.product{min-height:110px;font-size:17px}
+.product span{display:block;font-size:35px;margin-bottom:8px}
+.sectionTitle{margin-top:24px}
+.historyItem{background:#101827;padding:13px;border-radius:12px;margin:9px 0}
+#message,#loginError{color:#7ee0c1;white-space:pre-wrap}
+.price{color:#7ee0c1;font-weight:bold}
+@media(min-width:600px){.products{grid-template-columns:repeat(4,1fr)}}
 </style>
 </head>
 <body>
@@ -28,9 +42,20 @@ small{color:#b9c7d9}
 
 <section id="login" class="card">
 <h2>تسجيل الدخول</h2>
-<input id="username" placeholder="اسم المستخدم">
+<p>اختر حسابك:</p>
+<div class="accounts">
+<button class="accountBtn" id="azoozBtn" onclick="selectAccount('azooz')">👦 عزوز</button>
+<button class="accountBtn" id="sahabBtn" onclick="selectAccount('sahab')">👧 سحاب</button>
+</div>
 <input id="pin" type="password" inputmode="numeric" placeholder="رقم PIN">
-<button onclick="login()">دخول</button>
+<button onclick="login()">دخول الحساب</button>
+<hr style="border-color:#43536c;margin:20px 0">
+<button class="secondary" onclick="showMamaLogin()">دخول ماما 👩</button>
+<div id="mamaLogin" class="hidden">
+<h3>دخول الإدارة</h3>
+<input id="mamaPin" type="password" inputmode="numeric" placeholder="رقم PIN ماما">
+<button onclick="mamaLogin()">دخول لوحة ماما</button>
+</div>
 <p id="loginError"></p>
 </section>
 
@@ -38,52 +63,112 @@ small{color:#b9c7d9}
 <div class="card">
 <h2 id="welcome"></h2>
 <p>رصيدك</p>
-<div class="stat" id="balance">0</div>
+<div class="stat" id="balance">0.000 ريال</div>
 <p>نقاطك</p>
-<div class="stat" id="points">0</div>
+<div class="stat" id="points">0 نقطة</div>
 <button class="secondary" onclick="refresh()">تحديث البيانات</button>
 <button class="secondary" onclick="logout()">تسجيل الخروج</button>
 </div>
 
 <div class="tabs">
-<button onclick="tab('convert')">تحويل</button>
-<button onclick="tab('gift')">هدايا</button>
-<button onclick="tab('history')">السجل</button>
-<button onclick="tab('admin')">الإدارة</button>
+<button onclick="tab('store')">🛍️ المتجر</button>
+<button onclick="tab('convert')">تحويل النقاط</button>
+<button onclick="tab('gift')">🎁 الهدايا</button>
+<button onclick="tab('history')">📜 السجل</button>
+<button id="adminTab" class="hidden" onclick="tab('admin')">👩 الإدارة</button>
+</div>
+
+<div id="store" class="card hidden">
+<h2>🛍️ متجر العائلة</h2>
+<p><small>اختر المنتج، ثم اكتب السعر اللي تبي تدفعه. المبلغ ينخصم من رصيدك.</small></p>
+
+<h3 class="sectionTitle">🍿 السناكات</h3>
+<div class="products">
+<button class="product" onclick="buy('فشار')"><span>🍿</span>فشار</button>
+<button class="product" onclick="buy('بطاطس')"><span>🍟</span>بطاطس</button>
+</div>
+
+<h3 class="sectionTitle">🥤 المشروبات</h3>
+<div class="products">
+<button class="product" onclick="buy('مشروب')"><span>🥤</span>مشروب</button>
+</div>
+
+<h3 class="sectionTitle">🍬 الحلويات</h3>
+<div class="products">
+<button class="product" onclick="buy('دونات')"><span>🍩</span>دونات</button>
+<button class="product" onclick="buy('شوكولاتة')"><span>🍫</span>شوكولاتة</button>
+</div>
+
+<h3 class="sectionTitle">🍔 الوجبات</h3>
+<div class="products">
+<button class="product" onclick="buy('برقر')"><span>🍔</span>برقر</button>
+<button class="product" onclick="buy('بيتزا')"><span>🍕</span>بيتزا</button>
+</div>
+
+<h3 class="sectionTitle">🍦 الآيس كريم</h3>
+<div class="products">
+<button class="product" onclick="buy('آيس كريم')"><span>🍦</span>آيس كريم</button>
+</div>
 </div>
 
 <div id="convert" class="card hidden">
 <h2>تحويل النقاط</h2>
 <small>كل 1000 نقطة = 5 ريال</small>
-<input id="convertPoints" type="number" placeholder="عدد النقاط">
-<button onclick="convertPoints()">تحويل</button>
+<div id="convertChoices" class="choices"></div>
+<button onclick="convertPoints()">تأكيد التحويل</button>
 </div>
 
 <div id="gift" class="card hidden">
-<h2>إرسال هدية</h2>
+<h2>🎁 إرسال هدية</h2>
 <select id="receiver">
 <option value="azooz">عزوز</option>
 <option value="sahab">سحاب</option>
 </select>
-<input id="giftPoints" type="number" placeholder="عدد النقاط">
-<input id="giftMessage" placeholder="رسالة الهدية">
-<button onclick="sendGift()">إرسال</button>
+<div id="giftChoices" class="choices"></div>
+<input id="giftMessage" maxlength="150" placeholder="رسالة الهدية (اختياري)">
+<button onclick="sendGift()">إرسال الهدية</button>
 </div>
 
 <div id="history" class="card hidden">
-<h2>سجل العمليات</h2>
+<h2>📜 سجل العمليات</h2>
 <div id="historyList"></div>
 </div>
 
 <div id="admin" class="card hidden">
-<h2>لوحة الإدارة</h2>
-<input id="target" placeholder="اسم الحساب">
-<input id="adjustBalance" type="number" placeholder="تغيير الرصيد">
-<input id="adjustPoints" type="number" placeholder="تغيير النقاط">
-<button onclick="adminAdjust()">تنفيذ التعديل</button>
-<input id="blockTarget" placeholder="اسم الحساب للإيقاف">
-<button onclick="toggleBlock(true)">إيقاف حساب</button>
-<button class="secondary" onclick="toggleBlock(false)">تفعيل حساب</button>
+<h2>👩 لوحة ماما</h2>
+
+<div class="card">
+<h3>💰 إدارة الفلوس</h3>
+<select id="moneyTarget">
+<option value="azooz">عزوز</option>
+<option value="sahab">سحاب</option>
+</select>
+<input id="moneyAmount" type="number" min="0.001" step="0.001" placeholder="المبلغ بالريال مثل 5.50">
+<button onclick="mamaMoney('balance_add')">➕ زيادة فلوس</button>
+<button class="danger" onclick="mamaMoney('balance_sub')">➖ خصم فلوس</button>
+</div>
+
+<div class="card">
+<h3>⭐ إدارة النقاط</h3>
+<select id="pointsTarget">
+<option value="azooz">عزوز</option>
+<option value="sahab">سحاب</option>
+</select>
+<p><small>اختاري كمية النقاط:</small></p>
+<div id="adminPointChoices" class="choices"></div>
+<button onclick="mamaPoints('points_add')">➕ زيادة نقاط</button>
+<button class="danger" onclick="mamaPoints('points_sub')">➖ خصم نقاط</button>
+</div>
+
+<div class="card">
+<h3>🔒 إيقاف أو تفعيل حساب</h3>
+<select id="blockTarget">
+<option value="azooz">عزوز</option>
+<option value="sahab">سحاب</option>
+</select>
+<button class="danger" onclick="toggleBlock(true)">إيقاف الحساب</button>
+<button class="secondary" onclick="toggleBlock(false)">تفعيل الحساب</button>
+</div>
 </div>
 
 <p id="message"></p>
@@ -92,15 +177,34 @@ small{color:#b9c7d9}
 
 <script>
 const API = "https://cursiwpgzaisednzpjsi.supabase.co/functions/v1/family-api";
-
-// ضع Publishable key الخاص بنفس مشروع Supabase هنا:
 const PUBLIC_KEY = "PUT_YOUR_PROJECT_PUBLISHABLE_KEY_HERE";
 
 let token = "";
-let account = null;
+let selectedAccount = "";
+let selectedConvert = 0;
+let selectedGift = 0;
+let selectedAdminPoints = 0;
+let isMama = false;
 
-async function api(action, data={}) {
-  const response = await fetch(API, {
+const pointOptions = [25,50,75,100,150,200,250,500,1000];
+
+function money(value){
+  return Number(value).toFixed(3) + " ريال";
+}
+
+function selectAccount(name){
+  selectedAccount = name;
+  document.getElementById("azoozBtn").classList.toggle("selected",name==="azooz");
+  document.getElementById("sahabBtn").classList.toggle("selected",name==="sahab");
+  document.getElementById("loginError").textContent = "";
+}
+
+function showMamaLogin(){
+  document.getElementById("mamaLogin").classList.remove("hidden");
+}
+
+async function api(action,data={}){
+  const response = await fetch(API,{
     method:"POST",
     headers:{
       "Content-Type":"application/json",
@@ -110,120 +214,212 @@ async function api(action, data={}) {
   });
 
   const result = await response.json();
-  if (!response.ok || result.error) throw new Error(result.error || "Request failed");
+  if(!response.ok || result.error) throw new Error(result.error || "حدث خطأ");
   return result;
 }
 
-function message(text) {
+function message(text){
   document.getElementById("message").textContent = text;
 }
 
-async function login() {
-  const username = document.getElementById("username").value.trim().toLowerCase();
+async function login(){
   const pin = document.getElementById("pin").value.trim();
-
-  try {
-    const result = await api("login",{username,pin});
+  if(!selectedAccount){
+    document.getElementById("loginError").textContent = "اختر حساب عزوز أو سحاب أول";
+    return;
+  }
+  try{
+    const result = await api("login",{username:selectedAccount,pin});
     token = result.token;
-    account = result.account;
-    document.getElementById("login").classList.add("hidden");
-    document.getElementById("dashboard").classList.remove("hidden");
+    isMama = false;
+    openDashboard();
     await refresh();
-  } catch(e) {
+    tab("store");
+  }catch(e){
     document.getElementById("loginError").textContent = e.message;
   }
 }
 
-async function refresh() {
-  try {
-    const result = await api("getData");
-    const me = result.account;
-
-    document.getElementById("welcome").textContent = "أهلًا " + me.display_name;
-    document.getElementById("balance").textContent = Number(me.balance).toFixed(2) + " ريال";
-    document.getElementById("points").textContent = me.points + " نقطة";
-
-    document.getElementById("admin").style.display =
-      me.role === "admin" ? "" : "none";
-
-    document.getElementById("historyList").innerHTML =
-      result.ledger.map(x =>
-        `<div class="card"><b>${escapeHTML(x.description)}</b><br>
-        <small>${new Date(x.created_at).toLocaleString("ar-SA")}</small>
-        <p>الرصيد: ${x.amount_change} | النقاط: ${x.points_change}</p></div>`
-      ).join("") || "ما فيه عمليات";
-
-  } catch(e) {
-    message(e.message);
+async function mamaLogin(){
+  try{
+    const pin = document.getElementById("mamaPin").value.trim();
+    const result = await api("mamaLogin",{pin});
+    token = result.token;
+    isMama = true;
+    openDashboard();
+    document.getElementById("adminTab").classList.remove("hidden");
+    document.getElementById("welcome").textContent = "أهلًا ماما 👩";
+    tab("admin");
+  }catch(e){
+    document.getElementById("loginError").textContent = e.message;
   }
 }
 
-function escapeHTML(value) {
-  return String(value).replace(/[&<>"']/g, c => ({
-    "&":"&amp;","<":"&lt;",">":"&gt;",
-    '"':"&quot;","'":"&#39;"
+function openDashboard(){
+  document.getElementById("login").classList.add("hidden");
+  document.getElementById("dashboard").classList.remove("hidden");
+  document.getElementById("adminTab").classList.toggle("hidden",!isMama);
+}
+
+async function refresh(){
+  if(isMama) return;
+  try{
+    const result = await api("getData");
+    const me = result.account;
+    document.getElementById("welcome").textContent = "أهلًا " + me.display_name;
+    document.getElementById("balance").textContent = money(me.balance);
+    document.getElementById("points").textContent = me.points + " نقطة";
+
+    document.getElementById("historyList").innerHTML =
+      result.ledger.map(x=>`
+        <div class="historyItem">
+          <b>${escapeHTML(x.description)}</b>
+          <br><small>${new Date(x.created_at).toLocaleString("ar-SA")}</small>
+          <p>تغيير الرصيد: ${Number(x.amount_change).toFixed(3)} ريال</p>
+          <p>تغيير النقاط: ${x.points_change}</p>
+        </div>
+      `).join("") || "ما فيه عمليات حتى الآن";
+  }catch(e){message(e.message);}
+}
+
+function escapeHTML(value){
+  return String(value).replace(/[&<>"']/g,c=>({
+    "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"
   }[c]));
 }
 
-function tab(id) {
-  ["convert","gift","history","admin"].forEach(x =>
+function tab(id){
+  ["store","convert","gift","history","admin"].forEach(x=>
     document.getElementById(x).classList.add("hidden")
   );
   document.getElementById(id).classList.remove("hidden");
+  message("");
 }
 
-async function convertPoints() {
-  try {
-    await api("convertPoints",{
-      points:Number(document.getElementById("convertPoints").value)
+function makeChoices(containerId,type){
+  const container = document.getElementById(containerId);
+  container.innerHTML = pointOptions.map(n=>{
+    const value = (n*0.005).toFixed(3);
+    return `<button type="button" class="choice" data-points="${n}">
+      <b>${n} نقطة</b><small>${value} ريال</small>
+    </button>`;
+  }).join("");
+
+  container.querySelectorAll("button").forEach(button=>{
+    button.addEventListener("click",()=>{
+      container.querySelectorAll("button").forEach(b=>b.classList.remove("selected"));
+      button.classList.add("selected");
+      const n = Number(button.dataset.points);
+      if(type==="convert") selectedConvert=n;
+      if(type==="gift") selectedGift=n;
+      if(type==="admin") selectedAdminPoints=n;
     });
-    message("تم التحويل");
-    await refresh();
-  } catch(e) { message(e.message); }
+  });
 }
 
-async function sendGift() {
-  try {
+makeChoices("convertChoices","convert");
+makeChoices("giftChoices","gift");
+makeChoices("adminPointChoices","admin");
+
+async function convertPoints(){
+  if(!selectedConvert){message("اختر كمية النقاط أول");return;}
+  try{
+    await api("convertPoints",{points:selectedConvert});
+    selectedConvert=0;
+    message("تم تحويل النقاط بنجاح");
+    await refresh();
+  }catch(e){message(e.message);}
+}
+
+async function sendGift(){
+  const receiver = document.getElementById("receiver").value;
+  if(receiver===selectedAccount){message("ما تقدر ترسل هدية لنفسك");return;}
+  if(!selectedGift){message("اختر كمية النقاط أول");return;}
+  try{
     await api("sendGift",{
-      receiver:document.getElementById("receiver").value,
-      points:Number(document.getElementById("giftPoints").value),
+      receiver,
+      points:selectedGift,
       message:document.getElementById("giftMessage").value
     });
+    selectedGift=0;
+    document.getElementById("giftMessage").value="";
     message("تم إرسال الهدية");
     await refresh();
-  } catch(e) { message(e.message); }
+  }catch(e){message(e.message);}
 }
 
-async function adminAdjust() {
-  try {
-    await api("adminAdjust",{
-      username:document.getElementById("target").value,
-      balance:Number(document.getElementById("adjustBalance").value || 0),
-      points:Number(document.getElementById("adjustPoints").value || 0)
-    });
-    message("تم التعديل");
+async function buy(product){
+  const answer = prompt("اكتب المبلغ اللي تبي تدفعه بالريال، مثال 5.50");
+  if(answer===null)return;
+  const amount = Number(answer);
+  if(!Number.isFinite(amount)||amount<=0){
+    message("اكتب مبلغ صحيح");
+    return;
+  }
+  if(!confirm("تأكيد شراء "+product+" بمبلغ "+amount.toFixed(3)+" ريال؟")){
+    return;
+  }
+  try{
+    await api("purchase",{product,amount});
+    message("تم شراء "+product+" بنجاح");
     await refresh();
-  } catch(e) { message(e.message); }
+  }catch(e){message(e.message);}
 }
 
-async function toggleBlock(blocked) {
-  try {
+async function mamaMoney(kind){
+  const username = document.getElementById("moneyTarget").value;
+  const amount = Number(document.getElementById("moneyAmount").value);
+  if(!Number.isFinite(amount)||amount<=0){message("اكتبي مبلغ صحيح");return;}
+  try{
+    await api("mamaAdjustBalance",{username,kind,amount});
+    document.getElementById("moneyAmount").value="";
+    message("تم تنفيذ عملية الفلوس");
+  }catch(e){message(e.message);}
+}
+
+async function mamaPoints(kind){
+  const username = document.getElementById("pointsTarget").value;
+  if(!selectedAdminPoints){message("اختاري كمية النقاط أول");return;}
+  try{
+    await api("mamaAdjustPoints",{
+      username,
+      kind,
+      amount:selectedAdminPoints
+    });
+    selectedAdminPoints=0;
+    document.querySelectorAll("#adminPointChoices button").forEach(b=>b.classList.remove("selected"));
+    message("تم تنفيذ عملية النقاط");
+  }catch(e){message(e.message);}
+}
+
+async function toggleBlock(blocked){
+  try{
     await api("toggleBlock",{
       username:document.getElementById("blockTarget").value,
       blocked
     });
-    message("تم تحديث حالة الحساب");
-  } catch(e) { message(e.message); }
+    message(blocked?"تم إيقاف الحساب":"تم تفعيل الحساب");
+  }catch(e){message(e.message);}
 }
 
-function logout() {
-  token = "";
-  account = null;
+function logout(){
+  token="";
+  selectedAccount="";
+  isMama=false;
+  selectedConvert=0;
+  selectedGift=0;
+  selectedAdminPoints=0;
   document.getElementById("dashboard").classList.add("hidden");
   document.getElementById("login").classList.remove("hidden");
-  document.getElementById("pin").value = "";
+  document.getElementById("pin").value="";
+  document.getElementById("mamaPin").value="";
+  document.getElementById("mamaLogin").classList.add("hidden");
+  document.getElementById("loginError").textContent="";
+  document.getElementById("adminTab").classList.add("hidden");
+  document.getElementById("azoozBtn").classList.remove("selected");
+  document.getElementById("sahabBtn").classList.remove("selected");
+  message("");
 }
-
 </script>
 </body>
 </html>
