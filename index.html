@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
@@ -188,7 +187,7 @@ async function api(action, data={}) {
       headers:{
         "Content-Type":"application/json",
         "apikey":PUBLIC_KEY,
-        ...(token ? {"Authorization":"Bearer "+token} : {})
+        "Authorization":"Bearer " + (token || PUBLIC_KEY)
       },
       body:JSON.stringify({action,...data,token})
     });
@@ -277,7 +276,7 @@ function render() {
 
 function escapeHTML(value) {
   return String(value ?? "").replace(/[&<>"']/g,c=>({
-    "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"
+    "&":"&","<":"<",">":">",'"':""","'":"'"
   }[c]));
 }
 
