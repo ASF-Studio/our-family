@@ -3,677 +3,226 @@
 <html lang="ar" dir="rtl">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
-<meta name="theme-color" content="#183d35">
+<meta name="viewport" content="width=device-width, initial-scale=1">
 <title>بنك العائلة</title>
-
 <style>
 *{box-sizing:border-box}
-body{margin:0;background:#f2f6f4;color:#183d35;font-family:Tahoma,Arial,sans-serif}
-button,input,select{font:inherit}
-button{border:0;cursor:pointer}
-button:disabled{opacity:.6;cursor:not-allowed}
-header{background:#183d35;color:white;padding:22px 18px;border-radius:0 0 25px 25px}
-header h1{margin:0 0 7px;font-size:23px}
-header p{margin:0;color:#d2e4dc;font-size:13px}
-main{max-width:850px;margin:auto;padding:18px}
-.card{background:white;border-radius:18px;padding:17px;margin-bottom:14px;box-shadow:0 3px 15px #183d3510}
-h2{font-size:17px;margin:0 0 14px}
-label{display:block;font-size:13px;margin:12px 0 6px}
-input,select{width:100%;padding:13px;border:1px solid #dce6e1;border-radius:11px;background:#fbfdfc;outline:none}
-input:focus,select:focus{border-color:#548b75}
-button.primary{background:#183d35;color:white;padding:13px 17px;border-radius:11px;width:100%;margin-top:12px}
-button.secondary{background:#e8f1ed;color:#183d35;padding:11px 14px;border-radius:10px}
-button.danger{background:#ffe9e7;color:#a42c24;padding:10px;border-radius:10px}
-.hidden{display:none!important}
-.grid{display:grid;grid-template-columns:repeat(2,1fr);gap:12px}
-.stat{background:#eaf3ef;border-radius:14px;padding:15px}
-.stat small{color:#637b70}
-.stat strong{display:block;font-size:25px;margin-top:8px}
-.tabs{display:flex;gap:7px;overflow:auto;margin-bottom:14px}
-.tabs button{white-space:nowrap;background:white;color:#183d35;border-radius:10px;padding:11px 14px}
-.tabs button.active{background:#183d35;color:white}
-.item{padding:12px 0;border-bottom:1px solid #edf1ef;font-size:14px}
-.item:last-child{border:0}
-.muted{color:#71847b;font-size:12px}
-.notice{padding:12px;border-radius:11px;background:#e8f4ed;margin-bottom:12px;font-size:13px}
-.error{background:#fff0ed;color:#a42c24}
-.success{background:#e5f6eb;color:#176b3b}
-.row{display:flex;align-items:center;justify-content:space-between;gap:10px}
-@media(max-width:500px){
- main{padding:12px}
- .grid{gap:8px}
- .stat strong{font-size:21px}
-}
+body{margin:0;background:#101827;color:#fff;font-family:Arial,sans-serif}
+main{max-width:850px;margin:auto;padding:20px}
+.card{background:#1c293d;padding:20px;border-radius:18px;margin:14px 0}
+h1,h2{color:#7ee0c1}
+input,button,select{width:100%;padding:13px;border:0;border-radius:10px;margin:7px 0;font-size:16px}
+input,select{background:#101827;color:white;border:1px solid #43536c}
+button{background:#39bd9a;color:#071b18;font-weight:bold;cursor:pointer}
+button.secondary{background:#34445e;color:white}
+.hidden{display:none}
+.tabs{display:grid;grid-template-columns:repeat(3,1fr);gap:6px}
+.tabs button{font-size:13px}
+.stat{font-size:25px;font-weight:bold}
+small{color:#b9c7d9}
 </style>
 </head>
-
 <body>
-<header>
-  <h1>🏦 بنك العائلة</h1>
-  <p>إدارتكم المالية ومكافآتكم في مكان واحد</p>
-</header>
-
 <main>
-  <div id="message" class="notice hidden" role="status"></div>
+<h1>🏦 بنك العائلة</h1>
 
-  <section id="loginScreen" class="card">
-    <h2>تسجيل الدخول</h2>
+<section id="login" class="card">
+<h2>تسجيل الدخول</h2>
+<input id="username" placeholder="اسم المستخدم">
+<input id="pin" type="password" inputmode="numeric" placeholder="رقم PIN">
+<button onclick="login()">دخول</button>
+<p id="loginError"></p>
+</section>
 
-    <label for="loginId">الحساب</label>
-    <select id="loginId">
-      <option value="azoz">عزوز</option>
-      <option value="sahab">سحاب</option>
-      <option value="mama">ماما</option>
-    </select>
+<section id="dashboard" class="hidden">
+<div class="card">
+<h2 id="welcome"></h2>
+<p>رصيدك</p>
+<div class="stat" id="balance">0</div>
+<p>نقاطك</p>
+<div class="stat" id="points">0</div>
+<button class="secondary" onclick="refresh()">تحديث البيانات</button>
+<button class="secondary" onclick="logout()">تسجيل الخروج</button>
+</div>
 
-    <label for="pin">الرقم السري</label>
-    <input id="pin" type="password" inputmode="numeric" placeholder="أدخل الرقم السري">
+<div class="tabs">
+<button onclick="tab('convert')">تحويل</button>
+<button onclick="tab('gift')">هدايا</button>
+<button onclick="tab('history')">السجل</button>
+<button onclick="tab('admin')">الإدارة</button>
+</div>
 
-    <button class="primary" id="loginBtn" type="button">دخول</button>
-    <p class="muted">إذا كان الحساب مضبوطاً بدون رقم سري، تأكد من إعداداته في قاعدة البيانات.</p>
-  </section>
+<div id="convert" class="card hidden">
+<h2>تحويل النقاط</h2>
+<small>كل 1000 نقطة = 5 ريال</small>
+<input id="convertPoints" type="number" placeholder="عدد النقاط">
+<button onclick="convertPoints()">تحويل</button>
+</div>
 
-  <section id="appScreen" class="hidden">
-    <div class="card">
-      <div class="row">
-        <div>
-          <strong id="welcome">مرحباً</strong>
-          <div class="muted" id="roleText"></div>
-        </div>
-        <button class="secondary" id="logoutBtn" type="button">خروج</button>
-      </div>
-    </div>
+<div id="gift" class="card hidden">
+<h2>إرسال هدية</h2>
+<select id="receiver">
+<option value="azooz">عزوز</option>
+<option value="sahab">سحاب</option>
+</select>
+<input id="giftPoints" type="number" placeholder="عدد النقاط">
+<input id="giftMessage" placeholder="رسالة الهدية">
+<button onclick="sendGift()">إرسال</button>
+</div>
 
-    <div class="grid">
-      <div class="stat">
-        <small>رصيدك بالريال</small>
-        <strong id="balance">0</strong>
-      </div>
-      <div class="stat">
-        <small>نقاطك</small>
-        <strong id="points">0</strong>
-      </div>
-    </div>
+<div id="history" class="card hidden">
+<h2>سجل العمليات</h2>
+<div id="historyList"></div>
+</div>
 
-    <div class="tabs" style="margin-top:15px">
-      <button class="active" data-tab="home" type="button">الرئيسية</button>
-      <button data-tab="convert" type="button">تحويل النقاط</button>
-      <button data-tab="gifts" type="button">الهدايا</button>
-      <button data-tab="history" type="button">السجل</button>
-      <button data-tab="admin" id="adminTab" class="hidden" type="button">إدارة ماما</button>
-    </div>
+<div id="admin" class="card hidden">
+<h2>لوحة الإدارة</h2>
+<input id="target" placeholder="اسم الحساب">
+<input id="adjustBalance" type="number" placeholder="تغيير الرصيد">
+<input id="adjustPoints" type="number" placeholder="تغيير النقاط">
+<button onclick="adminAdjust()">تنفيذ التعديل</button>
+<input id="blockTarget" placeholder="اسم الحساب للإيقاف">
+<button onclick="toggleBlock(true)">إيقاف حساب</button>
+<button class="secondary" onclick="toggleBlock(false)">تفعيل حساب</button>
+</div>
 
-    <section id="tab-home" class="card">
-      <h2>حسابك</h2>
-      <div class="item">الاسم: <strong id="accountName">-</strong></div>
-      <div class="item">رقم الحساب: <strong id="accountId">-</strong></div>
-      <div class="item">طريقة التحويل: كل 1000 نقطة = 5 ريال</div>
-      <button class="secondary" id="refreshBtn" type="button">تحديث البيانات</button>
-    </section>
-
-    <section id="tab-convert" class="card hidden">
-      <h2>تحويل النقاط إلى ريال</h2>
-      <p class="muted">كل 1000 نقطة تساوي 5 ريالات.</p>
-
-      <label for="convertPoints">عدد النقاط</label>
-      <select id="convertPoints">
-        <option value="25">25 نقطة</option>
-        <option value="50">50 نقطة</option>
-        <option value="100">100 نقطة</option>
-        <option value="250">250 نقطة</option>
-        <option value="500">500 نقطة</option>
-        <option value="1000">1000 نقطة</option>
-        <option value="2500">2500 نقطة</option>
-        <option value="5000">5000 نقطة</option>
-        <option value="10000">10000 نقطة</option>
-      </select>
-
-      <div class="notice" id="convertPreview">ستحصل على 0.13 ريال تقريباً</div>
-      <button class="primary" id="convertBtn" type="button">تحويل النقاط</button>
-    </section>
-
-    <section id="tab-gifts" class="card hidden">
-      <h2>إرسال هدية نقاط</h2>
-
-      <label for="giftReceiver">إلى</label>
-      <select id="giftReceiver">
-        <option value="sahab">سحاب</option>
-        <option value="azoz">عزوز</option>
-      </select>
-
-      <label for="giftPoints">عدد النقاط</label>
-      <input id="giftPoints" type="number" min="1" step="1" placeholder="مثلاً 100">
-
-      <label for="giftMessage">رسالة (اختياري)</label>
-      <input id="giftMessage" maxlength="250" placeholder="اكتب رسالة">
-
-      <button class="primary" id="giftBtn" type="button">إرسال الهدية</button>
-      <div id="giftsList"></div>
-    </section>
-
-    <section id="tab-history" class="card hidden">
-      <h2>سجل العمليات</h2>
-      <div id="ledgerList" class="muted">لا توجد عمليات.</div>
-    </section>
-
-    <section id="tab-admin" class="card hidden">
-      <h2>لوحة ماما</h2>
-
-      <label for="adminUser">اختاري الحساب</label>
-      <select id="adminUser">
-        <option value="azoz">عزوز</option>
-        <option value="sahab">سحاب</option>
-      </select>
-
-      <label for="adminType">نوع العملية</label>
-      <select id="adminType">
-        <option value="pointsPlus">إضافة نقاط</option>
-        <option value="pointsMinus">خصم نقاط</option>
-        <option value="moneyPlus">إضافة رصيد ريال</option>
-        <option value="moneyMinus">خصم رصيد ريال</option>
-      </select>
-
-      <label for="adminAmount">المبلغ أو النقاط</label>
-      <input id="adminAmount" type="number" min="1" step="any" placeholder="اكتب القيمة">
-
-      <label for="adminDescription">سبب العملية</label>
-      <input id="adminDescription" placeholder="مثلاً مكافأة">
-
-      <button class="primary" id="adminAdjustBtn" type="button">تنفيذ العملية</button>
-
-      <hr style="border:0;border-top:1px solid #eee;margin:20px 0">
-
-      <h2>حالة الحسابات</h2>
-      <div id="accountsList"></div>
-    </section>
-  </section>
+<p id="message"></p>
+</section>
 </main>
 
 <script>
-"use strict";
-
-/* إعدادات الاتصال */
 const API = "https://cursiwpgzaisednzpjsi.supabase.co/functions/v1/family-api";
-const PUBLIC_KEY = "sb_publishable_hZ653h1LL_jnaHMLRw1-ng_vsSyQs57";
 
-let token = localStorage.getItem("family_bank_session") || "";
-let currentAccount = null;
-let appData = {};
+// ضع Publishable key الخاص بنفس مشروع Supabase هنا:
+const PUBLIC_KEY = "PUT_YOUR_PROJECT_PUBLISHABLE_KEY_HERE";
 
-const $ = id => document.getElementById(id);
+let token = "";
+let account = null;
 
-/* رسائل الموقع */
-function showMessage(text, type = "success") {
-  $("message").textContent = String(text);
-  $("message").className = "notice " + type;
-  $("message").classList.remove("hidden");
-  window.scrollTo({top: 0, behavior: "smooth"});
-}
+async function api(action, data={}) {
+  const response = await fetch(API, {
+    method:"POST",
+    headers:{
+      "Content-Type":"application/json",
+      "apikey":PUBLIC_KEY
+    },
+    body:JSON.stringify({action,...data,token})
+  });
 
-function hideMessage() {
-  $("message").classList.add("hidden");
-}
-
-/* حماية النصوص قبل عرضها في HTML */
-function escapeHTML(value) {
-  return String(value ?? "").replace(/[&<>"']/g, c => ({
-    "&": "&amp;",
-    "<": "&lt;",
-    ">": "&gt;",
-    '"': "&quot;",
-    "'": "&#39;"
-  }[c]));
-}
-
-/* تنسيق التاريخ */
-function formatDate(value) {
-  if (!value) return "";
-  const d = new Date(value);
-  return isNaN(d.getTime()) ? "" : d.toLocaleString("ar-SA");
-}
-
-/* الاتصال بالسيرفر */
-async function api(action, data = {}) {
-  let response;
-
-  try {
-    const headers = {
-      "Content-Type": "application/json",
-      "apikey": PUBLIC_KEY
-    };
-
-    if (token) {
-      headers["Authorization"] = "Bearer " + token;
-    }
-
-    response = await fetch(API, {
-      method: "POST",
-      headers,
-      body: JSON.stringify({
-        action,
-        ...data,
-        token
-      })
-    });
-
-  } catch (error) {
-    throw new Error("تعذر الاتصال بالسيرفر. تحقق من الإنترنت ورابط الدالة.");
-  }
-
-  let result;
-
-  try {
-    result = await response.json();
-  } catch (error) {
-    throw new Error("السيرفر أرسل استجابة غير مفهومة. تحقق من نشر الدالة.");
-  }
-
-  if (!response.ok || result.success === false) {
-    throw new Error(
-      result.error ||
-      result.message ||
-      ("حدث خطأ في الطلب: " + response.status)
-    );
-  }
-
+  const result = await response.json();
+  if (!response.ok || result.error) throw new Error(result.error || "Request failed");
   return result;
 }
 
-/* تسجيل الدخول */
+function message(text) {
+  document.getElementById("message").textContent = text;
+}
+
 async function login() {
-  hideMessage();
-
-  const id = $("loginId").value;
-  const pin = $("pin").value.trim();
-
-  if (!pin) {
-    showMessage("اكتب الرقم السري", "error");
-    $("pin").focus();
-    return;
-  }
-
-  const btn = $("loginBtn");
-  btn.disabled = true;
-  btn.textContent = "جاري الدخول...";
+  const username = document.getElementById("username").value.trim().toLowerCase();
+  const pin = document.getElementById("pin").value.trim();
 
   try {
-    const result = await api("login", {id, pin});
-
-    if (!result.token) {
-      throw new Error("السيرفر لم يرجع رمز الجلسة. راجع كود الدالة.");
-    }
-
+    const result = await api("login",{username,pin});
     token = result.token;
-    localStorage.setItem("family_bank_session", token);
-
-    currentAccount = result.account || null;
-
-    await loadData();
-
-    $("loginScreen").classList.add("hidden");
-    $("appScreen").classList.remove("hidden");
-
-    openTab("home");
-    $("pin").value = "";
-
-    showMessage("تم تسجيل الدخول بنجاح");
-
-  } catch (error) {
-    token = "";
-    currentAccount = null;
-    localStorage.removeItem("family_bank_session");
-    showMessage(error.message || "تعذر تسجيل الدخول", "error");
-
-  } finally {
-    btn.disabled = false;
-    btn.textContent = "دخول";
+    account = result.account;
+    document.getElementById("login").classList.add("hidden");
+    document.getElementById("dashboard").classList.remove("hidden");
+    await refresh();
+  } catch(e) {
+    document.getElementById("loginError").textContent = e.message;
   }
 }
 
-/* تحميل البيانات */
-async function loadData() {
-  const result = await api("getData");
-
-  appData = result || {};
-  currentAccount = result.account || currentAccount;
-
-  if (!currentAccount) {
-    throw new Error("لم تصل بيانات الحساب من السيرفر.");
-  }
-
-  render();
-}
-
-/* عرض البيانات */
-function render() {
-  const a = currentAccount || {};
-
-  $("welcome").textContent = "مرحباً، " + (a.display_name || "");
-  $("roleText").textContent =
-    a.role === "admin" ? "مديرة بنك العائلة" : "عضو في بنك العائلة";
-
-  $("balance").textContent =
-    Number(a.balance || 0).toLocaleString("ar-SA", {
-      maximumFractionDigits: 2
-    }) + " ر.س";
-
-  $("points").textContent =
-    Number(a.points || 0).toLocaleString("ar-SA");
-
-  $("accountName").textContent = a.display_name || "-";
-  $("accountId").textContent = a.id || "-";
-
-  $("adminTab").classList.toggle("hidden", a.role !== "admin");
-
-  const ledger = Array.isArray(appData.ledger) ? appData.ledger : [];
-
-  $("ledgerList").innerHTML = ledger.length
-    ? ledger.map(x => `
-      <div class="item">
-        <strong>${escapeHTML(x.description || x.type || "عملية")}</strong>
-        <div class="muted">
-          ${escapeHTML(x.user_name || "")} · ${formatDate(x.created_at)}
-        </div>
-        <div>
-          ${x.amount_change
-            ? Number(x.amount_change).toLocaleString("ar-SA") + " ر.س"
-            : ""}
-          ${x.points_change
-            ? " · " + Number(x.points_change).toLocaleString("ar-SA") + " نقطة"
-            : ""}
-        </div>
-      </div>
-    `).join("")
-    : "لا توجد عمليات حتى الآن.";
-
-  const gifts = Array.isArray(appData.gifts) ? appData.gifts : [];
-
-  $("giftsList").innerHTML = gifts.map(g => `
-    <div class="item">
-      <strong>
-        ${escapeHTML(g.sender_name || "")}
-        → ${escapeHTML(g.receiver_name || "")}
-      </strong>
-      <div>${Number(g.points || 0)} نقطة</div>
-      <div class="muted">${escapeHTML(g.message || "")}</div>
-    </div>
-  `).join("");
-
-  if (a.role === "admin") {
-    const accounts = Array.isArray(appData.accounts)
-      ? appData.accounts
-      : [];
-
-    $("accountsList").innerHTML = accounts.map(u => `
-      <div class="item row">
-        <div>
-          <strong>${escapeHTML(u.display_name || u.id)}</strong>
-          <div class="muted">
-            ${u.blocked ? "الحساب موقوف" : "الحساب نشط"}
-          </div>
-        </div>
-
-        <button
-          type="button"
-          class="${u.blocked ? "secondary" : "danger"}"
-          data-toggle-user="${escapeHTML(u.id)}">
-          ${u.blocked ? "تفعيل" : "إيقاف"}
-        </button>
-      </div>
-    `).join("");
-
-  } else {
-    $("accountsList").innerHTML = "";
-  }
-}
-
-/* التنقل بين التبويبات */
-function openTab(tab) {
-  const allowed = ["home", "convert", "gifts", "history", "admin"];
-
-  if (!allowed.includes(tab)) return;
-
-  if (tab === "admin" && currentAccount?.role !== "admin") {
-    showMessage("ما عندك صلاحية دخول لوحة الإدارة", "error");
-    return;
-  }
-
-  document.querySelectorAll("[id^='tab-']").forEach(el => {
-    el.classList.add("hidden");
-  });
-
-  $("tab-" + tab).classList.remove("hidden");
-
-  document.querySelectorAll(".tabs button[data-tab]").forEach(btn => {
-    btn.classList.toggle("active", btn.dataset.tab === tab);
-  });
-}
-
-/* معاينة تحويل النقاط */
-function updateConvertPreview() {
-  const value = Number($("convertPoints").value);
-  const amount = value / 1000 * 5;
-
-  $("convertPreview").textContent =
-    "ستحصل على " +
-    amount.toLocaleString("ar-SA", {maximumFractionDigits: 3}) +
-    " ريال";
-}
-
-/* تنفيذ تحويل النقاط */
-async function convert() {
-  const btn = $("convertBtn");
-  btn.disabled = true;
-
+async function refresh() {
   try {
-    const points = Number($("convertPoints").value);
+    const result = await api("getData");
+    const me = result.account;
 
-    if (!Number.isInteger(points) || points <= 0) {
-      throw new Error("اختر عدد نقاط صحيح.");
-    }
+    document.getElementById("welcome").textContent = "أهلًا " + me.display_name;
+    document.getElementById("balance").textContent = Number(me.balance).toFixed(2) + " ريال";
+    document.getElementById("points").textContent = me.points + " نقطة";
 
-    await api("convertPoints", {points});
-    await loadData();
+    document.getElementById("admin").style.display =
+      me.role === "admin" ? "" : "none";
 
-    showMessage("تم تحويل النقاط بنجاح");
+    document.getElementById("historyList").innerHTML =
+      result.ledger.map(x =>
+        `<div class="card"><b>${escapeHTML(x.description)}</b><br>
+        <small>${new Date(x.created_at).toLocaleString("ar-SA")}</small>
+        <p>الرصيد: ${x.amount_change} | النقاط: ${x.points_change}</p></div>`
+      ).join("") || "ما فيه عمليات";
 
-  } catch (error) {
-    showMessage(error.message, "error");
-
-  } finally {
-    btn.disabled = false;
+  } catch(e) {
+    message(e.message);
   }
 }
 
-/* إرسال هدية */
+function escapeHTML(value) {
+  return String(value).replace(/[&<>"']/g, c => ({
+    "&":"&amp;","<":"&lt;",">":"&gt;",
+    '"':"&quot;","'":"&#39;"
+  }[c]));
+}
+
+function tab(id) {
+  ["convert","gift","history","admin"].forEach(x =>
+    document.getElementById(x).classList.add("hidden")
+  );
+  document.getElementById(id).classList.remove("hidden");
+}
+
+async function convertPoints() {
+  try {
+    await api("convertPoints",{
+      points:Number(document.getElementById("convertPoints").value)
+    });
+    message("تم التحويل");
+    await refresh();
+  } catch(e) { message(e.message); }
+}
+
 async function sendGift() {
-  const btn = $("giftBtn");
-  btn.disabled = true;
-
   try {
-    const receiver_id = $("giftReceiver").value;
-    const points = Number($("giftPoints").value);
-    const message = $("giftMessage").value.trim();
-
-    if (!Number.isInteger(points) || points <= 0) {
-      throw new Error("اكتب عدد نقاط صحيح.");
-    }
-
-    if (currentAccount && receiver_id === currentAccount.id) {
-      throw new Error("ما تقدر ترسل هدية لنفسك.");
-    }
-
-    await api("sendGift", {
-      receiver_id,
-      points,
-      message
+    await api("sendGift",{
+      receiver:document.getElementById("receiver").value,
+      points:Number(document.getElementById("giftPoints").value),
+      message:document.getElementById("giftMessage").value
     });
-
-    $("giftPoints").value = "";
-    $("giftMessage").value = "";
-
-    await loadData();
-    showMessage("تم إرسال الهدية");
-
-  } catch (error) {
-    showMessage(error.message, "error");
-
-  } finally {
-    btn.disabled = false;
-  }
+    message("تم إرسال الهدية");
+    await refresh();
+  } catch(e) { message(e.message); }
 }
 
-/* عمليات ماما */
 async function adminAdjust() {
-  const btn = $("adminAdjustBtn");
-  btn.disabled = true;
-
   try {
-    if (currentAccount?.role !== "admin") {
-      throw new Error("هذه العملية متاحة لماما فقط.");
-    }
-
-    const user_id = $("adminUser").value;
-    const type = $("adminType").value;
-    const amount = Number($("adminAmount").value);
-    const description = $("adminDescription").value.trim();
-
-    if (!Number.isFinite(amount) || amount <= 0) {
-      throw new Error("أدخل قيمة صحيحة.");
-    }
-
-    await api("adminAdjust", {
-      user_id,
-      type,
-      amount,
-      description
+    await api("adminAdjust",{
+      username:document.getElementById("target").value,
+      balance:Number(document.getElementById("adjustBalance").value || 0),
+      points:Number(document.getElementById("adjustPoints").value || 0)
     });
-
-    $("adminAmount").value = "";
-    $("adminDescription").value = "";
-
-    await loadData();
-    showMessage("تم تنفيذ العملية بنجاح");
-
-  } catch (error) {
-    showMessage(error.message, "error");
-
-  } finally {
-    btn.disabled = false;
-  }
+    message("تم التعديل");
+    await refresh();
+  } catch(e) { message(e.message); }
 }
 
-/* إيقاف أو تفعيل حساب */
-async function toggleBlock(user_id) {
+async function toggleBlock(blocked) {
   try {
-    if (currentAccount?.role !== "admin") {
-      throw new Error("ما عندك صلاحية تنفيذ العملية.");
-    }
-
-    await api("toggleBlock", {user_id});
-    await loadData();
-
-    showMessage("تم تحديث حالة الحساب");
-
-  } catch (error) {
-    showMessage(error.message, "error");
-  }
+    await api("toggleBlock",{
+      username:document.getElementById("blockTarget").value,
+      blocked
+    });
+    message("تم تحديث حالة الحساب");
+  } catch(e) { message(e.message); }
 }
 
-/* تسجيل الخروج */
 function logout() {
   token = "";
-  currentAccount = null;
-  appData = {};
-
-  localStorage.removeItem("family_bank_session");
-
-  $("appScreen").classList.add("hidden");
-  $("loginScreen").classList.remove("hidden");
-  $("pin").value = "";
-
-  openTab("home");
-  hideMessage();
+  account = null;
+  document.getElementById("dashboard").classList.add("hidden");
+  document.getElementById("login").classList.remove("hidden");
+  document.getElementById("pin").value = "";
 }
-
-/* ربط جميع الأزرار */
-function setupEvents() {
-  document.querySelectorAll(".tabs button[data-tab]").forEach(btn => {
-    btn.addEventListener("click", () => {
-      openTab(btn.dataset.tab);
-    });
-  });
-
-  $("loginBtn").addEventListener("click", login);
-
-  $("pin").addEventListener("keydown", event => {
-    if (event.key === "Enter") login();
-  });
-
-  $("logoutBtn").addEventListener("click", logout);
-
-  $("refreshBtn").addEventListener("click", async () => {
-    const btn = $("refreshBtn");
-    btn.disabled = true;
-
-    try {
-      await loadData();
-      showMessage("تم تحديث البيانات");
-    } catch (error) {
-      showMessage(error.message, "error");
-    } finally {
-      btn.disabled = false;
-    }
-  });
-
-  $("convertPoints").addEventListener("change", updateConvertPreview);
-  $("convertBtn").addEventListener("click", convert);
-  $("giftBtn").addEventListener("click", sendGift);
-  $("adminAdjustBtn").addEventListener("click", adminAdjust);
-
-  $("accountsList").addEventListener("click", event => {
-    const btn = event.target.closest("[data-toggle-user]");
-    if (!btn) return;
-
-    const userId = btn.getAttribute("data-toggle-user");
-    if (userId) toggleBlock(userId);
-  });
-}
-
-/* استعادة الجلسة السابقة */
-async function restoreSession() {
-  if (!token) return;
-
-  try {
-    await loadData();
-
-    $("loginScreen").classList.add("hidden");
-    $("appScreen").classList.remove("hidden");
-
-    openTab("home");
-
-  } catch (error) {
-    token = "";
-    currentAccount = null;
-    appData = {};
-
-    localStorage.removeItem("family_bank_session");
-
-    $("loginScreen").classList.remove("hidden");
-    $("appScreen").classList.add("hidden");
-
-    showMessage(
-      "انتهت جلستك أو تعذر التحقق منها. سجل الدخول مرة ثانية.",
-      "error"
-    );
-  }
-}
-
-/* تشغيل الموقع */
-setupEvents();
-updateConvertPreview();
-restoreSession();
 
 </script>
 </body>
