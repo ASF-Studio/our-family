@@ -5,6 +5,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>بنك العائلة</title>
+
 <style>
 *{box-sizing:border-box}
 body{margin:0;background:#f3f5fa;color:#20263a;font-family:Arial,sans-serif}
@@ -27,276 +28,395 @@ button:disabled{opacity:.5}
 #toast{position:fixed;bottom:20px;left:20px;right:20px;max-width:420px;margin:auto;background:#202d4d;color:white;padding:15px;border-radius:12px;display:none;text-align:center;z-index:8}
 </style>
 </head>
+
 <body>
 <header>
-  <h1>🏦 بنك العائلة</h1>
-  <div id="status" class="status hidden">● الحساب نشط</div>
+<h1>🏦 بنك العائلة</h1>
+<div id="status" class="status hidden">● الحساب نشط</div>
 </header>
 
 <main>
+
 <section id="login" class="card">
-  <h2>تسجيل الدخول</h2>
-  <select id="familyId">
-    <option value="azoz">عزوز</option>
-    <option value="sahab">سحاب</option>
-    <option value="mama">ماما – الإدارة</option>
-  </select>
-  <input id="pin" type="password" inputmode="numeric" placeholder="رمز PIN">
-  <button onclick="login()">دخول</button>
+<h2>تسجيل الدخول</h2>
+
+<select id="familyId">
+<option value="azoz">عزوز</option>
+<option value="sahab">سحاب</option>
+<option value="mama">ماما – الإدارة</option>
+</select>
+
+<input id="pin" type="password" inputmode="numeric" placeholder="الرقم السري">
+
+<button id="loginBtn" onclick="login()">دخول</button>
+
+<p class="muted">
+إذا لم يتم تغيير الرقم السري من قبل، قد يكون الافتراضي 1111.
+</p>
 </section>
 
 <section id="app" class="hidden">
-  <div class="card">
-    <div class="grid">
-      <div class="stat">👤 الحساب<br><strong id="userName">-</strong></div>
-      <div class="stat">💰 الرصيد<br><strong id="balance">0</strong> ريال</div>
-      <div class="stat">⭐ النقاط<br><strong id="points">0</strong></div>
-    </div>
-    <button onclick="logout()">تسجيل الخروج</button>
-  </div>
 
-  <section id="userSections">
-    <div class="card">
-      <h2>🔄 تحويل النقاط إلى ريال</h2>
-      <select id="convertPoints" onchange="preview()">
-        <option value="25">25 نقطة</option><option value="50">50 نقطة</option>
-        <option value="100">100 نقطة</option><option value="250">250 نقطة</option>
-        <option value="500">500 نقطة</option><option value="1000">1000 نقطة</option>
-        <option value="2500">2500 نقطة</option><option value="5000">5000 نقطة</option>
-        <option value="10000">10000 نقطة</option>
-      </select>
-      <p id="preview" class="muted">قيمة التحويل: 0 ريال</p>
-      <button onclick="convert()">تحويل النقاط</button>
-    </div>
+<div class="card">
+<div class="grid">
+<div class="stat">👤 الحساب<br><strong id="userName">-</strong></div>
+<div class="stat">💰 الرصيد<br><strong id="balance">0</strong> ريال</div>
+<div class="stat">⭐ النقاط<br><strong id="points">0</strong></div>
+</div>
+<button onclick="logout()">تسجيل الخروج</button>
+</div>
 
-    <div class="card">
-      <h2>🛍️ المشتريات</h2>
-      <div id="products" class="grid"></div>
-    </div>
+<section id="userSections">
 
-    <div class="card">
-      <h2>🎁 إرسال هدية</h2>
-      <select id="receiver">
-        <option value="sahab">سحاب</option>
-        <option value="azoz">عزوز</option>
-      </select>
-      <input id="giftPoints" type="number" min="1" placeholder="عدد النقاط">
-      <input id="giftMessage" placeholder="رسالة (اختياري)">
-      <button onclick="sendGift()">إرسال الهدية</button>
-    </div>
-  </section>
+<div class="card">
+<h2>🔄 تحويل النقاط إلى ريال</h2>
 
-  <section id="admin" class="hidden">
-    <div class="card">
-      <h2>👑 لوحة ماما</h2>
-      <div id="accounts" class="grid"></div>
-    </div>
+<select id="convertPoints" onchange="preview()">
+<option value="25">25 نقطة</option>
+<option value="50">50 نقطة</option>
+<option value="100">100 نقطة</option>
+<option value="250">250 نقطة</option>
+<option value="500">500 نقطة</option>
+<option value="1000">1000 نقطة</option>
+<option value="2500">2500 نقطة</option>
+<option value="5000">5000 نقطة</option>
+<option value="10000">10000 نقطة</option>
+</select>
 
-    <div class="card">
-      <h2>➕ إضافة نقاط</h2>
-      <select id="addTarget"></select>
-      <input id="addValue" type="number" min="1" placeholder="عدد النقاط">
-      <button onclick="adjust('pointsPlus','addTarget','addValue')">إضافة نقاط</button>
-    </div>
+<p id="preview" class="muted">قيمة التحويل: 0 ريال</p>
+<button onclick="convert()">تحويل النقاط</button>
+</div>
 
-    <div class="card">
-      <h2>📈 زيادة نقاط</h2>
-      <select id="increaseTarget"></select>
-      <input id="increaseValue" type="number" min="1" placeholder="عدد النقاط">
-      <button onclick="adjust('pointsIncrease','increaseTarget','increaseValue')">زيادة نقاط</button>
-    </div>
+<div class="card">
+<h2>🛍️ المشتريات</h2>
+<div id="products" class="grid"></div>
+</div>
 
-    <div class="card">
-      <h2>💵 خصم فلوس</h2>
-      <select id="minusTarget"></select>
-      <input id="minusValue" type="number" min="0.01" step=".01" placeholder="المبلغ بالريال">
-      <button onclick="adjust('moneyMinus','minusTarget','minusValue')">خصم فلوس</button>
-    </div>
+<div class="card">
+<h2>🎁 إرسال هدية</h2>
 
-    <div class="card">
-      <h2>💰 زيادة فلوس</h2>
-      <select id="moneyTarget"></select>
-      <input id="moneyValue" type="number" min="0.01" step=".01" placeholder="المبلغ بالريال">
-      <button onclick="adjust('moneyPlus','moneyTarget','moneyValue')">زيادة فلوس</button>
-    </div>
+<select id="receiver">
+<option value="sahab">سحاب</option>
+<option value="azoz">عزوز</option>
+</select>
 
-    <div class="card">
-      <h2>🏷️ أسعار المشتريات</h2>
-      <div id="priceEditor" class="grid"></div>
-    </div>
+<input id="giftPoints" type="number" min="1" placeholder="عدد النقاط">
+<input id="giftMessage" placeholder="رسالة (اختياري)">
 
-    <div class="card">
-      <h2>📋 سجل العمليات</h2>
-      <div id="ledger"></div>
-    </div>
-  </section>
+<button onclick="sendGift()">إرسال الهدية</button>
+</div>
+
+</section>
+
+<section id="admin" class="hidden">
+
+<div class="card">
+<h2>👑 لوحة ماما</h2>
+<div id="accounts" class="grid"></div>
+</div>
+
+<div class="card">
+<h2>➕ إضافة نقاط</h2>
+<select id="addTarget"></select>
+<input id="addValue" type="number" min="1" placeholder="عدد النقاط">
+<button onclick="adjust('pointsPlus','addTarget','addValue')">إضافة نقاط</button>
+</div>
+
+<div class="card">
+<h2>📈 زيادة نقاط</h2>
+<select id="increaseTarget"></select>
+<input id="increaseValue" type="number" min="1" placeholder="عدد النقاط">
+<button onclick="adjust('pointsIncrease','increaseTarget','increaseValue')">زيادة نقاط</button>
+</div>
+
+<div class="card">
+<h2>💵 خصم فلوس</h2>
+<select id="minusTarget"></select>
+<input id="minusValue" type="number" min=".01" step=".01" placeholder="المبلغ بالريال">
+<button onclick="adjust('moneyMinus','minusTarget','minusValue')">خصم فلوس</button>
+</div>
+
+<div class="card">
+<h2>💰 زيادة فلوس</h2>
+<select id="moneyTarget"></select>
+<input id="moneyValue" type="number" min=".01" step=".01" placeholder="المبلغ بالريال">
+<button onclick="adjust('moneyPlus','moneyTarget','moneyValue')">زيادة فلوس</button>
+</div>
+
+<div class="card">
+<h2>🏷️ أسعار المشتريات</h2>
+<div id="priceEditor" class="grid"></div>
+</div>
+
+<div class="card">
+<h2>📋 سجل العمليات</h2>
+<div id="ledger"></div>
+</div>
+
+</section>
 </section>
 </main>
 
-<div id="loading"><div><div class="spin"></div>جاري تنفيذ العملية...</div></div>
+<div id="loading">
+<div><div class="spin"></div>جاري تنفيذ العملية...</div>
+</div>
+
 <div id="toast"></div>
 
 <script>
-const API = "https://cursiwpgzaisednzpjsi.supabase.co/functions/v1/family-api";
-const PUBLIC_KEY = "sb_publishable_hZ653h1LL_jnaHMLRw1-ng_vsSyQs57";
+const API="https://cursiwpgzaisednzpjsi.supabase.co/functions/v1/family-api";
+const PUBLIC_KEY="sb_publishable_hZ653h1LL_jnaHMLRw1-ng_vsSyQs57";
 
-let token = localStorage.getItem("family_bank_session") || "";
-let current = null;
-let data = null;
+let token=localStorage.getItem("family_bank_session")||"";
+let current=null;
+let data=null;
 
-async function call(action, values = {}) {
-  const res = await fetch(API, {
-    method:"POST",
-    headers:{
-      "Content-Type":"application/json",
-      "apikey":PUBLIC_KEY,
-      ...(token ? { "Authorization":"Bearer "+token } : {})
-    },
-    body:JSON.stringify({action,...values})
-  });
-  const result = await res.json();
-  if (!res.ok || result.error) throw new Error(result.error || "تعذر تنفيذ العملية");
-  return result;
+async function call(action,values={}) {
+ const res=await fetch(API,{
+  method:"POST",
+  mode:"cors",
+  headers:{
+   "Content-Type":"application/json",
+   "apikey":PUBLIC_KEY,
+   ...(token?{"Authorization":"Bearer "+token}:{})
+  },
+  body:JSON.stringify({action,...values})
+ });
+
+ let result;
+ try{result=await res.json()}
+ catch{throw new Error("استجابة السيرفر غير مفهومة")}
+
+ if(!res.ok||result.error)
+  throw new Error(result.error||"تعذر تنفيذ العملية");
+
+ return result;
 }
 
-function busy(on){document.getElementById("loading").style.display=on?"flex":"none"}
-function toast(message, ok=true){
-  const el=document.getElementById("toast");
-  el.textContent=(ok?"✅ ":"⚠️ ")+message;
-  el.style.display="block";
-  setTimeout(()=>el.style.display="none",3000);
+function busy(on){
+ document.getElementById("loading").style.display=on?"flex":"none";
 }
+
+function toast(message,ok=true){
+ const el=document.getElementById("toast");
+ el.textContent=(ok?"✅ ":"⚠️ ")+message;
+ el.style.display="block";
+ setTimeout(()=>el.style.display="none",3000);
+}
+
 async function run(fn){
-  busy(true);
-  try{const result=await fn();if(result?.message)toast(result.message);await refresh();return result}
-  catch(e){toast(e.message,false)}
-  finally{busy(false)}
+ busy(true);
+ try{
+  const result=await fn();
+  if(result?.message)toast(result.message);
+  if(token)await refresh();
+  return result;
+ }catch(e){
+  toast(e.message||"تعذر الاتصال بالسيرفر",false);
+ }finally{
+  busy(false);
+ }
 }
 
 async function login(){
-  await run(async()=>{
-    const result=await call("login",{
-      familyId:document.getElementById("familyId").value,
-      pin:document.getElementById("pin").value
-    });
-    token=result.token;
-    localStorage.setItem("family_bank_session",token);
-    current=result.account;
-    await refresh();
-    document.getElementById("login").classList.add("hidden");
-    document.getElementById("app").classList.remove("hidden");
-    toast("تم تسجيل الدخول");
+ await run(async()=>{
+  const result=await call("login",{
+   familyId:document.getElementById("familyId").value,
+   pin:document.getElementById("pin").value
   });
-}
-function logout(){
-  token="";current=null;data=null;
-  localStorage.removeItem("family_bank_session");
-  document.getElementById("app").classList.add("hidden");
-  document.getElementById("login").classList.remove("hidden");
-}
-async function refresh(){
-  if(!token)return;
-  const result=await call("getData");
-  data=result;
+
+  token=result.token;
+  localStorage.setItem("family_bank_session",token);
   current=result.account;
+
+  await refresh();
+
   document.getElementById("login").classList.add("hidden");
   document.getElementById("app").classList.remove("hidden");
-  document.getElementById("status").classList.remove("hidden");
-  document.getElementById("status").textContent="● الحساب نشط";
-  document.getElementById("userName").textContent=current.display_name;
-  document.getElementById("balance").textContent=Number(current.balance).toFixed(2);
-  document.getElementById("points").textContent=current.points;
-  const admin=current.role==="admin";
-  document.getElementById("admin").classList.toggle("hidden",!admin);
-  document.getElementById("userSections").classList.toggle("hidden",admin);
-  if(admin)renderAdmin();
-  renderProducts();
-  preview();
+
+  toast("تم تسجيل الدخول");
+ });
 }
+
+function logout(){
+ token="";
+ current=null;
+ data=null;
+
+ localStorage.removeItem("family_bank_session");
+
+ document.getElementById("app").classList.add("hidden");
+ document.getElementById("login").classList.remove("hidden");
+ document.getElementById("status").classList.add("hidden");
+}
+
+async function refresh(){
+ if(!token)return;
+
+ const result=await call("getData");
+
+ data=result;
+ current=result.account;
+
+ document.getElementById("login").classList.add("hidden");
+ document.getElementById("app").classList.remove("hidden");
+ document.getElementById("status").classList.remove("hidden");
+
+ document.getElementById("status").textContent="● الحساب نشط";
+ document.getElementById("userName").textContent=current.display_name;
+ document.getElementById("balance").textContent=Number(current.balance).toFixed(2);
+ document.getElementById("points").textContent=current.points;
+
+ const admin=current.role==="admin";
+
+ document.getElementById("admin").classList.toggle("hidden",!admin);
+ document.getElementById("userSections").classList.toggle("hidden",admin);
+
+ if(admin)renderAdmin();
+
+ renderProducts();
+ preview();
+}
+
 function preview(){
-  if(!current)return;
-  const p=Number(document.getElementById("convertPoints").value);
-  const money=p*.005;
-  document.getElementById("preview").textContent=
-    `قيمة التحويل: ${money.toFixed(2)} ريال — رصيدك بعد التحويل: ${(Number(current.balance)+money).toFixed(2)} ريال`;
+ if(!current)return;
+
+ const p=Number(document.getElementById("convertPoints").value);
+ const money=p*.005;
+
+ document.getElementById("preview").textContent=
+ `قيمة التحويل: ${money.toFixed(2)} ريال — رصيدك بعد التحويل: ${(Number(current.balance)+money).toFixed(2)} ريال`;
 }
+
 async function convert(){
-  await run(()=>call("convertPoints",{points:Number(document.getElementById("convertPoints").value)}));
+ await run(()=>call("convertPoints",{
+  points:Number(document.getElementById("convertPoints").value)
+ }));
 }
+
 function renderProducts(){
-  const box=document.getElementById("products");
-  box.innerHTML="";
-  (data?.products||[]).forEach(p=>{
-    const item=document.createElement("div");
-    item.className="product";
-    const title=document.createElement("strong");
-    title.textContent=`${p.emoji} ${p.name}`;
-    const price=document.createElement("p");
-    price.textContent=`السعر: ${Number(p.price).toFixed(2)} ريال`;
-    const button=document.createElement("button");
-    button.textContent="شراء";
-    button.onclick=()=>run(()=>call("purchase",{productId:p.id}));
-    item.append(title,price,button);
-    box.append(item);
-  });
+ const box=document.getElementById("products");
+ box.innerHTML="";
+
+ (data?.products||[]).forEach(p=>{
+  const item=document.createElement("div");
+  item.className="product";
+
+  const title=document.createElement("strong");
+  title.textContent=`${p.emoji} ${p.name}`;
+
+  const price=document.createElement("p");
+  price.textContent=`السعر: ${Number(p.price).toFixed(2)} ريال`;
+
+  const button=document.createElement("button");
+  button.textContent="شراء";
+  button.onclick=()=>run(()=>call("purchase",{productId:p.id}));
+
+  item.append(title,price,button);
+  box.append(item);
+ });
 }
+
 async function sendGift(){
-  const receiver=document.getElementById("receiver").value;
-  if(receiver===current.id){toast("اختر حسابًا آخر",false);return}
-  await run(()=>call("sendGift",{
-    receiverId:receiver,
-    points:Number(document.getElementById("giftPoints").value),
-    message:document.getElementById("giftMessage").value
-  }));
+ const receiver=document.getElementById("receiver").value;
+
+ if(receiver===current.id){
+  toast("اختر حسابًا آخر",false);
+  return;
+ }
+
+ await run(()=>call("sendGift",{
+  receiverId:receiver,
+  points:Number(document.getElementById("giftPoints").value),
+  message:document.getElementById("giftMessage").value
+ }));
 }
+
 function renderAdmin(){
-  const users=(data.accounts||[]).filter(a=>a.role!=="admin");
-  const selects=["addTarget","increaseTarget","minusTarget","moneyTarget"];
-  selects.forEach(id=>{
-    const el=document.getElementById(id);el.innerHTML="";
-    users.forEach(u=>el.add(new Option(u.display_name,u.id)));
-  });
-  const accounts=document.getElementById("accounts");
-  accounts.innerHTML="";
-  users.forEach(u=>{
-    const card=document.createElement("div");card.className="stat";
-    const name=document.createElement("strong");name.textContent=u.display_name;
-    const info=document.createElement("p");
-    info.textContent=`💰 ${Number(u.balance).toFixed(2)} ريال | ⭐ ${u.points} نقطة | ${u.blocked?"غير نشط":"نشط"}`;
-    const btn=document.createElement("button");
-    btn.textContent=u.blocked?"تفعيل الحساب":"إيقاف الحساب";
-    btn.onclick=()=>run(()=>call("toggleBlock",{userId:u.id}));
-    card.append(name,info,btn);accounts.append(card);
-  });
-  const editor=document.getElementById("priceEditor");
-  editor.innerHTML="";
-  (data.products||[]).forEach(p=>{
-    const card=document.createElement("div");card.className="product";
-    const label=document.createElement("label");label.textContent=`${p.emoji} ${p.name}`;
-    const input=document.createElement("input");input.type="number";input.min="0";input.step=".01";input.value=p.price;
-    const btn=document.createElement("button");btn.textContent="حفظ السعر";
-    btn.onclick=()=>run(()=>call("setProductPrice",{productId:p.id,price:Number(input.value)}));
-    card.append(label,input,btn);editor.append(card);
-  });
-  const ledger=document.getElementById("ledger");ledger.innerHTML="";
-  (data.ledger||[]).forEach(row=>{
-    const p=document.createElement("p");
-    p.textContent=`${row.user_name}: ${row.description} — ${row.amount_change} ريال / ${row.points_change} نقطة`;
-    ledger.append(p);
-  });
-}
-async function adjust(kind,targetId,valueId){
-  const value=Number(document.getElementById(valueId).value);
-  if(!value||value<=0){toast("أدخل قيمة صحيحة",false);return}
-  await run(()=>call("adminAdjust",{
-    kind,
-    userId:document.getElementById(targetId).value,
-    value
+ const users=(data.accounts||[]).filter(a=>a.role!=="admin");
+
+ ["addTarget","increaseTarget","minusTarget","moneyTarget"].forEach(id=>{
+  const el=document.getElementById(id);
+  el.innerHTML="";
+  users.forEach(u=>el.add(new Option(u.display_name,u.id)));
+ });
+
+ const accounts=document.getElementById("accounts");
+ accounts.innerHTML="";
+
+ users.forEach(u=>{
+  const card=document.createElement("div");
+  card.className="stat";
+
+  const name=document.createElement("strong");
+  name.textContent=u.display_name;
+
+  const info=document.createElement("p");
+  info.textContent=`💰 ${Number(u.balance).toFixed(2)} ريال | ⭐ ${u.points} نقطة | ${u.blocked?"غير نشط":"نشط"}`;
+
+  const btn=document.createElement("button");
+  btn.textContent=u.blocked?"تفعيل الحساب":"إيقاف الحساب";
+  btn.onclick=()=>run(()=>call("toggleBlock",{userId:u.id}));
+
+  card.append(name,info,btn);
+  accounts.append(card);
+ });
+
+ const editor=document.getElementById("priceEditor");
+ editor.innerHTML="";
+
+ (data.products||[]).forEach(p=>{
+  const card=document.createElement("div");
+  card.className="product";
+
+  const label=document.createElement("label");
+  label.textContent=`${p.emoji} ${p.name}`;
+
+  const input=document.createElement("input");
+  input.type="number";
+  input.min="0";
+  input.step=".01";
+  input.value=p.price;
+
+  const btn=document.createElement("button");
+  btn.textContent="حفظ السعر";
+  btn.onclick=()=>run(()=>call("setProductPrice",{
+   productId:p.id,
+   price:Number(input.value)
   }));
+
+  card.append(label,input,btn);
+  editor.append(card);
+ });
+
+ const ledger=document.getElementById("ledger");
+ ledger.innerHTML="";
+
+ (data.ledger||[]).forEach(row=>{
+  const p=document.createElement("p");
+  p.textContent=`${row.user_name}: ${row.description} — ${row.amount_change} ريال / ${row.points_change} نقطة`;
+  ledger.append(p);
+ });
 }
+
+async function adjust(kind,targetId,valueId){
+ const value=Number(document.getElementById(valueId).value);
+
+ if(!value||value<=0){
+  toast("أدخل قيمة صحيحة",false);
+  return;
+ }
+
+ await run(()=>call("adminAdjust",{
+  kind,
+  userId:document.getElementById(targetId).value,
+  value
+ }));
+}
+
 if(token){
-  busy(true);
-  refresh().catch(()=>logout()).finally(()=>busy(false));
+ busy(true);
+ refresh().catch(()=>logout()).finally(()=>busy(false));
 }
 </script>
 </body>
