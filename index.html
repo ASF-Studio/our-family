@@ -243,7 +243,6 @@ async function api(action, data = {}) {
       "apikey": PUBLIC_KEY
     };
 
-    // لا نرسل رمز جلسة إلا إذا كان موجوداً
     if (token) {
       headers["Authorization"] = "Bearer " + token;
     }
@@ -367,7 +366,6 @@ function render() {
 
   $("adminTab").classList.toggle("hidden", a.role !== "admin");
 
-  // سجل العمليات
   const ledger = Array.isArray(appData.ledger) ? appData.ledger : [];
 
   $("ledgerList").innerHTML = ledger.length
@@ -389,7 +387,6 @@ function render() {
     `).join("")
     : "لا توجد عمليات حتى الآن.";
 
-  // الهدايا
   const gifts = Array.isArray(appData.gifts) ? appData.gifts : [];
 
   $("giftsList").innerHTML = gifts.map(g => `
@@ -403,7 +400,6 @@ function render() {
     </div>
   `).join("");
 
-  // لوحة الإدارة
   if (a.role === "admin") {
     const accounts = Array.isArray(appData.accounts)
       ? appData.accounts
@@ -603,24 +599,20 @@ function logout() {
 
 /* ربط جميع الأزرار */
 function setupEvents() {
-  // التبويبات
   document.querySelectorAll(".tabs button[data-tab]").forEach(btn => {
     btn.addEventListener("click", () => {
       openTab(btn.dataset.tab);
     });
   });
 
-  // الدخول
   $("loginBtn").addEventListener("click", login);
 
   $("pin").addEventListener("keydown", event => {
     if (event.key === "Enter") login();
   });
 
-  // الخروج
   $("logoutBtn").addEventListener("click", logout);
 
-  // تحديث البيانات
   $("refreshBtn").addEventListener("click", async () => {
     const btn = $("refreshBtn");
     btn.disabled = true;
@@ -635,17 +627,11 @@ function setupEvents() {
     }
   });
 
-  // التحويل
   $("convertPoints").addEventListener("change", updateConvertPreview);
   $("convertBtn").addEventListener("click", convert);
-
-  // الهدايا
   $("giftBtn").addEventListener("click", sendGift);
-
-  // الإدارة
   $("adminAdjustBtn").addEventListener("click", adminAdjust);
 
-  // أزرار إيقاف الحسابات وتفعيلها
   $("accountsList").addEventListener("click", event => {
     const btn = event.target.closest("[data-toggle-user]");
     if (!btn) return;
