@@ -204,7 +204,17 @@ let hideBalance = false;
 let hidePoints = false;
 
 function el(id){return document.getElementById(id)}
-function escapeHTML(value){return String(value??"").replace(/[&<>"']/g,c=>({"&":"&","<":"<",">":">",'"':""","'":"'"}[c]))}
+
+function escapeHTML(value){
+ return String(value??"").replace(/[&<>"']/g, c => ({
+  "&": "&",
+  "<": "<",
+  ">": ">",
+  '"': """,
+  "'": "'"
+ }[c]));
+}
+
 function money(value){return hideBalance ? "••••••" : (Number(value)||0).toLocaleString("ar-SA",{minimumFractionDigits:2,maximumFractionDigits:2})+" ر.س"}
 function points(value){return hidePoints ? "••••" : (Number(value)||0).toLocaleString("ar-SA")+" نقطة"}
 
@@ -280,7 +290,6 @@ async function handleLoginSubmit(event) {
  }
 
  try {
-  // 1. طلب تسجيل الدخول والتحقق من الرمز
   const response = await fetch(EDGE_FUNCTION_URL, {
    method: "POST",
    headers: {
@@ -295,16 +304,13 @@ async function handleLoginSubmit(event) {
    throw new Error(data.error || "فشل تسجيل الدخول: الرمز السري غير صحيح");
   }
 
-  // 2. تعيين المستخدم المؤقت وحفظه محلياً
   currentUser = data.currentUser;
   localStorage.setItem("family_bank_user_id", currentUser.id);
 
   el("loginPin").value = "";
 
-  // 3. جلب بيانات التطبيق الكاملة أولاً للتأكد من نجاح الاتصال وتعبئة المصفوفات
   await refreshData();
 
-  // 4. الانتقال الفوري وإظهار واجهة التطبيق الرئيسية
   el("loginScreen").classList.add("hidden");
   el("header").classList.remove("hidden");
   el("app").classList.remove("hidden");
@@ -322,6 +328,8 @@ async function handleLoginSubmit(event) {
  } catch (err) {
   console.error("Login Navigation Error:", err);
   toast(err.message || "فشل تسجيل الدخول");
+  currentUser = null;
+  localStorage.removeItem("family_bank_user_id");
  } finally {
   isProcessing = false;
   if(btn) {
@@ -345,7 +353,7 @@ async function refreshData() {
   allNotifications = res.notifications || [];
  } catch(e) {
   console.error("Refresh Data Error:", e);
-  throw e; // إعادة رمي الخطأ ليتم التعامل معه في حال فشل الجلب
+  throw e;
  }
 }
 
@@ -375,7 +383,7 @@ async function restoreSession() {
    }
   } catch(e) {
    console.error("Restore Session Error:", e);
-   logout();
+   toast("تعذر الاتصال بالخادم لاستعادة الجلسة تلقائياً. يرجى تسجيل الدخول يدويّاً.");
   } finally {
    showLoading(false);
   }
@@ -454,7 +462,7 @@ function renderPage() {
  };
  const container = el("pageContent");
  if(container && pages[currentPage]) {
-  pages[currentPage](container); // تصحيح استدعاء الدالة البرمجية
+  pages[currentPage](container);
  }
 }
 
@@ -496,10 +504,16 @@ async function doConvert() {
  if(btn) btn.classList.add("active");
 
  setTimeout(async () => {
-  await apiRequest({ action: "convertPoints", pointsToConvert: pts });
-  await refreshData();
-  renderApp();
-  toast("تم تحويل النقاط وإضافة المبلغ لمحفظتك بنجاح!");
+  try {
+   await apiRequest({ action: "convertPoints", pointsToConvert: pts });
+   await refreshData();
+   renderApp();
+   toast("تم تحويل النقاط وإضافة المبلغ لمحفظتك بنجاح!");
+  } catch(e) {
+   // تم معالجة الخطأ
+  } finally {
+   if(btn) btn.classList.remove("active");
+  }
  }, 600);
 }
 
@@ -532,16 +546,18 @@ function formatZeroSystem(inputEl, hintId) {
 }
 
 async function doRequestTopUp() {
- const rawVal = Number(el("topUpAmountRaw").value);
- const amount = rawVal >= 1000 ? rawVal / 1000 : rawVal;
- const note = el("topUpNote").value.trim();
+ try {
+  const rawVal = Number(el("topUpAmountRaw").value);
+  const amount = rawVal >= 1000 ? rawVal / 1000 : rawVal;
+  const note = el("topUpNote").value.trim();
 
- if(!amount || amount <= 0) return toast("يرجى إدخال مبلغ صالح للشحن");
+  if(!amount || amount <= 0) return toast("يرجى إدخال مبلغ صالح للشحن");
 
- await apiRequest({ action: "requestTopUp", amount, note });
- await refreshData();
- renderApp();
- toast("تم إرسال طلب الشحن بنجاح وهو بانتظار موافقة ماما");
+  await apiRequest({ action: "requestTopUp", amount, note });
+  await refreshData();
+  renderApp();
+  toast("تم إرسال طلب الشحن بنجاح وهو بانتظار موافقة ماما");
+ } catch(e) {}
 }
 
 function topUpHTML(list) {
@@ -575,17 +591,19 @@ function pageGifts(c) {
 }
 
 async function doSendGift() {
- const toId = el("giftTo").value;
- const points = Number(el("giftPoints").value);
- const message = el("giftMessage").value.trim();
+ try {
+  const toId = el("giftTo").value;
+  const points = Number(el("giftPoints").value);
+  const message = el("giftMessage").value.trim();
 
- if(!points || points <= 0) return toast("يرجى إدخال عدد نقاط صالح");
- if(points > currentUser.points) return toast("رصيد النقاط غير كافٍ لإرسال الهدية");
+  if(!points || points <= 0) return toast("يرجى إدخال عدد نقاط صالح");
+  if(points > currentUser.points) return toast("رصيد النقاط غير كافٍ لإرسال الهدية");
 
- await apiRequest({ action: "sendGift", toId, points, message });
- await refreshData();
- renderApp();
- toast("تم إرسال الهدية بنجاح تام!");
+  await apiRequest({ action: "sendGift", toId, points, message });
+  await refreshData();
+  renderApp();
+  toast("تم إرسال الهدية بنجاح تام!");
+ } catch(e) {}
 }
 
 function giftsHTML(list) {
@@ -622,7 +640,7 @@ function pagePurchase(c) {
     <div class="product-card">
      <h4>${escapeHTML(p.name)}</h4>
      <p>${money(p.price)}</p>
-     <button class="btn gold small" onclick="doPurchase('${escapeHTML(p.name)}', ${p.price})">شراء الآن</button>
+     <button class="btn gold small" onclick="doPurchase('${escapeHTML(p.name).replace(/'/g, "\\'")}', ${p.price})">شراء الآن</button>
     </div>
    `).join("")}
   </div>
@@ -630,16 +648,18 @@ function pagePurchase(c) {
 }
 
 async function doPurchase(product, cost) {
- if (cost > currentUser.balance) {
-  return toast(`عذراً، رصيدك النقدي (${money(currentUser.balance)}) لا يكفي لشراء (${product}) بسعر ${money(cost)}`);
- }
+ try {
+  if (cost > currentUser.balance) {
+   return toast(`عذراً، رصيدك النقدي (${money(currentUser.balance)}) لا يكفي لشراء (${product}) بسعر ${money(cost)}`);
+  }
 
- if (!confirm(`هل تأكيد شراء (${product}) بسعر ${money(cost)}؟`)) return;
+  if (!confirm(`هل تأكيد شراء (${product}) بسعر ${money(cost)}؟`)) return;
 
- await apiRequest({ action: "purchase", product, cost });
- await refreshData();
- renderApp();
- toast(`تم شراء "${product}" بنجاح وخصم المبلغ من محفظتك`);
+  await apiRequest({ action: "purchase", product, cost });
+  await refreshData();
+  renderApp();
+  toast(`تم شراء "${product}" بنجاح وخصم المبلغ من محفظتك`);
+ } catch(e) {}
 }
 
 function ledgerHTML(list) {
@@ -703,11 +723,13 @@ function pageSettings(c) {
 }
 
 async function doChangePin() {
- const newPin = el("newPinInput").value.trim();
- if (!newPin || newPin.length < 4) return toast("الرقم السري يجب ألا يقل عن 4 أرقام");
- await apiRequest({ action: "changePin", newPin });
- toast("تم تحديث الرقم السري بنجاح!");
- el("newPinInput").value = "";
+ try {
+  const newPin = el("newPinInput").value.trim();
+  if (!newPin || newPin.length < 4) return toast("الرقم السري يجب ألا يقل عن 4 أرقام");
+  await apiRequest({ action: "changePin", newPin });
+  toast("تم تحديث الرقم السري بنجاح!");
+  el("newPinInput").value = "";
+ } catch(e) {}
 }
 
 function pageAdmin(c) {
@@ -717,7 +739,7 @@ function pageAdmin(c) {
   <p class="muted">إضافة أو خصم الأموال والنقاط للأفراد بكل سهولة، مع إمكانية كتابة السبب ليظهر في السجل والإشعارات.</p>
   
   <div class="field"><label>اختر العضو المستهدف</label><select id="admTarget">${allAccounts.map(a=>`<option value="${a.id}">${escapeHTML(a.name)} (رصيد: ${money(a.balance)} | نقاط: ${points(a.points)})</option>`).join("")}</select></div>
-  <div class="field"><label>نوع العملية الإدارية</label><select id="admType">
+  <div class="field"><label>نوع العملية الإدارية</label><select id="admType" onchange="formatAdminValue(el('admValRaw'))">
    <option value="moneyPlus">➕ إضافة رصيد نقدي</option>
    <option value="moneyMinus">➖ خصم رصيد نقدي</option>
    <option value="pointsPlus">➕ إضافة نقاط</option>
@@ -725,7 +747,7 @@ function pageAdmin(c) {
   </select></div>
   <div class="field">
    <label>القيمة (المبلغ أو النقاط)</label>
-   <input id="admValRaw" type="number" step="0.01" min="1" placeholder="أدخل القيمة العددية..." oninput="formatZeroSystem(this, 'admFormatted')">
+   <input id="admValRaw" type="number" step="0.01" min="1" placeholder="أدخل القيمة العددية..." oninput="formatAdminValue(this)">
    <span id="admFormatted" class="hint-text">القيمة الفعلية: 0</span>
   </div>
   <div class="field"><label>سبب الإضافة أو الخصم (اختياري)</label><input id="admReason" placeholder="مثال: مكافأة تفوق دراسي، أو خصم بسبب..."></div>
@@ -756,11 +778,23 @@ function pageAdmin(c) {
  </div>`;
 }
 
+function formatAdminValue(inputEl) {
+ const type = el("admType").value;
+ const rawVal = Number(inputEl.value) || 0;
+ const isMoney = type.includes('money');
+ const actualVal = (isMoney && rawVal >= 1000) ? rawVal / 1000 : rawVal;
+ const hint = el("admFormatted");
+ if(hint) {
+  hint.textContent = isMoney ? `القيمة الفعلية: ${actualVal.toFixed(2)} ر.س` : `القيمة الفعلية: ${rawVal} نقطة`;
+ }
+}
+
 function confirmAdminAdjust() {
  const targetId = el("admTarget").value;
  const type = el("admType").value;
  const rawVal = Number(el("admValRaw").value);
- const val = rawVal >= 1000 && type.includes('money') ? rawVal / 1000 : rawVal;
+ const isMoney = type.includes('money');
+ const val = (isMoney && rawVal >= 1000) ? rawVal / 1000 : rawVal;
  const reason = el("admReason").value.trim();
 
  const targetAcc = allAccounts.find(a => a.id === targetId);
@@ -788,28 +822,34 @@ function confirmAdminAdjust() {
 }
 
 async function executeAdminAdjust(targetId, type, val, reason) {
- await apiRequest({ action: "adminAdjust", targetId, type, val, reason });
- await refreshData();
- renderApp();
- toast("تم تنفيذ العملية الإدارية بنجاح وتحديث الأرصدة وإرسال الإشعار");
+ try {
+  await apiRequest({ action: "adminAdjust", targetId, type, val, reason });
+  await refreshData();
+  renderApp();
+  toast("تم تنفيذ العملية الإدارية بنجاح وتحديث الأرصدة وإرسال الإشعار");
+ } catch(e) {}
 }
 
 async function handleTopUp(requestId, status) {
- const adminReason = status === 'rejected' ? prompt("سبب الرفض (اختياري):") || '' : '';
- await apiRequest({ action: "handleTopUp", requestId, status, adminReason });
- await refreshData();
- renderApp();
- toast("تم تحديث حالة طلب الشحن بنجاح وإرسال الإشعار للعضو");
+ try {
+  const adminReason = status === 'rejected' ? prompt("سبب الرفض (اختياري):") || '' : '';
+  await apiRequest({ action: "handleTopUp", requestId, status, adminReason });
+  await refreshData();
+  renderApp();
+  toast("تم تحديث حالة طلب الشحن بنجاح وإرسال الإشعار للعضو");
+ } catch(e) {}
 }
 
 async function doToggleBlock() {
- const targetId = el("blockTarget").value;
- const blocked = el("blockStatus").value === 'true';
+ try {
+  const targetId = el("blockTarget").value;
+  const blocked = el("blockStatus").value === 'true';
 
- await apiRequest({ action: "toggleBlock", targetId, blocked });
- await refreshData();
- renderApp();
- toast("تم تحديث حالة الحساب الأمنية بنجاح");
+  await apiRequest({ action: "toggleBlock", targetId, blocked });
+  await refreshData();
+  renderApp();
+  toast("تم تحديث حالة الحساب الأمنية بنجاح");
+ } catch(e) {}
 }
 
 function logout() {
@@ -820,7 +860,6 @@ function logout() {
  el("loginScreen").classList.remove("hidden");
 }
 
-// تصحيح الاستدعاء البرمجي لحدث التحميل
 window.addEventListener('DOMContentLoaded', restoreSession);
 </script>
 </body>
