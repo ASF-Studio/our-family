@@ -5,7 +5,6 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>بنك العائلة</title>
-
 <style>
 *{box-sizing:border-box}
 body{margin:0;background:#f3f5fa;color:#20263a;font-family:Arial,sans-serif}
@@ -15,62 +14,53 @@ main{max-width:950px;margin:22px auto;padding:12px}
 h2{font-size:19px;margin-top:0}
 input,select,button{font:inherit;padding:12px;border-radius:10px;border:1px solid #dce1eb;width:100%;margin:6px 0}
 button{background:#344f91;color:white;border:0;cursor:pointer;font-weight:bold}
-button:disabled{opacity:.5}
+button:disabled{opacity:.5;cursor:not-allowed}
 .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:12px}
 .stat{background:#f1f4fb;padding:15px;border-radius:12px}
-.muted{color:#69738a;font-size:13px}
+.muted{color:#69738a;font-size:13px;line-height:1.7}
 .hidden{display:none!important}
 .status{display:inline-block;padding:7px 12px;border-radius:20px;background:#d9f7e6;color:#176b3a}
 .product{border:1px solid #e3e7ef;border-radius:12px;padding:12px}
-#loading{position:fixed;inset:0;background:#10182dcc;color:white;display:none;align-items:center;justify-content:center;z-index:5;font-size:20px}
-.spin{width:30px;height:30px;border:4px solid #ffffff55;border-top-color:white;border-radius:50%;animation:spin .7s linear infinite;margin:auto auto 12px}
+#loading{position:fixed;inset:0;background:#10182dcc;color:white;display:none;align-items:center;justify-content:center;z-index:5;font-size:20px;text-align:center}
+.spin{width:30px;height:30px;border:4px solid #ffffff55;border-top-color:white;border-radius:50%;animation:spin .7s linear infinite;margin:0 auto 12px}
 @keyframes spin{to{transform:rotate(360deg)}}
-#toast{position:fixed;bottom:20px;left:20px;right:20px;max-width:420px;margin:auto;background:#202d4d;color:white;padding:15px;border-radius:12px;display:none;text-align:center;z-index:8}
+#toast{position:fixed;bottom:20px;left:20px;right:20px;max-width:420px;margin:auto;background:#202d4d;color:white;padding:15px;border-radius:12px;display:none;text-align:center;z-index:8;line-height:1.6}
+button.secondary{background:#e8edf7;color:#263b70}
 </style>
 </head>
-
 <body>
+
 <header>
 <h1>🏦 بنك العائلة</h1>
 <div id="status" class="status hidden">● الحساب نشط</div>
 </header>
 
 <main>
-
 <section id="login" class="card">
 <h2>تسجيل الدخول</h2>
-
 <select id="familyId">
 <option value="azoz">عزوز</option>
 <option value="sahab">سحاب</option>
 <option value="mama">ماما – الإدارة</option>
 </select>
-
 <input id="pin" type="password" inputmode="numeric" placeholder="الرقم السري">
-
 <button id="loginBtn" onclick="login()">دخول</button>
-
-<p class="muted">
-إذا لم يتم تغيير الرقم السري من قبل، قد يكون الافتراضي 1111.
-</p>
+<p class="muted">إذا لم يتم تغيير الرقم السري من قبل، قد يكون الافتراضي 1111.</p>
 </section>
 
 <section id="app" class="hidden">
-
 <div class="card">
 <div class="grid">
 <div class="stat">👤 الحساب<br><strong id="userName">-</strong></div>
 <div class="stat">💰 الرصيد<br><strong id="balance">0</strong> ريال</div>
 <div class="stat">⭐ النقاط<br><strong id="points">0</strong></div>
 </div>
-<button onclick="logout()">تسجيل الخروج</button>
+<button class="secondary" onclick="logout()">تسجيل الخروج</button>
 </div>
 
 <section id="userSections">
-
 <div class="card">
 <h2>🔄 تحويل النقاط إلى ريال</h2>
-
 <select id="convertPoints" onchange="preview()">
 <option value="25">25 نقطة</option>
 <option value="50">50 نقطة</option>
@@ -82,7 +72,6 @@ button:disabled{opacity:.5}
 <option value="5000">5000 نقطة</option>
 <option value="10000">10000 نقطة</option>
 </select>
-
 <p id="preview" class="muted">قيمة التحويل: 0 ريال</p>
 <button onclick="convert()">تحويل النقاط</button>
 </div>
@@ -94,22 +83,17 @@ button:disabled{opacity:.5}
 
 <div class="card">
 <h2>🎁 إرسال هدية</h2>
-
 <select id="receiver">
 <option value="sahab">سحاب</option>
 <option value="azoz">عزوز</option>
 </select>
-
-<input id="giftPoints" type="number" min="1" placeholder="عدد النقاط">
-<input id="giftMessage" placeholder="رسالة (اختياري)">
-
+<input id="giftPoints" type="number" min="1" step="1" placeholder="عدد النقاط">
+<input id="giftMessage" maxlength="200" placeholder="رسالة (اختياري)">
 <button onclick="sendGift()">إرسال الهدية</button>
 </div>
-
 </section>
 
 <section id="admin" class="hidden">
-
 <div class="card">
 <h2>👑 لوحة ماما</h2>
 <div id="accounts" class="grid"></div>
@@ -118,14 +102,14 @@ button:disabled{opacity:.5}
 <div class="card">
 <h2>➕ إضافة نقاط</h2>
 <select id="addTarget"></select>
-<input id="addValue" type="number" min="1" placeholder="عدد النقاط">
+<input id="addValue" type="number" min="1" step="1" placeholder="عدد النقاط">
 <button onclick="adjust('pointsPlus','addTarget','addValue')">إضافة نقاط</button>
 </div>
 
 <div class="card">
 <h2>📈 زيادة نقاط</h2>
 <select id="increaseTarget"></select>
-<input id="increaseValue" type="number" min="1" placeholder="عدد النقاط">
+<input id="increaseValue" type="number" min="1" step="1" placeholder="عدد النقاط">
 <button onclick="adjust('pointsIncrease','increaseTarget','increaseValue')">زيادة نقاط</button>
 </div>
 
@@ -152,7 +136,6 @@ button:disabled{opacity:.5}
 <h2>📋 سجل العمليات</h2>
 <div id="ledger"></div>
 </div>
-
 </section>
 </section>
 </main>
@@ -160,264 +143,412 @@ button:disabled{opacity:.5}
 <div id="loading">
 <div><div class="spin"></div>جاري تنفيذ العملية...</div>
 </div>
-
 <div id="toast"></div>
 
 <script>
+"use strict";
+
 const API="https://cursiwpgzaisednzpjsi.supabase.co/functions/v1/family-api";
 const PUBLIC_KEY="sb_publishable_hZ653h1LL_jnaHMLRw1-ng_vsSyQs57";
 
 let token=localStorage.getItem("family_bank_session")||"";
 let current=null;
 let data=null;
+let toastTimer=null;
 
-async function call(action,values={}) {
- const res=await fetch(API,{
-  method:"POST",
-  mode:"cors",
-  headers:{
-   "Content-Type":"application/json",
-   "apikey":PUBLIC_KEY,
-   ...(token?{"Authorization":"Bearer "+token}:{})
-  },
-  body:JSON.stringify({action,...values})
- });
+/* الاتصال بالسيرفر */
+async function call(action,values={}){
+  let response;
 
- let result;
- try{result=await res.json()}
- catch{throw new Error("استجابة السيرفر غير مفهومة")}
+  try{
+    const headers={
+      "Content-Type":"application/json",
+      "apikey":PUBLIC_KEY,
+      "Accept":"application/json"
+    };
 
- if(!res.ok||result.error)
-  throw new Error(result.error||"تعذر تنفيذ العملية");
+    // رمز الجلسة يرسل فقط بعد تسجيل الدخول
+    if(token){
+      headers["Authorization"]="Bearer "+token;
+    }
 
- return result;
+    response=await fetch(API,{
+      method:"POST",
+      mode:"cors",
+      cache:"no-store",
+      credentials:"omit",
+      headers,
+      body:JSON.stringify({action,...values})
+    });
+
+  }catch(error){
+    console.error("Network/CORS error:",error);
+    throw new Error(
+      "تعذر الوصول إلى السيرفر. افحص نشر الدالة وإعدادات CORS."
+    );
+  }
+
+  const responseText=await response.text();
+  let result={};
+
+  try{
+    result=responseText?JSON.parse(responseText):{};
+  }catch(error){
+    console.error("Invalid server response:",responseText);
+    throw new Error("السيرفر أرسل استجابة غير مفهومة ("+response.status+")");
+  }
+
+  if(!response.ok){
+    console.error("Server error:",response.status,result);
+    throw new Error(
+      result.error||result.message||"خطأ من السيرفر: "+response.status
+    );
+  }
+
+  if(result.error){
+    throw new Error(result.error);
+  }
+
+  return result;
 }
 
+/* الواجهة */
 function busy(on){
- document.getElementById("loading").style.display=on?"flex":"none";
+  document.getElementById("loading").style.display=on?"flex":"none";
 }
 
 function toast(message,ok=true){
- const el=document.getElementById("toast");
- el.textContent=(ok?"✅ ":"⚠️ ")+message;
- el.style.display="block";
- setTimeout(()=>el.style.display="none",3000);
+  const el=document.getElementById("toast");
+  el.textContent=(ok?"✅ ":"⚠️ ")+message;
+  el.style.display="block";
+
+  clearTimeout(toastTimer);
+  toastTimer=setTimeout(()=>{
+    el.style.display="none";
+  },4500);
 }
 
-async function run(fn){
- busy(true);
- try{
-  const result=await fn();
-  if(result?.message)toast(result.message);
-  if(token)await refresh();
-  return result;
- }catch(e){
-  toast(e.message||"تعذر الاتصال بالسيرفر",false);
- }finally{
-  busy(false);
- }
+async function run(fn,refreshAfter=true){
+  busy(true);
+
+  try{
+    const result=await fn();
+
+    if(result?.message){
+      toast(result.message,true);
+    }
+
+    if(token && refreshAfter){
+      await refresh();
+    }
+
+    return result;
+
+  }catch(error){
+    console.error(error);
+    toast(error.message||"حدث خطأ غير معروف",false);
+    return null;
+
+  }finally{
+    busy(false);
+  }
 }
 
+/* تسجيل الدخول */
 async function login(){
- await run(async()=>{
-  const result=await call("login",{
-   familyId:document.getElementById("familyId").value,
-   pin:document.getElementById("pin").value
-  });
+  const familyId=document.getElementById("familyId").value;
+  const pin=document.getElementById("pin").value;
 
-  token=result.token;
-  localStorage.setItem("family_bank_session",token);
+  if(!pin.trim()){
+    toast("اكتب الرقم السري أولاً",false);
+    return;
+  }
+
+  await run(async()=>{
+    const result=await call("login",{familyId,pin});
+
+    if(!result.token){
+      throw new Error("السيرفر لم يرجع رمز الجلسة");
+    }
+
+    token=result.token;
+    localStorage.setItem("family_bank_session",token);
+
+    await refresh();
+
+    document.getElementById("pin").value="";
+    toast("تم تسجيل الدخول بنجاح");
+
+  },false);
+}
+
+/* تسجيل الخروج */
+function logout(){
+  token="";
+  current=null;
+  data=null;
+
+  localStorage.removeItem("family_bank_session");
+
+  document.getElementById("app").classList.add("hidden");
+  document.getElementById("login").classList.remove("hidden");
+  document.getElementById("status").classList.add("hidden");
+
+  document.getElementById("pin").value="";
+  toast("تم تسجيل الخروج");
+}
+
+/* تحديث البيانات */
+async function refresh(){
+  if(!token)return;
+
+  const result=await call("getData");
+
+  if(!result.account){
+    throw new Error("بيانات الحساب غير موجودة في استجابة السيرفر");
+  }
+
+  data=result;
   current=result.account;
-
-  await refresh();
 
   document.getElementById("login").classList.add("hidden");
   document.getElementById("app").classList.remove("hidden");
+  document.getElementById("status").classList.remove("hidden");
 
-  toast("تم تسجيل الدخول");
- });
+  document.getElementById("status").textContent="● الحساب نشط";
+  document.getElementById("userName").textContent=current.display_name||current.id;
+  document.getElementById("balance").textContent=Number(current.balance||0).toFixed(2);
+  document.getElementById("points").textContent=Number(current.points||0);
+
+  const isAdmin=current.role==="admin";
+
+  document.getElementById("admin").classList.toggle("hidden",!isAdmin);
+  document.getElementById("userSections").classList.toggle("hidden",isAdmin);
+
+  if(isAdmin){
+    renderAdmin();
+  }
+
+  renderProducts();
+  preview();
 }
 
-function logout(){
- token="";
- current=null;
- data=null;
-
- localStorage.removeItem("family_bank_session");
-
- document.getElementById("app").classList.add("hidden");
- document.getElementById("login").classList.remove("hidden");
- document.getElementById("status").classList.add("hidden");
-}
-
-async function refresh(){
- if(!token)return;
-
- const result=await call("getData");
-
- data=result;
- current=result.account;
-
- document.getElementById("login").classList.add("hidden");
- document.getElementById("app").classList.remove("hidden");
- document.getElementById("status").classList.remove("hidden");
-
- document.getElementById("status").textContent="● الحساب نشط";
- document.getElementById("userName").textContent=current.display_name;
- document.getElementById("balance").textContent=Number(current.balance).toFixed(2);
- document.getElementById("points").textContent=current.points;
-
- const admin=current.role==="admin";
-
- document.getElementById("admin").classList.toggle("hidden",!admin);
- document.getElementById("userSections").classList.toggle("hidden",admin);
-
- if(admin)renderAdmin();
-
- renderProducts();
- preview();
-}
-
+/* معاينة التحويل */
 function preview(){
- if(!current)return;
+  if(!current)return;
 
- const p=Number(document.getElementById("convertPoints").value);
- const money=p*.005;
+  const points=Number(document.getElementById("convertPoints").value);
+  const money=points*.005;
 
- document.getElementById("preview").textContent=
- `قيمة التحويل: ${money.toFixed(2)} ريال — رصيدك بعد التحويل: ${(Number(current.balance)+money).toFixed(2)} ريال`;
+  document.getElementById("preview").textContent=
+    `قيمة التحويل: ${money.toFixed(2)} ريال`;
 }
 
+/* تحويل النقاط */
 async function convert(){
- await run(()=>call("convertPoints",{
-  points:Number(document.getElementById("convertPoints").value)
- }));
+  const points=Number(document.getElementById("convertPoints").value);
+
+  if(!Number.isInteger(points)||points<=0){
+    toast("اختر عدد نقاط صحيح",false);
+    return;
+  }
+
+  await run(()=>call("convertPoints",{points}));
 }
 
+/* عرض المنتجات */
 function renderProducts(){
- const box=document.getElementById("products");
- box.innerHTML="";
+  const box=document.getElementById("products");
+  box.innerHTML="";
 
- (data?.products||[]).forEach(p=>{
-  const item=document.createElement("div");
-  item.className="product";
+  (data?.products||[]).forEach(product=>{
+    const item=document.createElement("div");
+    item.className="product";
 
-  const title=document.createElement("strong");
-  title.textContent=`${p.emoji} ${p.name}`;
+    const title=document.createElement("strong");
+    title.textContent=`${product.emoji||"🎁"} ${product.name}`;
 
-  const price=document.createElement("p");
-  price.textContent=`السعر: ${Number(p.price).toFixed(2)} ريال`;
+    const price=document.createElement("p");
+    price.textContent=`السعر: ${Number(product.price||0).toFixed(2)} ريال`;
 
-  const button=document.createElement("button");
-  button.textContent="شراء";
-  button.onclick=()=>run(()=>call("purchase",{productId:p.id}));
+    const button=document.createElement("button");
+    button.textContent="شراء";
+    button.onclick=()=>run(()=>call("purchase",{
+      productId:product.id
+    }));
 
-  item.append(title,price,button);
-  box.append(item);
- });
+    item.append(title,price,button);
+    box.append(item);
+  });
+
+  if(!box.children.length){
+    box.textContent="ما فيه منتجات متاحة حالياً.";
+  }
 }
 
+/* إرسال هدية */
 async function sendGift(){
- const receiver=document.getElementById("receiver").value;
+  if(!current)return;
 
- if(receiver===current.id){
-  toast("اختر حسابًا آخر",false);
-  return;
- }
+  const receiver=document.getElementById("receiver").value;
+  const points=Number(document.getElementById("giftPoints").value);
+  const message=document.getElementById("giftMessage").value.trim();
 
- await run(()=>call("sendGift",{
-  receiverId:receiver,
-  points:Number(document.getElementById("giftPoints").value),
-  message:document.getElementById("giftMessage").value
- }));
-}
+  if(receiver===current.id){
+    toast("ما تقدر ترسل هدية لنفسك",false);
+    return;
+  }
 
-function renderAdmin(){
- const users=(data.accounts||[]).filter(a=>a.role!=="admin");
+  if(!Number.isInteger(points)||points<=0){
+    toast("أدخل عدد نقاط صحيح",false);
+    return;
+  }
 
- ["addTarget","increaseTarget","minusTarget","moneyTarget"].forEach(id=>{
-  const el=document.getElementById(id);
-  el.innerHTML="";
-  users.forEach(u=>el.add(new Option(u.display_name,u.id)));
- });
-
- const accounts=document.getElementById("accounts");
- accounts.innerHTML="";
-
- users.forEach(u=>{
-  const card=document.createElement("div");
-  card.className="stat";
-
-  const name=document.createElement("strong");
-  name.textContent=u.display_name;
-
-  const info=document.createElement("p");
-  info.textContent=`💰 ${Number(u.balance).toFixed(2)} ريال | ⭐ ${u.points} نقطة | ${u.blocked?"غير نشط":"نشط"}`;
-
-  const btn=document.createElement("button");
-  btn.textContent=u.blocked?"تفعيل الحساب":"إيقاف الحساب";
-  btn.onclick=()=>run(()=>call("toggleBlock",{userId:u.id}));
-
-  card.append(name,info,btn);
-  accounts.append(card);
- });
-
- const editor=document.getElementById("priceEditor");
- editor.innerHTML="";
-
- (data.products||[]).forEach(p=>{
-  const card=document.createElement("div");
-  card.className="product";
-
-  const label=document.createElement("label");
-  label.textContent=`${p.emoji} ${p.name}`;
-
-  const input=document.createElement("input");
-  input.type="number";
-  input.min="0";
-  input.step=".01";
-  input.value=p.price;
-
-  const btn=document.createElement("button");
-  btn.textContent="حفظ السعر";
-  btn.onclick=()=>run(()=>call("setProductPrice",{
-   productId:p.id,
-   price:Number(input.value)
+  const result=await run(()=>call("sendGift",{
+    receiverId:receiver,
+    points,
+    message
   }));
 
-  card.append(label,input,btn);
-  editor.append(card);
- });
-
- const ledger=document.getElementById("ledger");
- ledger.innerHTML="";
-
- (data.ledger||[]).forEach(row=>{
-  const p=document.createElement("p");
-  p.textContent=`${row.user_name}: ${row.description} — ${row.amount_change} ريال / ${row.points_change} نقطة`;
-  ledger.append(p);
- });
+  if(result){
+    document.getElementById("giftPoints").value="";
+    document.getElementById("giftMessage").value="";
+  }
 }
 
+/* لوحة الإدارة */
+function renderAdmin(){
+  const users=(data.accounts||[]).filter(account=>account.role!=="admin");
+
+  ["addTarget","increaseTarget","minusTarget","moneyTarget"].forEach(id=>{
+    const select=document.getElementById(id);
+    select.innerHTML="";
+
+    users.forEach(user=>{
+      select.add(new Option(user.display_name||user.id,user.id));
+    });
+  });
+
+  const accounts=document.getElementById("accounts");
+  accounts.innerHTML="";
+
+  users.forEach(user=>{
+    const card=document.createElement("div");
+    card.className="stat";
+
+    const name=document.createElement("strong");
+    name.textContent=user.display_name||user.id;
+
+    const info=document.createElement("p");
+    info.textContent=
+      `💰 ${Number(user.balance||0).toFixed(2)} ريال | ⭐ ${Number(user.points||0)} نقطة | ${user.blocked?"متوقف":"نشط"}`;
+
+    const button=document.createElement("button");
+    button.textContent=user.blocked?"تفعيل الحساب":"إيقاف الحساب";
+    button.onclick=()=>run(()=>call("toggleBlock",{userId:user.id}));
+
+    card.append(name,info,button);
+    accounts.append(card);
+  });
+
+  /* محرر الأسعار */
+  const editor=document.getElementById("priceEditor");
+  editor.innerHTML="";
+
+  (data.products||[]).forEach(product=>{
+    const card=document.createElement("div");
+    card.className="product";
+
+    const label=document.createElement("label");
+    label.textContent=`${product.emoji||"🎁"} ${product.name}`;
+
+    const input=document.createElement("input");
+    input.type="number";
+    input.min="0";
+    input.step=".01";
+    input.value=Number(product.price||0);
+
+    const button=document.createElement("button");
+    button.textContent="حفظ السعر";
+
+    button.onclick=async()=>{
+      const price=Number(input.value);
+
+      if(!Number.isFinite(price)||price<0){
+        toast("أدخل سعراً صحيحاً",false);
+        return;
+      }
+
+      await run(()=>call("setProductPrice",{
+        productId:product.id,
+        price
+      }));
+    };
+
+    card.append(label,input,button);
+    editor.append(card);
+  });
+
+  /* سجل العمليات */
+  const ledger=document.getElementById("ledger");
+  ledger.innerHTML="";
+
+  (data.ledger||[]).forEach(row=>{
+    const item=document.createElement("p");
+    item.textContent=
+      `${row.user_name||"حساب"}: ${row.description||"عملية"} — ${row.amount_change||0} ريال / ${row.points_change||0} نقطة`;
+    ledger.append(item);
+  });
+
+  if(!ledger.children.length){
+    ledger.textContent="ما فيه عمليات مسجلة.";
+  }
+}
+
+/* تعديلات ماما */
 async function adjust(kind,targetId,valueId){
- const value=Number(document.getElementById(valueId).value);
+  const value=Number(document.getElementById(valueId).value);
+  const userId=document.getElementById(targetId).value;
 
- if(!value||value<=0){
-  toast("أدخل قيمة صحيحة",false);
-  return;
- }
+  if(!userId){
+    toast("اختر الحساب أولاً",false);
+    return;
+  }
 
- await run(()=>call("adminAdjust",{
-  kind,
-  userId:document.getElementById(targetId).value,
-  value
- }));
+  if(!Number.isFinite(value)||value<=0){
+    toast("أدخل قيمة صحيحة",false);
+    return;
+  }
+
+  const result=await run(()=>call("adminAdjust",{
+    kind,
+    userId,
+    value
+  }));
+
+  if(result){
+    document.getElementById(valueId).value="";
+  }
 }
 
-if(token){
- busy(true);
- refresh().catch(()=>logout()).finally(()=>busy(false));
+/* استعادة الجلسة السابقة */
+async function restoreSession(){
+  if(!token)return;
+
+  busy(true);
+
+  try{
+    await refresh();
+  }catch(error){
+    console.error("Session restore failed:",error);
+    logout();
+    toast("انتهت الجلسة أو تعذر تحميل الحساب. سجل دخولك مرة ثانية.",false);
+  }finally{
+    busy(false);
+  }
 }
+
+restoreSession();
 </script>
 </body>
 </html>
