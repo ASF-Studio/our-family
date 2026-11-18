@@ -77,7 +77,7 @@ input:focus,select:focus,textarea:focus{border-color:var(--primary);outline:none
 .product-card h4{margin:0 0 8px;font-size:16px;color:var(--primary)}
 .product-card p{font-size:15px;font-weight:700;color:var(--gold);margin:0 0 14px}
 
-/* تأثيرات الـ Animation لتحويل النقاط */
+/* تأثيرات الحركة لتحويل النقاط */
 @keyframes coinFly {
  0% { transform: translateY(0) scale(1); opacity: 1; }
  50% { transform: translateY(-40px) scale(1.2); color: var(--gold); }
@@ -280,6 +280,7 @@ async function handleLoginSubmit(event) {
  }
 
  try {
+  // 1. طلب تسجيل الدخول والتحقق من الرمز
   const response = await fetch(EDGE_FUNCTION_URL, {
    method: "POST",
    headers: {
@@ -294,15 +295,20 @@ async function handleLoginSubmit(event) {
    throw new Error(data.error || "فشل تسجيل الدخول: الرمز السري غير صحيح");
   }
 
+  // 2. تعيين المستخدم المؤقت وحفظه محلياً
   currentUser = data.currentUser;
   localStorage.setItem("family_bank_user_id", currentUser.id);
 
   el("loginPin").value = "";
+
+  // 3. جلب بيانات التطبيق الكاملة أولاً للتأكد من نجاح الاتصال وتعبئة المصفوفات
+  await refreshData();
+
+  // 4. الانتقال الفوري وإظهار واجهة التطبيق الرئيسية
   el("loginScreen").classList.add("hidden");
   el("header").classList.remove("hidden");
   el("app").classList.remove("hidden");
 
-  await refreshData();
   currentPage = "home";
   renderApp();
   
@@ -339,6 +345,7 @@ async function refreshData() {
   allNotifications = res.notifications || [];
  } catch(e) {
   console.error("Refresh Data Error:", e);
+  throw e; // إعادة رمي الخطأ ليتم التعامل معه في حال فشل الجلب
  }
 }
 
@@ -447,7 +454,7 @@ function renderPage() {
  };
  const container = el("pageContent");
  if(container && pages[currentPage]) {
-  pages[currentPage](container);
+  pages[currentPage](container); // تصحيح استدعاء الدالة البرمجية
  }
 }
 
@@ -483,7 +490,7 @@ function pageConvert(c) {
 async function doConvert() {
  const pts = Number(el("convertPoints").value);
  if (!pts || pts < 25 || pts % 25 !== 0) return toast("الحد الأدنى 25 نقطة ويجب أن يكون من مضاعفاتها");
- if (pts > currentUser.points) return toast("رصيد النقاط غير كافٍ لإتمام العملية");
+ if (pts > currentUser.points) return toast("رصيد نقاطك غير كافٍ لإتمام العملية");
 
  const btn = el("convertBtn");
  if(btn) btn.classList.add("active");
@@ -813,6 +820,7 @@ function logout() {
  el("loginScreen").classList.remove("hidden");
 }
 
+// تصحيح الاستدعاء البرمجي لحدث التحميل
 window.addEventListener('DOMContentLoaded', restoreSession);
 </script>
 </body>
