@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
@@ -15,7 +16,7 @@ h2{font-size:20px;margin:0 0 17px}
 h3{font-size:16px;margin:0 0 12px}
 .muted{font-size:13px;color:#77827b}
 input,select{font:inherit}
-input{width:100%;padding:13px;border:1px solid #dfe7e1;border-radius:10px;margin:8px 0 12px}
+input,select{width:100%;padding:13px;border:1px solid #dfe7e1;border-radius:10px;margin:8px 0 12px;background:white;color:#202923}
 button{font:inherit;cursor:pointer;border:0;border-radius:10px;padding:12px 15px}
 button:disabled{opacity:.55;cursor:not-allowed}
 .btn{background:#176b45;color:white;font-weight:bold}
@@ -36,7 +37,7 @@ button:disabled{opacity:.55;cursor:not-allowed}
 .admin-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;margin-top:15px}
 .admin-box{border:1px solid #e5ebe7;border-radius:15px;padding:14px;background:#fff;min-width:0;display:flex;flex-direction:column;justify-content:space-between;min-height:190px}
 .admin-box h3{font-size:16px;min-height:38px}
-.admin-box input{margin:8px 0}
+.admin-box input,.admin-box select{margin:8px 0}
 .admin-box button{width:100%;margin-top:auto}
 .account{padding:14px;border:1px solid #e5ebe7;border-radius:12px;margin:10px 0}
 .message{padding:12px;border-radius:10px;margin-top:10px;background:#eaf7ee;color:#176b45}
@@ -85,13 +86,13 @@ button:disabled{opacity:.55;cursor:not-allowed}
 <div id="login" class="panel wrap" style="max-width:400px;margin-top:55px">
  <h2 style="text-align:center">تسجيل الدخول</h2>
  <label>نوع الحساب</label>
- <select id="loginType" onchange="document.getElementById('userBox').classList.toggle('hidden',this.value==='admin')" style="width:100%;padding:12px;border:1px solid #ddd;border-radius:10px;margin:8px 0">
+ <select id="loginType" onchange="document.getElementById('userBox').classList.toggle('hidden',this.value==='admin')">
   <option value="user">فرد من العائلة</option>
   <option value="admin">ماما</option>
  </select>
  <div id="userBox">
   <label>الحساب</label>
-  <select id="username" style="width:100%;padding:12px;border:1px solid #ddd;border-radius:10px;margin:8px 0">
+  <select id="username">
    <option value="azooz">عزوز</option>
    <option value="sahab">سحاب</option>
   </select>
@@ -103,7 +104,6 @@ button:disabled{opacity:.55;cursor:not-allowed}
 </div>
 
 <div id="app" class="wrap hidden">
-
  <div class="tabs" id="userTabs">
   <button class="tab active" onclick="tab('home',this)">الرئيسية</button>
   <button class="tab" onclick="tab('transfer',this)">تحويل</button>
@@ -186,7 +186,7 @@ button:disabled{opacity:.55;cursor:not-allowed}
   <section id="admin-balances" class="panel">
    <h2>إدارة الأرصدة</h2>
    <label>الحساب المستهدف</label>
-   <select id="target" style="width:100%;padding:12px;border:1px solid #ddd;border-radius:10px">
+   <select id="target">
     <option value="azooz">عزوز</option>
     <option value="sahab">سحاب</option>
    </select>
@@ -194,19 +194,44 @@ button:disabled{opacity:.55;cursor:not-allowed}
    <div class="admin-grid">
     <div class="admin-box">
      <h3>زيادة نقاط</h3>
-     <input id="addPoints" type="number" placeholder="عدد النقاط">
+     <select id="addPoints">
+      <option value="">اختر عدد النقاط</option>
+      <option value="25">25 نقطة</option>
+      <option value="50">50 نقطة</option>
+      <option value="75">75 نقطة</option>
+      <option value="100">100 نقطة</option>
+      <option value="150">150 نقطة</option>
+      <option value="200">200 نقطة</option>
+      <option value="250">250 نقطة</option>
+      <option value="500">500 نقطة</option>
+      <option value="1000">1000 نقطة</option>
+     </select>
      <button class="btn" onclick="adminAction('points','add','addPoints')">زيادة النقاط</button>
     </div>
+
     <div class="admin-box">
      <h3>خصم نقاط</h3>
-     <input id="removePoints" type="number" placeholder="عدد النقاط">
+     <select id="removePoints">
+      <option value="">اختر عدد النقاط</option>
+      <option value="25">25 نقطة</option>
+      <option value="50">50 نقطة</option>
+      <option value="75">75 نقطة</option>
+      <option value="100">100 نقطة</option>
+      <option value="150">150 نقطة</option>
+      <option value="200">200 نقطة</option>
+      <option value="250">250 نقطة</option>
+      <option value="500">500 نقطة</option>
+      <option value="1000">1000 نقطة</option>
+     </select>
      <button class="danger" onclick="adminAction('points','subtract','removePoints')">خصم النقاط</button>
     </div>
+
     <div class="admin-box">
      <h3>زيادة فلوس</h3>
      <input id="addMoney" class="money-input" type="text" inputmode="decimal" value="0.00" placeholder="0.00">
      <button class="btn" onclick="adminAction('balance','add','addMoney')">زيادة الرصيد</button>
     </div>
+
     <div class="admin-box">
      <h3>خصم فلوس</h3>
      <input id="removeMoney" class="money-input" type="text" inputmode="decimal" value="0.00" placeholder="0.00">
@@ -253,31 +278,36 @@ async function api(action,data={}){
   body:JSON.stringify({action,token,...data})
  });
  const d=await r.json();
- if(!r.ok)throw Error(d.error||"حدث خطأ");
+ if(!r.ok||d.error)throw Error(d.error||"حدث خطأ");
  return d;
 }
 
+function escapeHTML(value){
+ return String(value??"").replace(/[&<>"']/g,c=>({
+  "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"
+ }[c]));
+}
+
 function msg(id,text,error=false){
- document.getElementById(id).innerHTML='<div class="message '+(error?'error':'')+'">'+text+'</div>';
+ document.getElementById(id).innerHTML='<div class="message '+(error?'error':'')+'">'+escapeHTML(text)+'</div>';
 }
 
 function money(n){
  return Number(n||0).toFixed(2)+" ر.س";
 }
 
-/* قراءة المبلغ بالريال وتحويله إلى هللات صحيحة */
-function parseHalalas(id){
- const field=document.getElementById(id);
- const raw=field.value.trim().replace(",",".");
+/* قراءة المبلغ بالريال وتحويله إلى هللات */
+function parseHalalasValue(raw){
+ raw=String(raw??"").trim().replace(",",".");
  if(!/^\d+(\.\d{1,2})?$/.test(raw))return null;
-
  const parts=raw.split(".");
- const riyals=Number(parts[0]);
- const halalas=Number(((parts[1]||"")+"00").slice(0,2));
- const total=riyals*100+halalas;
-
- if(!Number.isSafeInteger(total)||total<=0)return null;
+ const total=Number(parts[0])*100+Number(((parts[1]||"")+"00").slice(0,2));
+ if(!Number.isSafeInteger(total)||total<=0||total>10000000)return null;
  return total;
+}
+
+function parseHalalas(id){
+ return parseHalalasValue(document.getElementById(id).value);
 }
 
 function show(id){
@@ -318,6 +348,7 @@ function operationSuccess(title,text){
 
 function closeOperation(){
  document.getElementById("operationOverlay").classList.add("hidden");
+ operationBusy=false;
 }
 
 async function runOperation(title,text,successTitle,successText,action){
@@ -329,11 +360,10 @@ async function runOperation(title,text,successTitle,successText,action){
   operationSuccess(successTitle,successText);
   return true;
  }catch(e){
-  closeOperation();
-  alert(e.message);
-  return false;
- }finally{
+  document.getElementById("operationOverlay").classList.add("hidden");
   operationBusy=false;
+  alert(e.message||"حدث خطأ");
+  return false;
  }
 }
 
@@ -342,7 +372,6 @@ async function login(){
  const admin=document.getElementById("loginType").value==="admin";
  const btn=document.getElementById("loginBtn");
  btn.disabled=true;
-
  const ok=await runOperation(
   "جاري تسجيل الدخول",
   "نتحقق من بيانات الحساب، يرجى الانتظار...",
@@ -353,6 +382,7 @@ async function login(){
     pin:document.getElementById("pin").value,
     username:document.getElementById("username").value
    });
+   if(!d.token)throw Error("لم يرجع الخادم رمز الدخول");
    token=d.token;
    role=d.role;
    account=d.account;
@@ -362,7 +392,7 @@ async function login(){
   }
  );
  btn.disabled=false;
- if(!ok)return;
+ if(ok)document.getElementById("pin").value="";
 }
 
 async function load(){
@@ -378,17 +408,14 @@ async function load(){
   accounts=d.accounts||[];
   renderAccounts();
  }else{
+  account=d.account;
+  if(!account||account.is_blocked)throw Error("الحساب موقوف أو غير موجود");
   document.getElementById("admin").classList.add("hidden");
   document.getElementById("userTabs").classList.remove("hidden");
-  account=d.account;
-
-  if(!account||account.is_blocked)throw Error("الحساب موقوف أو غير موجود");
-
-  document.getElementById("name").textContent=account.display_name;
+  document.getElementById("name").textContent=account.display_name||account.username;
   document.getElementById("balance").textContent=money(account.balance);
-  document.getElementById("points").textContent=Number(account.points).toLocaleString()+" نقطة";
-  document.getElementById("convertCurrent").textContent=Number(account.points).toLocaleString();
-
+  document.getElementById("points").textContent=Number(account.points||0).toLocaleString("en-US")+" نقطة";
+  document.getElementById("convertCurrent").textContent=Number(account.points||0).toLocaleString("en-US");
   updateConvertPreview();
   renderStore();
  }
@@ -397,87 +424,73 @@ async function load(){
 function renderStore(){
  document.getElementById("storeItems").innerHTML=cats.map((c,i)=>`
   <div class="category">
-   <div class="category-title">${c}</div>
-   <input type="number" min="0.01" step="0.01" id="price${i}" placeholder="أدخل السعر بالريال">
+   <div class="category-title">${escapeHTML(c)}</div>
+   <input type="text" inputmode="decimal" id="price${i}" placeholder="أدخل السعر بالريال">
    <button class="btn" onclick="buy(${i})">شراء</button>
    <div id="buyMsg${i}"></div>
   </div>`).join("");
 }
 
 async function buy(i){
- const price=Number(document.getElementById("price"+i).value);
-
- if(!Number.isFinite(price)||price<=0||price>100000||Math.round(price*100)!==price*100)
-  return msg("buyMsg"+i,"أدخل سعرًا صحيحًا",true);
-
+ const halalas=parseHalalas("price"+i);
+ if(halalas===null)return msg("buyMsg"+i,"أدخل سعرًا صحيحًا بين 0.01 و100000 ريال",true);
+ const price=halalas/100;
  if(!confirm("تأكيد الشراء من قسم "+cats[i]+" بسعر "+money(price)+"؟"))return;
-
  const ok=await runOperation(
-  "جاري تنفيذ الشراء",
-  "جاري إتمام عملية الشراء، يرجى الانتظار...",
-  "تم الشراء بنجاح",
-  "تمت عملية الشراء بنجاح.",
+  "جاري تنفيذ الشراء","جاري إتمام عملية الشراء، يرجى الانتظار...",
+  "تم الشراء بنجاح","تمت عملية الشراء بنجاح.",
   async()=>{
-   await api("purchase",{product:cats[i],amount:price});
+   await api("purchase",{product:cats[i],amount:price,requestId:crypto.randomUUID()});
    await load();
   }
  );
-
  if(ok)document.getElementById("price"+i).value="";
 }
 
 function prepareTransfer(type){
  transferType=type;
  const other=account.username==="azooz"?"سحاب":"عزوز";
-
  document.getElementById("transferBox").classList.remove("hidden");
  document.getElementById("transferTitle").textContent=type==="money"?"تحويل فلوس":"تحويل نقاط";
  document.getElementById("receiver").textContent="المستلم: "+other;
-
  const input=document.getElementById("transferAmount");
  input.value="";
+ input.type=type==="money"?"text":"number";
+ input.inputMode=type==="money"?"decimal":"numeric";
  input.step=type==="money"?"0.01":"1";
  input.min=type==="money"?"0.01":"1";
- input.placeholder=type==="money"?"أدخل المبلغ بالريال":"أدخل عدد النقاط";
-
+ input.placeholder=type==="money"?"أدخل المبلغ بالريال":"أدخل عدد النقاط المعتمد";
  document.getElementById("transferMsg").innerHTML="";
 }
 
 async function sendTransfer(){
  if(operationBusy)return;
-
- const amount=Number(document.getElementById("transferAmount").value);
-
- if(!Number.isFinite(amount)||amount<=0)
-  return msg("transferMsg","أدخل كمية صحيحة",true);
-
- if(transferType==="points"&&!allowed.includes(amount))
-  return msg("transferMsg","عدد النقاط غير معتمد",true);
-
- if(transferType==="money"&&Math.round(amount*100)!==amount*100)
-  return msg("transferMsg","المبلغ غير صحيح",true);
-
+ let amount;
+ if(transferType==="money"){
+  const halalas=parseHalalasValue(document.getElementById("transferAmount").value);
+  if(halalas===null)return msg("transferMsg","أدخل مبلغًا صحيحًا بين 0.01 و100000 ريال",true);
+  amount=halalas/100;
+ }else{
+  amount=Number(document.getElementById("transferAmount").value);
+  if(!Number.isInteger(amount)||!allowed.includes(amount))
+   return msg("transferMsg","اختر عدد نقاط معتمد",true);
+ }
  if(!confirm("تأكيد التحويل؟"))return;
-
  const btn=document.getElementById("sendTransferBtn");
  btn.disabled=true;
-
  const action=transferType==="money"?"sendMoney":"sendGift";
  const data=transferType==="money"
   ?{amount,requestId:crypto.randomUUID()}
   :{points:amount,requestId:crypto.randomUUID()};
-
  const ok=await runOperation(
   "جاري التحويل",
   transferType==="money"?"جاري تحويل الفلوس إلى الحساب الثاني...":"جاري تحويل النقاط إلى الحساب الثاني...",
-  "تم التحويل بنجاح",
-  "اكتملت عملية التحويل بنجاح.",
+  "تم التحويل بنجاح","اكتملت عملية التحويل بنجاح.",
   async()=>{
    await api(action,data);
    await load();
   }
  );
-
  if(ok)document.getElementById("transferAmount").value="";
  btn.disabled=false;
 }
@@ -490,55 +503,37 @@ function selectPoints(points,btn){
 }
 
 function updateConvertPreview(){
- const value=selectedPoints/200;
- document.getElementById("convertValue").textContent=money(value);
+ document.getElementById("convertValue").textContent=money(selectedPoints/200);
 }
 
 async function convertPoints(){
  if(operationBusy)return;
-
- if(!allowed.includes(selectedPoints))
-  return msg("convertMsg","اختر عدد نقاط صحيح",true);
-
- if(Number(account.points)<selectedPoints)
-  return msg("convertMsg","رصيد نقاطك غير كافٍ",true);
-
+ if(!allowed.includes(selectedPoints))return msg("convertMsg","اختر عدد نقاط صحيح",true);
+ if(Number(account.points)<selectedPoints)return msg("convertMsg","رصيد نقاطك غير كافٍ",true);
  if(!confirm("تأكيد تحويل "+selectedPoints+" نقطة؟"))return;
-
  const btn=document.getElementById("convertBtn");
  btn.disabled=true;
-
  const ok=await runOperation(
-  "جاري تحويل النقاط",
-  "جاري تنفيذ تحويل النقاط إلى رصيدك، يرجى الانتظار...",
-  "تم التحويل بنجاح",
-  "تم تحويل النقاط بنجاح.",
+  "جاري تحويل النقاط","جاري تنفيذ تحويل النقاط إلى رصيدك، يرجى الانتظار...",
+  "تم التحويل بنجاح","تم تحويل النقاط بنجاح.",
   async()=>{
    await api("convertPoints",{points:selectedPoints,requestId:crypto.randomUUID()});
    await load();
   }
  );
-
  btn.disabled=false;
 }
 
 async function changePin(){
  const currentPin=document.getElementById("oldPin").value;
  const newPin=document.getElementById("newPin").value;
-
- if(!/^\d{4,12}$/.test(newPin))
-  return msg("pinMsg","الرقم الجديد يجب أن يكون 4 إلى 12 رقمًا",true);
-
+ if(!/^\d{4,12}$/.test(newPin))return msg("pinMsg","الرقم الجديد يجب أن يكون 4 إلى 12 رقمًا",true);
+ if(!currentPin)return msg("pinMsg","أدخل الرقم الحالي",true);
  const ok=await runOperation(
-  "جاري تغيير الرقم السري",
-  "يرجى الانتظار...",
-  "تم تغيير الرقم",
-  "تم تغيير الرقم السري بنجاح.",
-  async()=>{
-   await api("changePin",{currentPin,newPin});
-  }
+  "جاري تغيير الرقم السري","يرجى الانتظار...",
+  "تم تغيير الرقم","تم تغيير الرقم السري بنجاح.",
+  async()=>{await api("changePin",{currentPin,newPin});}
  );
-
  if(ok){
   document.getElementById("oldPin").value="";
   document.getElementById("newPin").value="";
@@ -547,60 +542,36 @@ async function changePin(){
 
 async function adminAction(kind,operation,id){
  if(operationBusy)return;
-
  const username=document.getElementById("target").value;
  let amount;
 
  if(kind==="balance"){
   const halalas=parseHalalas(id);
-
-  if(halalas===null)
-   return msg("adminMsg","أدخل مبلغًا صحيحًا، مثال: 10.50 أو 0.25",true);
-
-  // تحويل الهللات إلى مبلغ بالريال بعد التحقق منها
-  amount=Number((halalas/100).toFixed(2));
+  if(halalas===null)return msg("adminMsg","أدخل مبلغًا صحيحًا بين 0.01 و100000 ريال، مثال: 10.50",true);
+  amount=halalas/100;
  }else{
   amount=Number(document.getElementById(id).value);
-
-  if(!Number.isFinite(amount)||amount<=0)
-   return msg("adminMsg","أدخل كمية صحيحة",true);
-
-  if(!allowed.includes(amount))
-   return msg("adminMsg","عدد النقاط غير معتمد",true);
+  if(!allowed.includes(amount))return msg("adminMsg","اختر عدد نقاط من القائمة المعتمدة",true);
  }
 
  if(!confirm("تأكيد العملية؟"))return;
-
  const accountName=username==="azooz"?"عزوز":"سحاب";
 
  const ok=await runOperation(
   "جاري تحديث الرصيد",
   kind==="points"?"جاري تعديل نقاط "+accountName+"...":"جاري تعديل رصيد "+accountName+"...",
-  "تمت العملية بنجاح",
-  "تم تحديث بيانات "+accountName+" بنجاح.",
+  "تمت العملية بنجاح","تم تحديث بيانات "+accountName+" بنجاح.",
   async()=>{
    if(kind==="balance"){
     await api("mamaAdjustBalance",{
-     username,
-     amount,
-     operation,
-     requestId:crypto.randomUUID()
+     username,amount,operation,requestId:crypto.randomUUID()
     });
    }else{
     await api("mamaAdjustPoints",{
-     username,
-     points:amount,
-     operation,
-     requestId:crypto.randomUUID()
+     username,points:amount,operation,requestId:crypto.randomUUID()
     });
    }
-
-   if(kind==="balance"){
-    document.getElementById(id).value="0.00";
-   }else{
-    document.getElementById(id).value="";
-   }
-
+   document.getElementById(id).value="";
    await load();
   }
  );
@@ -608,34 +579,29 @@ async function adminAction(kind,operation,id){
  if(ok&&kind==="points"&&operation==="add"){
   const accountsTab=document.querySelector("#adminTabs .tab:nth-child(2)");
   adminTab("accountsPanel",accountsTab);
-
-  const accountCard=[...document.querySelectorAll(".account")]
-   .find(x=>x.dataset.username===username);
-
-  if(accountCard)
-   accountCard.scrollIntoView({behavior:"smooth",block:"center"});
+  const card=[...document.querySelectorAll(".account")].find(x=>x.dataset.username===username);
+  if(card)card.scrollIntoView({behavior:"smooth",block:"center"});
  }
 }
 
 function renderAccounts(){
  document.getElementById("accounts").innerHTML=accounts.map(a=>`
-  <div class="account" data-username="${a.username}">
-   <b>${a.display_name}</b>
-   <p>الرصيد: ${money(a.balance)}</p>
-   <p>النقاط: ${Number(a.points).toLocaleString()} نقطة</p>
+  <div class="account" data-username="${escapeHTML(a.username)}">
+   <b>${escapeHTML(a.display_name||a.username)}</b>
+   <p>الرصيد: ${escapeHTML(money(a.balance))}</p>
+   <p>النقاط: ${Number(a.points||0).toLocaleString("en-US")} نقطة</p>
    <p>${a.is_blocked?"الحساب موقوف":"الحساب نشط"}</p>
-   <button class="${a.is_blocked?"btn":"danger"}" onclick="toggleBlock('${a.username}')">${a.is_blocked?"إعادة تفعيل الحساب":"إيقاف الحساب"}</button>
+   <button class="${a.is_blocked?"btn":"danger"}" onclick="toggleBlock('${escapeHTML(a.username)}')">
+    ${a.is_blocked?"إعادة تفعيل الحساب":"إيقاف الحساب"}
+   </button>
   </div>`).join("");
 }
 
 async function toggleBlock(username){
- if(!confirm("تأكيد تغيير حالة الحساب؟"))return;
-
+ if(operationBusy||!confirm("تأكيد تغيير حالة الحساب؟"))return;
  await runOperation(
-  "جاري تحديث الحساب",
-  "يرجى الانتظار...",
-  "تم تحديث الحساب",
-  "تم تغيير حالة الحساب بنجاح.",
+  "جاري تحديث الحساب","يرجى الانتظار...",
+  "تم تحديث الحساب","تم تغيير حالة الحساب بنجاح.",
   async()=>{
    await api("toggleBlock",{username});
    await load();
@@ -646,20 +612,13 @@ async function toggleBlock(username){
 async function adminChangePin(){
  const currentPin=document.getElementById("adminOldPin").value;
  const newPin=document.getElementById("adminNewPin").value;
-
- if(!/^\d{4,12}$/.test(newPin))
-  return msg("adminPinMsg","الرقم الجديد غير صحيح",true);
-
+ if(!/^\d{4,12}$/.test(newPin))return msg("adminPinMsg","الرقم الجديد يجب أن يكون من 4 إلى 12 رقمًا",true);
+ if(!currentPin)return msg("adminPinMsg","أدخل الرقم الحالي",true);
  const ok=await runOperation(
-  "جاري تغيير الرقم السري",
-  "يرجى الانتظار...",
-  "تم تغيير الرقم",
-  "تم تغيير رقم ماما السري بنجاح.",
-  async()=>{
-   await api("changePin",{currentPin,newPin});
-  }
+  "جاري تغيير الرقم السري","يرجى الانتظار...",
+  "تم تغيير الرقم","تم تغيير رقم ماما السري بنجاح.",
+  async()=>{await api("changePin",{currentPin,newPin});}
  );
-
  if(ok){
   document.getElementById("adminOldPin").value="";
   document.getElementById("adminNewPin").value="";
@@ -670,23 +629,20 @@ function clear(){
  token="";
  role="";
  account=null;
-
+ accounts=[];
  localStorage.removeItem("family_token");
  localStorage.removeItem("family_role");
-
  document.getElementById("app").classList.add("hidden");
  document.getElementById("login").classList.remove("hidden");
  document.getElementById("logoutBtn").classList.add("hidden");
+ document.getElementById("pin").value="";
 }
 
 async function logout(){
- if(!confirm("متأكد من تسجيل الخروج؟"))return;
-
+ if(operationBusy||!confirm("متأكد من تسجيل الخروج؟"))return;
  await runOperation(
-  "جاري تسجيل الخروج",
-  "يرجى الانتظار...",
-  "تم تسجيل الخروج",
-  "تم تسجيل الخروج بنجاح.",
+  "جاري تسجيل الخروج","يرجى الانتظار...",
+  "تم تسجيل الخروج","تم تسجيل الخروج بنجاح.",
   async()=>{
    try{await api("logout")}catch(e){}
    clear();
@@ -696,13 +652,13 @@ async function logout(){
 
 if(token&&role){
  showOperation("جاري فتح الحساب","جاري تحميل بياناتك...");
-
  load()
   .then(()=>operationSuccess("تم الدخول","تم تحميل بيانات الحساب بنجاح."))
   .catch(e=>{
-   closeOperation();
+   document.getElementById("operationOverlay").classList.add("hidden");
+   operationBusy=false;
    clear();
-   alert(e.message);
+   alert(e.message||"تعذر فتح الحساب");
   });
 }
 </script>
